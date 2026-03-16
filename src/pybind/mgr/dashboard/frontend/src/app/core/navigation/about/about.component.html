@@ -3,7 +3,7 @@
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
     <div class="header-content">
-      <img src="assets/Ceph_Ceph_Logo_with_text_red_white.svg"
+      <img [src]="projectConstants.cephLogo"
            class="ceph-logo"
            alt="{{ projectConstants.organization }}">
     <h3 class="modal-title">
@@ -42,12 +42,4 @@
     </div>
     </section>
 
-  <cds-modal-footer>
-    <div class="footer-content">
-      {{ projectConstants.copyright }}
-      {{ projectConstants.license }}
-    </div>
-  </cds-modal-footer>
 </cds-modal>
-
-

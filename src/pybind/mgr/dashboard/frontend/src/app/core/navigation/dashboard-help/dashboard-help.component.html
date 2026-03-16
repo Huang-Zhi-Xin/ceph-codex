@@ -1,16 +1,6 @@
 <cds-overflow-menu [customTrigger]="customTrigger"
                    [flip]="true">
   <li>
-    <a [ngClass]="{'cds--overflow-menu-options__btn': true, 'disabled': !docsUrl}"
-       href="{{ docsUrl }}"
-       target="_blank"
-       i18n>Documentation
-      <svg cdsIcon="launch"
-           class="ms-2"
-           size="16"></svg>
-    </a>
-  </li>
-  <li>
     <a routerLink="/api-docs"
        target="_blank"
        class="cds--overflow-menu-options__btn"
@@ -22,8 +12,6 @@
   </li>
   <cds-overflow-menu-option (click)="openAboutModal()"
                             i18n>About</cds-overflow-menu-option>
-  <cds-overflow-menu-option (click)="openFeedbackModal()"
-                            i18n>Report an issue...</cds-overflow-menu-option>
 </cds-overflow-menu>
 
 <ng-template #customTrigger>

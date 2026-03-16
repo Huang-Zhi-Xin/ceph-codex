@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import * as _ from 'lodash';
@@ -48,6 +48,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     cluster_connection_status?: number;
   };
   currentClusterName: string;
+  isZhHans: boolean;
+  dashboardLabel: string;
 
   constructor(
     public notificationService: NotificationService,
@@ -58,10 +60,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private featureToggles: FeatureTogglesService,
     public prometheusAlertService: PrometheusAlertService,
     private cookieService: CookiesService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     this.permissions = this.authStorageService.getPermissions();
     this.enabledFeature$ = this.featureToggles.get();
+    this.isZhHans = this.localeId.startsWith('zh');
+    this.dashboardLabel = this.isZhHans ? '仪表盘' : 'Dashboard';
   }
 
   ngOnInit() {

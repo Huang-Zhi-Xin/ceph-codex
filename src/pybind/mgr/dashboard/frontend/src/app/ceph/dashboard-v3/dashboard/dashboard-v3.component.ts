@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 
 import _ from 'lodash';
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, of } from 'rxjs';
@@ -49,6 +49,34 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
   telemetryURL = 'https://telemetry-public.ceph.com/';
   origin = window.location.origin;
   icons = Icons;
+  isZhHans: boolean;
+  detailsTitle: string;
+  statusTitle: string;
+  capacityTitle: string;
+  inventoryTitle: string;
+  clusterUtilizationTitle: string;
+  clusterIdLabel: string;
+  orchestratorLabel: string;
+  cephVersionLabel: string;
+  clusterApiLabel: string;
+  telemetryDashboardLabel: string;
+  managedByLabel: string;
+  telemetryActiveLabel: string;
+  telemetryInactiveLabel: string;
+  viewAlertsLabel: string;
+  hostLabel: string;
+  monitorLabel: string;
+  managerLabel: string;
+  poolLabel: string;
+  pgLabel: string;
+  objectGatewayLabel: string;
+  metadataServerLabel: string;
+  iscsiGatewayLabel: string;
+  usedCapacityRawTitle: string;
+  iopsTitle: string;
+  osdLatenciesTitle: string;
+  usedCapacityLabels: string[];
+  iopsLabels: string[];
 
   permissions: Permissions;
 
@@ -118,11 +146,40 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
     private mgrModuleService: MgrModuleService,
     private refreshIntervalService: RefreshIntervalService,
     public prometheusAlertService: PrometheusAlertService,
-    private hardwareService: HardwareService
+    private hardwareService: HardwareService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super(prometheusService);
     this.permissions = this.authStorageService.getPermissions();
     this.enabledFeature$ = this.featureToggles.get();
+    this.isZhHans = this.localeId.startsWith('zh');
+    this.detailsTitle = this.isZhHans ? '详细信息' : 'Details';
+    this.statusTitle = this.isZhHans ? '状态' : 'Status';
+    this.capacityTitle = this.isZhHans ? '容量' : 'Capacity';
+    this.inventoryTitle = this.isZhHans ? '清单' : 'Inventory';
+    this.clusterUtilizationTitle = this.isZhHans ? '集群利用率' : 'Cluster Utilization';
+    this.clusterIdLabel = this.isZhHans ? '集群 ID' : 'Cluster ID';
+    this.orchestratorLabel = this.isZhHans ? '编排器' : 'Orchestrator';
+    this.cephVersionLabel = this.isZhHans ? 'Ceph 版本' : 'Ceph version';
+    this.clusterApiLabel = this.isZhHans ? '集群 API' : 'Cluster API';
+    this.telemetryDashboardLabel = this.isZhHans ? '遥测仪表盘' : 'Telemetry Dashboard';
+    this.managedByLabel = this.isZhHans ? '管理方' : 'Managed By';
+    this.telemetryActiveLabel = this.isZhHans ? '已启用' : 'Active';
+    this.telemetryInactiveLabel = this.isZhHans ? '未启用' : 'Inactive';
+    this.viewAlertsLabel = this.isZhHans ? '查看告警' : 'View alerts';
+    this.hostLabel = this.isZhHans ? '主机' : 'Host';
+    this.monitorLabel = this.isZhHans ? '监视器' : 'Monitor';
+    this.managerLabel = this.isZhHans ? '管理器' : 'Manager';
+    this.poolLabel = this.isZhHans ? '存储池' : 'Pool';
+    this.pgLabel = 'PG';
+    this.objectGatewayLabel = this.isZhHans ? '对象网关' : 'Object Gateway';
+    this.metadataServerLabel = this.isZhHans ? '元数据服务器' : 'Metadata Server';
+    this.iscsiGatewayLabel = this.isZhHans ? 'iSCSI 网关' : 'iSCSI Gateway';
+    this.usedCapacityRawTitle = this.isZhHans ? '已用容量（裸容量）' : 'Used Capacity (RAW)';
+    this.iopsTitle = 'IOPS';
+    this.osdLatenciesTitle = this.isZhHans ? 'OSD 延迟' : 'OSD Latencies';
+    this.usedCapacityLabels = [this.isZhHans ? '已用容量' : 'Used Capacity'];
+    this.iopsLabels = [this.isZhHans ? '读取' : 'Reads', this.isZhHans ? '写入' : 'Writes'];
   }
 
   ngOnInit() {
@@ -153,9 +210,7 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
   getTelemetryText(): string {
     return this.telemetryEnabled
       ? $localize`Cluster telemetry is active`
-      : $localize`Cluster telemetry is inactive. To Activate the Telemetry, \
-       click settings icon on top navigation bar and select \
-       Telemetry configration.`;
+      : $localize`Cluster telemetry is inactive.`;
   }
 
   ngOnDestroy() {

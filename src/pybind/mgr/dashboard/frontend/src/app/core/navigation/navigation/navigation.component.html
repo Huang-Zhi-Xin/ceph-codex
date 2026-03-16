@@ -6,7 +6,7 @@
   <!-- ************************ -->
   <!-- HEADER                   -->
   <!-- ************************ -->
-  <cds-header name="Ceph Dashboard"
+  <cds-header name="KX Storage 分布式存储管理系统"
               class="cd-navbar-top"
               [brand]="brandTemplate">
     <cds-hamburger [active]="showMenuSidebar"
@@ -55,8 +55,8 @@
   <ng-template #brandTemplate>
     <a class="cds--header__name navbar-brand ms-3"
        routerLink="/dashboard">
-      <img src="assets/Ceph_Ceph_Logo_with_text_white.svg"
-           alt="Ceph" />
+      <img src="assets/kx-registry-logo.svg"
+           alt="KX Storage" />
     </a>
   </ng-template>
   <!-- **************************************** -->
@@ -84,14 +84,12 @@
         <!-- Dashboard -->
         <cds-sidenav-item route="/dashboard"
                           [useRouter]="true"
-                          title="Dashboard"
-                          i18n-title
+                          [title]="dashboardLabel"
                           class="nav-item tc_menuitem_dashboard">
           <svg cdsIcon="template"
                icon
                size="20"></svg>
-          <span i18n>
-            Dashboard</span>
+          <span>{{ dashboardLabel }}</span>
         </cds-sidenav-item>
         <!-- Multi-cluster Dashboard -->
         <cds-sidenav-menu title="Multi-Cluster"

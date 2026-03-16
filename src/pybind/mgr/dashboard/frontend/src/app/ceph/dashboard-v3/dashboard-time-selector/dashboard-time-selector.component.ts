@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, Output } from '@angular/core';
 
 import moment from 'moment';
 
@@ -13,39 +13,41 @@ export class DashboardTimeSelectorComponent {
 
   times: any;
   time: any;
+  isZhHans: boolean;
 
-  constructor() {
+  constructor(@Inject(LOCALE_ID) private localeId: string) {
+    this.isZhHans = this.localeId.startsWith('zh');
     this.times = [
       {
-        name: $localize`Last 5 minutes`,
+        name: this.isZhHans ? '过去 5 分钟' : 'Last 5 minutes',
         value: this.timeToDate(5 * 60, 1)
       },
       {
-        name: $localize`Last 15 minutes`,
+        name: this.isZhHans ? '过去 15 分钟' : 'Last 15 minutes',
         value: this.timeToDate(15 * 60, 3)
       },
       {
-        name: $localize`Last 30 minutes`,
+        name: this.isZhHans ? '过去 30 分钟' : 'Last 30 minutes',
         value: this.timeToDate(30 * 60, 7)
       },
       {
-        name: $localize`Last 1 hour`,
+        name: this.isZhHans ? '过去 1 小时' : 'Last 1 hour',
         value: this.timeToDate(3600, 14)
       },
       {
-        name: $localize`Last 3 hours`,
+        name: this.isZhHans ? '过去 3 小时' : 'Last 3 hours',
         value: this.timeToDate(3 * 3600, 42)
       },
       {
-        name: $localize`Last 6 hours`,
+        name: this.isZhHans ? '过去 6 小时' : 'Last 6 hours',
         value: this.timeToDate(6 * 3600, 84)
       },
       {
-        name: $localize`Last 12 hours`,
+        name: this.isZhHans ? '过去 12 小时' : 'Last 12 hours',
         value: this.timeToDate(12 * 3600, 168)
       },
       {
-        name: $localize`Last 24 hours`,
+        name: this.isZhHans ? '过去 24 小时' : 'Last 24 hours',
         value: this.timeToDate(24 * 3600, 336)
       }
     ];

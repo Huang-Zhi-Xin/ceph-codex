@@ -23,7 +23,6 @@ import { SilenceFormComponent } from './ceph/cluster/prometheus/silence-form/sil
 import { SilenceListComponent } from './ceph/cluster/prometheus/silence-list/silence-list.component';
 import { ServiceFormComponent } from './ceph/cluster/services/service-form/service-form.component';
 import { ServicesComponent } from './ceph/cluster/services/services.component';
-import { TelemetryComponent } from './ceph/cluster/telemetry/telemetry.component';
 import { DashboardComponent } from './ceph/dashboard/dashboard/dashboard.component';
 import { NfsFormComponent } from './ceph/nfs/nfs-form/nfs-form.component';
 import { PerformanceCounterComponent } from './ceph/performance-counter/performance-counter/performance-counter.component';
@@ -270,11 +269,6 @@ const routes: Routes = [
         path: 'logs',
         component: LogsComponent,
         data: { breadcrumbs: 'Observability/Logs' }
-      },
-      {
-        path: 'telemetry',
-        component: TelemetryComponent,
-        data: { breadcrumbs: 'Telemetry configuration' }
       },
       {
         path: 'monitoring',

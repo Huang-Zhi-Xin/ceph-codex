@@ -5,21 +5,20 @@
     <div class="col-sm-3 d-flex flex-column ps-2">
 
       <!-- Details Card-->
-      <cd-card cardTitle="Details"
-               i18n-title
+      <cd-card [cardTitle]="detailsTitle"
                class="details"
                aria-label="Details card">
         <dl class="ms-4 me-4">
-          <dt>Cluster ID</dt>
+          <dt>{{ clusterIdLabel }}</dt>
           <dd>{{ detailsCardData.fsid }}</dd>
-          <dt>Orchestrator</dt>
+          <dt>{{ orchestratorLabel }}</dt>
           <dd i18n>{{ detailsCardData.orchestrator || 'Orchestrator is not available' }}</dd>
-          <dt>Ceph version</dt>
+          <dt>{{ cephVersionLabel }}</dt>
           <dd>
             {{ detailsCardData.cephVersion }}
             <cd-upgradable></cd-upgradable>
           </dd>
-          <dt>Cluster API</dt>
+          <dt>{{ clusterApiLabel }}</dt>
           <dd>
             <a routerLink="/api-docs"
                target="_blank">
@@ -28,12 +27,12 @@
             </a>
           </dd>
           <ng-container>
-            <dt>Telemetry Dashboard
+            <dt>{{ telemetryDashboardLabel }}
               <span
                 class="badge"
                 [ngClass]="telemetryEnabled ? 'badge-success' : 'badge-secondary'"
                 [ngbTooltip]="getTelemetryText()" >
-                {{ telemetryEnabled ? 'Active' : 'Inactive' }}
+                {{ telemetryEnabled ? telemetryActiveLabel : telemetryInactiveLabel }}
               </span>
             </dt>
             <dd>
@@ -46,7 +45,7 @@
           </ng-container>
           <ng-container *ngIf="managedByConfig$ | async as managedByConfig">
             <span *ngIf="managedByConfig['MANAGED_BY_CLUSTERS'].length > 0">
-              <dt>Managed By</dt>
+              <dt>{{ managedByLabel }}</dt>
               <dd>
                 <a target="_blank"
                    [href]="managedByConfig['MANAGED_BY_CLUSTERS'][0]['url']">
@@ -60,26 +59,25 @@
       </cd-card>
 
       <!-- Inventory Card-->
-      <cd-card cardTitle="Inventory"
-               i18n-title
+      <cd-card [cardTitle]="inventoryTitle"
                class="pt-4"
                aria-label="Inventory card">
         <ng-container *ngIf="enabledFeature$ | async as enabledFeature">
           <!-- Hosts -->
           <cd-card-row [data]="hostsCount"
                        link="/hosts"
-                       title="Host"
+                       [title]="hostLabel"
                        summaryType="simplified"
                        [dropdownData]="(isHardwareEnabled$ | async) && (hardwareSummary$ | async)">
           </cd-card-row>
           <!-- Monitors -->
           <cd-card-row [data]="monCount"
                        link="/monitor"
-                       title="Monitor"
+                       [title]="monitorLabel"
                        summaryType="simplified"></cd-card-row>
           <!-- Managers -->
           <cd-card-row [data]="mgrStatus"
-                       title="Manager"></cd-card-row>
+                       [title]="managerLabel"></cd-card-row>
 
           <!-- OSDs -->
           <cd-card-row [data]="osdCount"
@@ -90,30 +88,30 @@
           <!-- Pools -->
           <cd-card-row [data]="poolCount"
                        link="/pool"
-                       title="Pool"
+                       [title]="poolLabel"
                        summaryType="simplified"></cd-card-row>
 
           <!-- PG Info -->
           <cd-card-row [data]="pgStatus | pgSummary"
-                       title="PG"></cd-card-row>
+                       [title]="pgLabel"></cd-card-row>
 
           <!-- Object gateways -->
           <cd-card-row [data]="rgwCount"
                        link="/rgw/daemon"
-                       title="Object Gateway"
+                       [title]="objectGatewayLabel"
                        summaryType="simplified"
                        id="rgw-item"
                        *ngIf="enabledFeature.rgw"></cd-card-row>
 
           <!-- Metadata Servers -->
           <cd-card-row [data]="mdsStatus"
-                       title="Metadata Server"
+                       [title]="metadataServerLabel"
                        id="mds-item"
                        *ngIf="enabledFeature.cephfs"></cd-card-row>
           <!-- iSCSI Gateways -->
           <cd-card-row [data]="iscsiMap"
                        link="/iscsi/daemon"
-                       title="iSCSI Gateway"
+                       [title]="iscsiGatewayLabel"
                        summaryType="iscsi"
                        id="iscsi-item"
                        *ngIf="enabledFeature.iscsi"></cd-card-row>
@@ -126,8 +124,7 @@
       <div class="row">
         <!-- This column will hold Status and Capacity cards-->
         <div class="col-sm-8">
-          <cd-card cardTitle="Status"
-                   i18n-title
+          <cd-card [cardTitle]="statusTitle"
                    aria-label="Status card"
                    class="status"
                    [alignItemsCenter]="true"
@@ -136,8 +133,7 @@
             <div class="viewAlert"
                  *ngIf="prometheusAlertService.alerts.length">
               <a href="#/monitoring/active-alerts"
-                 i18n>
-                View alerts
+                 >{{ viewAlertsLabel }}
               </a>
             </div>
             <div class="d-flex flex-column ms-4 me-4 mt-4 mb-4">
@@ -220,8 +216,7 @@
           </cd-card>
         </div>
         <div class="col-sm-4 ps-0">
-          <cd-card cardTitle="Capacity"
-                   i18n-title
+          <cd-card [cardTitle]="capacityTitle"
                    [fullHeight]="true"
                    aria-label="Capacity card">
             <ng-container class="ms-4 me-4"
@@ -236,27 +231,26 @@
 
       <!-- This column will hold Cluster Utlization card -->
       <div class="col-sm-12 d-flex flex-column pt-4">
-        <cd-card cardTitle="Cluster Utilization"
-                 i18n-title
+        <cd-card [cardTitle]="clusterUtilizationTitle"
                  aria-label="Cluster utilization card">
           <div class="ms-4 me-4 mt-0">
             <cd-dashboard-time-selector (selectedTime)="getPrometheusData($event)">
             </cd-dashboard-time-selector>
             <ng-container *ngIf="usedCapacity">
-              <cd-dashboard-area-chart chartTitle="Used Capacity (RAW)"
+              <cd-dashboard-area-chart [chartTitle]="usedCapacityRawTitle"
                                        [maxValue]="usedCapacity"
                                        dataUnits="B"
-                                       [labelsArray]="['Used Capacity']"
+                                       [labelsArray]="usedCapacityLabels"
                                        [dataArray]="[queriesResults.USEDCAPACITY]">
               </cd-dashboard-area-chart>
             </ng-container>
-            <cd-dashboard-area-chart chartTitle="IOPS"
+            <cd-dashboard-area-chart [chartTitle]="iopsTitle"
                                      dataUnits=""
                                      decimals="0"
-                                     [labelsArray]="['Reads', 'Writes']"
+                                     [labelsArray]="iopsLabels"
                                      [dataArray]="[queriesResults.READIOPS, queriesResults.WRITEIOPS]">
             </cd-dashboard-area-chart>
-            <cd-dashboard-area-chart chartTitle="OSD Latencies"
+            <cd-dashboard-area-chart [chartTitle]="osdLatenciesTitle"
                                      dataUnits="ms"
                                      decimals="2"
                                      [labelsArray]="['Apply', 'Commit']"

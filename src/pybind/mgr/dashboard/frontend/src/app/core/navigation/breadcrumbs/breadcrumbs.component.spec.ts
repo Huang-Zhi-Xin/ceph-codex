@@ -142,7 +142,7 @@ describe('BreadcrumbsComponent', () => {
       router.navigateByUrl('');
     });
     tick();
-    expect(titleService.getTitle()).toEqual('Ceph Dashboard');
+    expect(titleService.getTitle()).toEqual('KX Storage 分布式存储管理系统');
   }));
 
   it('should display no breadcrumbs in page title when a page is not found', fakeAsync(() => {
@@ -150,7 +150,7 @@ describe('BreadcrumbsComponent', () => {
       router.navigateByUrl('/error');
     });
     tick();
-    expect(titleService.getTitle()).toEqual('Ceph Dashboard');
+    expect(titleService.getTitle()).toEqual('KX Storage 分布式存储管理系统');
   }));
 
   it('should display 2 breadcrumbs in page title when navigating to hosts', fakeAsync(() => {
@@ -158,7 +158,7 @@ describe('BreadcrumbsComponent', () => {
       router.navigateByUrl('/hosts');
     });
     tick();
-    expect(titleService.getTitle()).toEqual('Ceph Dashboard: Cluster > Hosts');
+    expect(titleService.getTitle()).toEqual('KX Storage 分布式存储管理系统: Cluster > Hosts');
   }));
 
   it('should display 3 breadcrumbs in page title when navigating to RBD Add', fakeAsync(() => {
@@ -166,6 +166,6 @@ describe('BreadcrumbsComponent', () => {
       router.navigateByUrl('/block/rbd/add');
     });
     tick();
-    expect(titleService.getTitle()).toEqual('Ceph Dashboard: Block > Images > Add');
+    expect(titleService.getTitle()).toEqual('KX Storage 分布式存储管理系统: Block > Images > Add');
   }));
 });

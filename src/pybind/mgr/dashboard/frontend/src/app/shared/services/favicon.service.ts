@@ -3,8 +3,6 @@ import { Inject, Injectable, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
-import { CssHelper } from '~/app/shared/classes/css-helper';
-import { HealthColor } from '~/app/shared/enum/health-color.enum';
 import { SummaryService } from './summary.service';
 
 @Injectable()
@@ -15,8 +13,7 @@ export class FaviconService implements OnDestroy {
 
   constructor(
     @Inject(DOCUMENT) private document: HTMLDocument,
-    private summaryService: SummaryService,
-    private cssHelper: CssHelper
+    private summaryService: SummaryService
   ) {}
 
   init() {
@@ -35,41 +32,9 @@ export class FaviconService implements OnDestroy {
     this.oldStatus = status;
 
     const favicon = this.document.getElementById('cdFavicon');
-    const faviconSize = 16;
-    const radius = faviconSize / 4;
-
-    const canvas = this.document.createElement('canvas');
-    canvas.width = faviconSize;
-    canvas.height = faviconSize;
-
-    const context = canvas.getContext('2d');
-    const img = this.document.createElement('img');
-    img.src = this.url;
-
-    img.onload = () => {
-      // Draw Original Favicon as Background
-      context.drawImage(img, 0, 0, faviconSize, faviconSize);
-
-      if (Object.keys(HealthColor).includes(status as HealthColor)) {
-        // Cut notification circle area
-        context.save();
-        context.globalCompositeOperation = 'destination-out';
-        context.beginPath();
-        context.arc(canvas.width - radius, radius, radius + 2, 0, 2 * Math.PI);
-        context.fill();
-        context.restore();
-
-        // Draw Notification Circle
-        context.beginPath();
-        context.arc(canvas.width - radius, radius, radius, 0, 2 * Math.PI);
-
-        context.fillStyle = this.cssHelper.propertyValue(HealthColor[status]);
-        context.fill();
-      }
-
-      // Replace favicon
-      favicon.setAttribute('href', canvas.toDataURL('image/png'));
-    };
+    if (favicon && this.url) {
+      favicon.setAttribute('href', this.url);
+    }
   }
 
   ngOnDestroy() {

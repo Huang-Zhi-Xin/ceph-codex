@@ -1,0 +1,424 @@
+{
+  "This field is required.": "此字段为必填项。",
+  "This field is required": "此字段为必填项",
+  "selection is required!": "必须进行选择！",
+  "Please enter a valid URL.": "请输入有效的 URL。",
+  "Name": "名称",
+  "Username": "用户名",
+  "Password": "密码",
+  "Realm Name": "Realm 名称",
+  "Token": "令牌",
+  "Flow": "流",
+  "Pipe": "管道",
+  "Site Name": "站点名称",
+  "Address": "地址",
+  "Image Size": "镜像大小",
+  "Pool": "存储池",
+  "NQN": "NQN",
+  "Size": "大小",
+  "Namespace": "命名空间",
+  "User ID": "用户 ID",
+  "Volume name": "卷名称",
+  "Mode": "模式",
+  "Cluster": "集群",
+  "Group Name": "组名称",
+  "Stop": "停止",
+  "Policies": "策略",
+  "Enabled": "已启用",
+  "Encryption Type": "加密类型",
+  "Zone Endpoints": "区域端点",
+  "Source Zone": "源区域",
+  "Storage Class": "存储类型",
+  "Placement Target": "放置目标",
+  "Target Region": "目标区域",
+  "Target Endpoint": "目标端点",
+  "Push endpoint": "推送端点",
+  "Tenant": "租户",
+  "Email": "邮箱",
+  "Type": "类型",
+  "Secret key": "密钥",
+  "Auto-generate key": "自动生成密钥",
+  "Linked to cluster": "关联到集群",
+  "Resource Name": "资源名称",
+  "Configure NVMe/TCP": "配置 NVMe/TCP",
+  "Block Pool is not configured": "块存储池未配置",
+  "Configure Default pool": "配置默认存储池",
+  "Block Mirroring is not configured": "块镜像未配置",
+  "Configure Block Mirroring": "配置块镜像",
+  "NVMe/TCP Gateway not configured": "NVMe/TCP 网关未配置",
+  "Bytes per second": "每秒字节数",
+  "Entries behind primary": "落后主端的条目数",
+  "pool mirror peer": "存储池镜像对端",
+  "Cluster Name": "集群名称",
+  "CephX ID": "CephX ID",
+  "Monitor Addresses": "Monitor 地址",
+  "CephX Key": "CephX 密钥",
+  "Local image count": "本地镜像数",
+  "Remote image count": "远端镜像数",
+  "Selected Gateway Group": "已选网关组",
+  "Gateway overview": "网关概览",
+  "Gateway performance": "网关性能",
+  "Enter group name": "输入组名称",
+  "Gateway ID": "网关 ID",
+  "No groups available": "无可用组",
+  "Hosts": "主机",
+  "Add host": "添加主机",
+  "Add host nqn": "添加主机 NQN",
+  "Allow any host": "允许任意主机",
+  "Any host allowed (*)": "允许任意主机（*）",
+  "Allow any host(*)": "允许任意主机（*）",
+  "Host Name": "主机名",
+  "-- No hosts available --": "-- 无可用主机 --",
+  "-- Select a host --": "-- 选择一个主机 --",
+  "Transport Service ID": "传输服务 ID",
+  "The IP port to use. Default is 4420.": "要使用的 IP 端口，默认值为 4420。",
+  "The value must be a positive integer.": "该值必须为正整数。",
+  "Listener": "监听器",
+  "listener": "监听器",
+  "-- No block pools available --": "-- 无可用块存储池 --",
+  "Namespace Count": "命名空间数量",
+  "The number of namespaces to create": "要创建的命名空间数量",
+  "Enter a positive integer.": "请输入正整数。",
+  "Bdev Name": "块设备名称",
+  "Block Size": "块大小",
+  "R/W Throughput": "读写吞吐量",
+  "Read Throughput": "读取吞吐量",
+  "Write Throughput": "写入吞吐量",
+  "Load Balancing Group": "负载均衡组",
+  "Listeners": "监听器",
+  "Subsystem details": "子系统详情",
+  "Serial Number": "序列号",
+  "Model Number": "型号",
+  "Minimum Controller Identifier": "最小控制器标识符",
+  "Maximum Controller Identifier": "最大控制器标识符",
+  "Subsystem Type": "子系统类型",
+  "Maximum Namespaces": "最大命名空间数",
+  "Subsystem": "子系统",
+  "Subsystems": "子系统",
+  "# Namespaces": "命名空间数量",
+  "# Maximum Allowed Namespaces": "最大允许命名空间数",
+  "RBD details": "RBD 详情",
+  "from": "从",
+  "Schedule Interval": "调度间隔",
+  "-- Select a data pool --": "-- 选择数据池 --",
+  "Next Scheduled Snapshot": "下次计划快照",
+  "image": "镜像",
+  "Create Namespace": "创建命名空间",
+  "The namespace already exists.": "该命名空间已存在。",
+  "RBD overview": "RBD 概览",
+  "Mirror Image Snapshot": "镜像快照",
+  "FS name": "文件系统名称",
+  "Directory": "目录",
+  "Data pool": "数据池",
+  "Metadata pool": "元数据池",
+  "File System": "文件系统",
+  "Using NFS Command": "使用 NFS 命令",
+  "Directory (required)": "目录（必填）",
+  "Add retention policy": "添加保留策略",
+  "Retention policy": "保留策略",
+  "Created Count": "已创建数量",
+  "Deleted Count": "已删除数量",
+  "Subvolume": "子卷",
+  "Repeat interval": "重复间隔",
+  "Write": "写入",
+  "Quota limit is not set": "未设置配额限制",
+  "Host details": "主机详情",
+  "Hostname (required)": "主机名（必填）",
+  "Network address": "网络地址",
+  "Host overview": "主机概览",
+  "Daemon Logs": "守护进程日志",
+  "Daemon logs": "守护进程日志",
+  "Cluster details": "集群详情",
+  "Cluster API URL Enter the Dashboard API URL. You can retrieve it from the CLI with:": "集群 API URL 输入 Dashboard API URL。你可以通过以下 CLI 命令获取：",
+  "Alias Name": "别名",
+  "Connection to the cluster failed": "连接集群失败",
+  "Cluster connected successfully": "集群连接成功",
+  "Cluster updated successfully": "集群更新成功",
+  "Clusters List": "集群列表",
+  "Loading data, Please wait...": "正在加载数据，请稍候...",
+  "OSD details": "OSD 详情",
+  "Daemon name": "守护进程名称",
+  "Block Pool": "块存储池",
+  "Ceph users": "Ceph 用户",
+  "Provider display name": "提供方显示名称",
+  "Https address": "HTTPS 地址",
+  "Allowlist domains": "允许域名列表",
+  "Upgrade Cluster": "升级集群",
+  "New Version": "新版本",
+  "-- No version available --": "-- 无可用版本 --",
+  "-- Select a version --": "-- 选择一个版本 --",
+  "Use image": "使用镜像",
+  "Started upgrading the cluster": "已开始升级集群",
+  "Failed to start the upgrade": "启动升级失败",
+  "Cluster logs": "集群日志",
+  "Failed to pause the upgrade": "暂停升级失败",
+  "The upgrade is paused": "升级已暂停",
+  "Failed to resume the upgrade": "恢复升级失败",
+  "Upgrade is resumed": "升级已恢复",
+  "Failed to stop the upgrade": "停止升级失败",
+  "The upgrade is stopped": "升级已停止",
+  "View Details...": "查看详情...",
+  "Current Version": "当前版本",
+  "Cluster FSID": "集群 FSID",
+  "Release Image": "发布镜像",
+  "Daemon versions": "守护进程版本",
+  "Select another version...": "选择其他版本...",
+  "Cluster is up-to-date": "集群已是最新",
+  "Upgrade using custom image...": "使用自定义镜像升级...",
+  "Checking for upgrades": "正在检查可升级版本",
+  "Back": "返回",
+  "Next": "下一步",
+  "Close": "关闭",
+  "Apply": "应用",
+  "Enable": "启用",
+  "Disable": "禁用",
+  "Warning": "警告",
+  "Error": "错误",
+  "Success": "成功",
+  "Import": "导入",
+  "Export": "导出",
+  "Details": "详情",
+  "Overview": "概览",
+  "Loading...": "加载中...",
+  "Save": "保存",
+  "Cancel": "取消",
+  "Role": "角色",
+  "Version": "版本",
+  "Domain": "域",
+  "Group": "组",
+  "Policy": "策略",
+  "Bucket": "存储桶",
+  "Gateway": "网关",
+  "Image": "镜像",
+  "File": "文件",
+  "Object": "对象",
+  "Block": "块",
+  "Topic": "主题",
+  "User": "用户",
+  "Size must be a number or in a valid format. eg: 5 GiB": "大小必须为数字或有效格式，例如：5 GiB",
+  "In order to access the snapshot scheduler feature, the snap_scheduler module must be enabled": "要访问快照调度功能，必须启用 snap_scheduler 模块",
+  "Please note that the data for the disconnected cluster will be visible for a duration of ~ 5 minutes. After this period, it will be automatically removed.": "请注意，已断开集群的数据会保留约 5 分钟可见，超过该时间后会自动移除。",
+  "Upgrading %": "升级中 %",
+  "See Logs for more details.": "更多详情请查看日志。",
+  "Tiering": "分层",
+  "You cannot unset the default flag.": "不能取消默认标记。",
+  "You cannot unset the master flag.": "不能取消主标记。",
+  "Last Synced:": "上次同步：",
+  "This will create &quot;rbd-mirror&quot; service and a replicated Block pool": "这将创建 `rbd-mirror` 服务和一个复制型块存储池",
+  "Please consult the on how to configure and enable the iSCSI Targets management functionality.": "请参考相关文档以配置并启用 iSCSI 目标管理功能。",
+  "Issues ( )": "问题（ ）",
+  "Syncing ( )": "同步中（ ）",
+  "Ready ( )": "就绪（ ）",
+  "Allow specific hosts to run NVMe/TCP commands to the NVMe subsystem.": "允许指定主机向 NVMe 子系统执行 NVMe/TCP 命令。",
+  "Expected NQN format &lt; nqn.$year-$month.$reverseDomainName:$utf8-string &quot;.&gt; or &lt; nqn.2014-08.org.nvmexpress:uuid:$UUID-string &quot;.&gt;": "期望的 NQN 格式为 < nqn.$year-$month.$reverseDomainName:$utf8-string \".\"> 或 < nqn.2014-08.org.nvmexpress:uuid:$UUID-string \".\">",
+  "An NQN may not be more than 223 bytes in length.": "NQN 长度不能超过 223 字节。",
+  "Duplicate entry detected. Enter a unique value.": "检测到重复项，请输入唯一值。",
+  "This hostname uniquely identifies the gateway on which the listener is being set up.": "该主机名唯一标识正在配置监听器的网关。",
+  "The value cannot be greated than 65535.": "该值不能大于 65535。",
+  "An RBD application-enabled pool where the image will be created.": "将用于创建镜像的已启用 RBD 应用的存储池。",
+  "Enter a value above than previous. A block device image can be expanded but not reduced.": "请输入大于之前的值。块设备镜像只能扩容，不能缩容。",
+  "The namespace count should be between 1 and 5": "命名空间数量必须在 1 到 5 之间",
+  "This NQN is already in use.": "该 NQN 已被使用。",
+  "The maximum namespaces per subsystem. Default is": "每个子系统允许的最大命名空间数，默认值为",
+  "The value cannot be greater than .": "该值不能大于指定上限。",
+  "Subsystems A subsystem provides access control to which hosts can access the namespaces within the subsystem.": "子系统。子系统用于控制哪些主机可以访问该子系统中的命名空间。",
+  "The minimum value is 0.": "最小值为 0。",
+  "Move an image to the trash. Images, even ones actively in-use by clones, can be moved to the trash and deleted at a later time.": "将镜像移入回收站。即使镜像正被克隆使用，也可以先移入回收站，稍后再删除。",
+  "Delete an rbd image (including all data blocks). If the image has snapshots, this fails and nothing is deleted.": "删除一个 RBD 镜像（包括所有数据块）。如果镜像存在快照，则删除会失败且不会移除任何内容。",
+  "Copy the content of a source image into the newly created destination image": "将源镜像内容复制到新创建的目标镜像中",
+  "If the image is a clone, copy all shared blocks from the parent snapshot and make the child independent of the parent, severing the link between parent snap and child.": "如果该镜像是克隆镜像，则从父快照复制所有共享块，使子镜像独立于父镜像，并切断父快照与子镜像之间的关系。",
+  "Mirroring needs to be enabled on the image to perform this action": "执行此操作前，必须为该镜像启用镜像功能",
+  "This RBD has cloned snapshots. Please delete related RBDs before deleting this RBD": "该 RBD 存在克隆快照。请先删除相关 RBD，再删除此 RBD",
+  "The image cannot be deleted as it is secondary": "该镜像是从端镜像，无法删除",
+  "Primary RBD images cannot be resynced": "主 RBD 镜像不能重新同步",
+  "'Ensures reliable replication by logging changes before updating the image, but doubles write time, impacting performance. Not recommended for high-speed data processing tasks.": "通过在更新镜像前记录变更来保证复制可靠性，但会使写入时间翻倍并影响性能，不建议用于高速数据处理场景。",
+  "This mode replicates RBD images between clusters using snapshots, efficiently copying data changes but requiring complete delta syncing during failover. Ideal for less demanding tasks due to its less granular approach compared to journaling.": "该模式通过快照在集群间复制 RBD 镜像，高效传输数据变化，但在故障切换时需要完整增量同步。相比日志模式粒度更粗，更适合要求较低的场景。",
+  "Mirroring Allow data to be asynchronously mirrored between two Ceph clusters": "镜像。允许在两个 Ceph 集群之间异步镜像数据",
+  "You need to set mode as Image in the selected pool to enable snapshot mirroring.": "要启用快照镜像，需要将所选存储池的模式设置为 Image。",
+  "Use a dedicated data pool Use a dedicated pool to store the image data. If not selected, the image data will be stored in the same pool as the image metadata. You need more than one pool with the rbd application label use to use a dedicated data pool.": "使用专用数据池。使用独立的存储池保存镜像数据；若不选择，则镜像数据将与镜像元数据存放在同一存储池中。若要使用专用数据池，需至少存在两个带有 rbd 应用标签的存储池。",
+  "-- Select stripe unit --": "-- 选择条带单元 --",
+  "Feature can be disabled but can't be re-enabled later": "该特性可以禁用，但后续无法再次启用",
+  "Speeds up the process of deleting a clone by removing the dependency on the parent image.": "通过移除对父镜像的依赖，加快克隆删除过程。",
+  "Feature flag can't be manipulated after the image is created. Disabling this option will also disable the Protect and Clone actions on Snapshot": "镜像创建后无法再修改此特性标志。禁用该选项也会同时禁用快照上的 Protect 和 Clone 操作。",
+  "Allows the creation of snapshots and clones of an image.": "允许为镜像创建快照和克隆。",
+  "Ensures that only one client can write to the image at a time.": "确保同一时刻只有一个客户端可以写入该镜像。",
+  "Tracks which objects actually exist (have data stored on a device). Enabling object map support speeds up I/O operations for cloning, importing and exporting a sparsely populated image, and deleting.": "跟踪实际存在的对象（即设备上已存储数据的对象）。启用对象映射后，可加速对稀疏镜像进行克隆、导入、导出和删除的 I/O 操作。",
+  "Speeds up the process of comparing two images.": "加快两个镜像的比较过程。",
+  "primary": "主",
+  "secondary": "从",
+  "Do you want to force the operation?": "是否强制执行该操作？",
+  "Enforce": "强制",
+  "Loading... -- No rbd pools available -- -- Select a pool --": "加载中... -- 无可用 RBD 存储池 -- -- 选择一个存储池 --",
+  "Snapshot mode is enabled on image : snapshot names are auto generated": "镜像已启用快照模式：快照名称将自动生成",
+  "The snapshot name cannot start with &quot;.&quot; and cannot contain &quot;/&quot; and &quot;@&quot;.": "快照名称不能以 \".\" 开头，且不能包含 \"/\" 和 \"@\"。",
+  "The layering feature needs to be enabled on parent image": "父镜像必须启用分层特性",
+  "Set expiration date": "设置过期时间",
+  "Path to restrict access to": "限制访问的路径",
+  "Read permission is the minimum givable access": "读权限是可授予的最小访问权限",
+  "Permission to set layouts or quotas, write access needed": "设置布局或配额的权限，需要写权限",
+  "Permission to create or delete snapshots, write access needed": "创建或删除快照的权限，需要写权限",
+  "Safety measure to prevent scenarios such as accidental sudo rm -rf /path": "用于防止误执行 `sudo rm -rf /path` 等场景的安全措施",
+  "access": "访问",
+  "Snapshot name ' ' is already in use. Please use another name.": "该快照名称已被使用，请更换其他名称。",
+  "Orchestrator is not configured. Deploy MDS daemons manually after creating the volume.": "编排器未配置。创建卷后请手动部署 MDS 守护进程。",
+  "The File System can only be renamed if it is shutdown and `refuse_client_session` is set to true. Follow the steps below in the command line and refresh the page:": "只有在文件系统已关闭且 `refuse_client_session` 设置为 true 时，才能重命名文件系统。请按下列命令行步骤执行后刷新页面：",
+  "File System name should start with a letter or dot (.) and can only contain letters, numbers, '.', '-' or '_'": "文件系统名称必须以字母或点号 (.) 开头，且只能包含字母、数字、'.'、'-' 或 '_'",
+  "Use existing pools Allows you to use replicated pools with 'cephfs' application tag that are already created.": "使用已有存储池。允许使用已创建且带有 `cephfs` 应用标签的复制型存储池。",
+  "You need to have atleast 2 pools that are empty, applied with cephfs label and not erasure-coded.": "你至少需要 2 个空存储池，且这些存储池已打上 cephfs 标签并且不是纠删码池。",
+  "-- No cephfs pools available --": "-- 无可用 CephFS 存储池 --",
+  "Hosts Labels": "主机标签",
+  "Select labels...": "选择标签...",
+  "Select hosts...": "选择主机...",
+  "This will remove its data and metadata pools. It'll also remove the MDS daemon associated with the volume.": "这将删除其数据池和元数据池，同时还会移除与该卷关联的 MDS 守护进程。",
+  "File System deletion is disabled by the mon_allow_pool_delete configuration setting.": "由于 `mon_allow_pool_delete` 配置项限制，文件系统删除已被禁用。",
+  "Attach commands": "挂载命令",
+  "Using Mount command": "使用 Mount 命令",
+  "Using FUSE command": "使用 FUSE 命令",
+  "A snapshot schedule for this path already exists.": "该路径的快照调度已存在。",
+  "This schedule already exists for the selected directory.": "所选目录已存在该调度。",
+  "Choose a value greater than 0.": "请选择大于 0 的值。",
+  "This retention policy already exists for the selected directory.": "所选目录已存在该保留策略。",
+  "Snapshot schedule": "快照调度",
+  "snapshot schedule": "快照调度",
+  "The subvolume already exists.": "该子卷已存在。",
+  "Subvolume name can only contain letters, numbers, '.', '-' or '_'": "子卷名称只能包含字母、数字、'.'、'-' 或 '_'",
+  "The size of the subvolume is specified by setting a quota on it. If left blank or put 0, then quota will be infinite": "通过设置配额来指定子卷大小。若留空或填写 0，则配额为无限制。",
+  "By default, the data_pool_layout of the parent directory is selected.": "默认选择父目录的 data_pool_layout。",
+  "UID": "UID",
+  "GID": "GID",
+  "Isolated Namespace To create subvolume in a separate RADOS namespace.": "隔离命名空间。将在独立的 RADOS 命名空间中创建子卷。",
+  "Retain snapshots The subvolume can be removed retaining existing snapshots using this option. If snapshots are retained, the subvolume is considered empty for all operations not involving the retained snapshots.": "保留快照。启用此选项后，可在保留已有快照的情况下删除子卷。若保留了快照，则对于所有不涉及这些保留快照的操作，该子卷会被视为空。",
+  "The snapshot already exists.": "该快照已存在。",
+  "snapshot": "快照",
+  "Loading snapshots...": "正在加载快照...",
+  "No subvolumes are present. Please create subvolumes to manage snapshots.": "当前没有子卷，请先创建子卷后再管理快照。",
+  "Pending Clones": "待处理克隆",
+  "Create clone": "创建克隆",
+  "Allowed characters are letters, numbers, '.', '-', '+', ':' or '_'": "允许使用的字符为字母、数字、'.'、'-'、'+'、':' 或 '_'",
+  "A subvolume or clone with this name already exists.": "具有该名称的子卷或克隆已存在。",
+  "Group name": "组名称",
+  "Create Clone": "创建克隆",
+  "Created Clone &quot; &quot; successfully.": "克隆创建成功。",
+  "Subvolume group name...": "子卷组名称...",
+  "The subvolume group already exists.": "该子卷组已存在。",
+  "subvolume group": "子卷组",
+  "Subvolumes": "子卷",
+  "Subvolume groups": "子卷组",
+  "Snapshot schedules": "快照调度",
+  "CephFS MDS performance": "CephFS MDS 性能",
+  "Force Edit": "强制编辑",
+  "force edit": "强制编辑",
+  "configuration": "配置",
+  "yes": "是",
+  "no": "否"
+  ,"CPU Usage": "CPU 使用率"
+  ,"Memory Usage": "内存使用率"
+  ,"Click here to create a new Realm/Zone Group/Zone": "点击此处创建新的 Realm/Zone Group/Zone"
+  ,"Authentication must be enabled in an active `mgtm-gateway` service to enable Single Sign-On(SSO) with `oauth2-proxy`": "要通过 `oauth2-proxy` 启用单点登录（SSO），必须在活动的 `mgmt-gateway` 服务中启用认证。"
+  ,"With an active mgmt-gateway service, the dashboard will continue to be served on : and all other services will be accessible from : /service_name": "启用 mgmt-gateway 服务后，Dashboard 将继续通过指定地址提供服务，其他服务将通过对应的 `/service_name` 路径访问。"
+  ,"SMB service management is intended for advanced users only. For most scenarios, it is recommended to use the SMB module instead. To manage SMB clusters and shares, please visit the SMB page .": "SMB 服务管理仅适用于高级用户。大多数场景建议使用 SMB 模块。要管理 SMB 集群和共享，请访问 SMB 页面。"
+  ,"-- Select an existing service --": "-- 选择现有服务 --"
+  ,"The name of the gateway group.": "网关组名称。"
+  ,"This service id is already in use.": "该服务 ID 已被占用。"
+  ,"MDS service id must start with a letter and contain alphanumeric characters or '.', '-', and '_'": "MDS 服务 ID 必须以字母开头，并且只能包含字母、数字、'.'、'-' 和 '_'"
+  ,"-- No realm available --": "-- 无可用 Realm --"
+  ,"If Unmanaged is selected, the orchestrator will not start or stop any daemons associated with this service. Placement and all other properties will be ignored.": "如果选择 Unmanaged，编排器将不会启动或停止与该服务关联的任何守护进程，放置策略及其他属性也会被忽略。"
+  ,"Number of deamons that will be deployed": "将要部署的守护进程数量"
+  ,"Cluster id A short name identifying the SMB “cluster”. In this case a cluster is simply a management unit of one or more Samba services sharing a common configuration, and may not provide actual clustering or availability mechanisms.": "Cluster id：用于标识 SMB“集群”的短名称。这里的集群仅表示共享同一配置的一个或多个 Samba 服务的管理单元，不一定提供真正的集群或高可用机制。"
+  ,"Config URI": "配置 URI"
+  ,"Configuration source that should be loaded by the samba-container as the primary configuration file.": "samba-container 应加载为主配置文件的配置源。"
+  ,"The value must start with either 'http:', 'https:', 'rados:' or 'rados:mon-config-key:'": "该值必须以 `http:`、`https:`、`rados:` 或 `rados:mon-config-key:` 开头"
+  ,"Features Pre-defined terms enabling specific deployment characteristics.": "特性：用于启用特定部署能力的预定义项。"
+  ,"Custom DNS": "自定义 DNS"
+  ,"Comma separated list of DNSs. A list of IP addresses that will be used as the DNS servers for a Samba container.": "以逗号分隔的 DNS 列表。该 IP 地址列表将作为 Samba 容器使用的 DNS 服务器。"
+  ,"Join sources": "加入源"
+  ,"Comma separated list of URIs. A list of values that will be used to identify where authentication data that will be used to perform domain joins are located.": "以逗号分隔的 URI 列表，用于标识执行域加入时认证数据所在的位置。"
+  ,"User sources": "用户源"
+  ,"Comma separated list of URIs. A list of pseudo-uris containing data the samba-container can use to create users (and/or groups). A ceph based samba container may typically use a rados uri or a mon config-key store uri": "以逗号分隔的 URI 列表，包含 samba-container 可用于创建用户（和/或组）的数据。基于 Ceph 的 Samba 容器通常使用 rados URI 或 mon config-key store URI。"
+  ,"Comma separated list of Ceph users. A list of cephx user names that the Samba Containers may use.": "以逗号分隔的 Ceph 用户列表，表示 Samba 容器可使用的 cephx 用户名。"
+  ,"My OIDC Provider": "我的 OIDC 提供方"
+  ,"The display name for the identity provider (IdP) in the UI.": "身份提供方（IdP）在界面中的显示名称。"
+  ,"Client ID": "客户端 ID"
+  ,"The client ID for authenticating with the IdP.": "与 IdP 认证时使用的客户端 ID。"
+  ,"Client secret": "客户端密钥"
+  ,"The client secret for authenticating with the IdP.": "与 IdP 认证时使用的客户端密钥。"
+  ,"OIDC Issuer URL": "OIDC Issuer URL"
+  ,"The URL of the OpenID Connect (OIDC) issuer.": "OpenID Connect (OIDC) Issuer 的 URL。"
+  ,"Invalid url.": "无效的 URL。"
+  ,"Format must be [IP|Hostname]:port and the port between 0 and 65535": "格式必须为 [IP|Hostname]:port，且端口范围应在 0 到 65535 之间"
+  ,"Redirect URL": "重定向 URL"
+  ,"The URL the oauth2-proxy service will redirect to after a successful login.": "oauth2-proxy 服务在登录成功后将重定向到的 URL。"
+  ,"Authentication": "认证"
+  ,"Allows to enable authentication through an external Identity Provider (IdP) using Single Sign-On (SSO)": "允许通过外部身份提供方（IdP）使用单点登录（SSO）启用认证。"
+  ,"Select protocols...": "选择协议..."
+  ,"SSL ciphers": "SSL 加密套件"
+  ,"Default cipher list used: https://ssl-config.mozilla.org/#server=nginx": "默认使用的加密套件列表见：https://ssl-config.mozilla.org/#server=nginx"
+  ,"Invalid cipher suite. Each cipher must be separated by '-' and each cipher suite must be separated by ':'": "无效的加密套件。每个 cipher 必须以 `-` 分隔，每组 cipher suite 必须以 `:` 分隔。"
+  ,"Grafana Port": "Grafana 端口"
+  ,"The default port used by grafana.": "Grafana 使用的默认端口。"
+  ,"Grafana Password The password of the default Grafana Admin. Set once on first-run.": "Grafana 密码。默认 Grafana 管理员密码，仅在首次运行时设置。"
+  ,"Modifying the default settings could lead to a weaker security configuration": "修改默认设置可能导致更弱的安全配置"
+  ,"Enables mutual TLS (mTLS) between the client and the gateway server.": "启用客户端与网关服务器之间的双向 TLS（mTLS）。"
+  ,"Root CA certificate": "根 CA 证书"
+  ,"Client CA certificate": "客户端 CA 证书"
+  ,"Client key": "客户端密钥"
+  ,"Gateway server certificate": "网关服务器证书"
+  ,"Gateway server key": "网关服务器密钥"
+  ,"Ports": "端口"
+  ,"Make sure to put the correct image. Passing an incorrect image can lead the cluster into an undesired state.": "请确保填写正确的镜像，错误镜像可能导致集群进入异常状态。"
+  ,"Resume": "恢复"
+  ,"Upgrade is paused %": "升级已暂停 %"
+  ,"MGR Count": "MGR 数量"
+  ,"Registry": "镜像仓库"
+  ,"Upgrade to": "升级到"
+  ,"Fetching registry informations": "正在获取仓库信息"
+  ,"Failed to fetch registry informations": "获取仓库信息失败"
+  ,"Upgrade in progress %": "升级进行中 %"
+  ,"Not retrieving upgrades": "未获取升级信息"
+  ,"Every": "每"
+  ,"Invalid file type: only .json or .yaml accepted": "无效文件类型，仅接受 .json 或 .yaml"
+  ,"Enter resource name to delete": "输入要删除的资源名称"
+  ,"Enter the correct resource name.": "请输入正确的资源名称。"
+  ,"Please consult the on how to configure and enable the monitoring functionality.": "请参考相关文档以配置并启用监控功能。"
+  ,"Grafana Dashboard doesn't exist. Please refer to on how to add dashboards to Grafana.": "Grafana Dashboard 不存在。请参考相关文档将仪表盘添加到 Grafana。"
+  ,"Show hidden information": "显示隐藏信息"
+  ,"If no embedded Grafana Dashboard appeared below, please follow this link to check if Grafana is reachable and there are no HTTPS certificate issues. You may need to reload this page after accepting any Browser certificate exceptions": "如果下方未显示嵌入式 Grafana Dashboard，请通过该链接检查 Grafana 是否可访问，以及是否存在 HTTPS 证书问题。接受浏览器证书例外后，可能需要重新加载当前页面。"
+  ,"All fields are required, except where marked optional.": "除标记为可选的字段外，其余字段均为必填。"
+  ,"Silence Alert": "静默告警"
+  ,"Expire Silence": "使静默过期"
+  ,"Orchestrator is not available. Please consult the on how to configure and enable the functionality.": "编排器当前不可用，请参考相关文档配置并启用该功能。"
+  ,"Finished :": "已完成："
+  ,"Upgrade is paused": "升级已暂停"
+  ,"Upgrade available": "有可用升级"
+  ,"usage": "使用量"
+  ,"Setup Multi-site Replication": "配置多站点复制"
+  ,"Migrate": "迁移"
+  ,"Authorize": "授权"
+  ,"Resync": "重新同步"
+  ,"Start": "启动"
+  ,"Redeploy": "重新部署"
+  ,"Restart": "重启"
+  ,"Remove Scheduling": "移除调度"
+  ,"Promote": "提升"
+  ,"Demote": "降级"
+  ,"Start Upgrade": "开始升级"
+  ,"Activate": "激活"
+  ,"Attach": "挂载"
+  ,"Connect": "连接"
+  ,"Reconnect": "重新连接"
+  ,"Create NFS Export": "创建 NFS 导出"
+  ,"Ceph user export data": "Ceph 用户导出数据"
+  ,"Pagination": "分页"
+  ,"Go to first page": "跳转到第一页"
+  ,"Go to previous page": "跳转到上一页"
+  ,"Current page": "当前页"
+  ,"Go to next page": "跳转到下一页"
+  ,"Go to last page": "跳转到最后一页"
+  ,"Any": "任意"
+  ,"No data to display": "没有可显示的数据"
+  ,"Add": "添加"
+  ,"activate": "激活"
+  ,"Activated": "已激活"
+  ,"deactivate": "停用"
+  ,"Deactivated": "已停用"
+}

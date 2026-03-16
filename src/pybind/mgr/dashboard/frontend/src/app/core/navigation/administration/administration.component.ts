@@ -10,11 +10,9 @@ import { AuthStorageService } from '~/app/shared/services/auth-storage.service';
 })
 export class AdministrationComponent {
   userPermission: Permission;
-  configOptPermission: Permission;
 
   constructor(private authStorageService: AuthStorageService) {
     const permissions = this.authStorageService.getPermissions();
     this.userPermission = permissions.user;
-    this.configOptPermission = permissions.configOpt;
   }
 }

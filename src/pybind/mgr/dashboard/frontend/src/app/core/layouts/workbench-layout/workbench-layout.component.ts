@@ -9,7 +9,6 @@ import { AuthStorageService } from '~/app/shared/services/auth-storage.service';
 import { FaviconService } from '~/app/shared/services/favicon.service';
 import { SummaryService } from '~/app/shared/services/summary.service';
 import { TaskManagerService } from '~/app/shared/services/task-manager.service';
-import { TelemetryNotificationService } from '../../../shared/services/telemetry-notification.service';
 import { MotdNotificationService } from '~/app/shared/services/motd-notification.service';
 import _ from 'lodash';
 
@@ -34,7 +33,6 @@ export class WorkbenchLayoutComponent implements OnInit, OnDestroy {
     private multiClusterService: MultiClusterService,
     private faviconService: FaviconService,
     private authStorageService: AuthStorageService,
-    private telemetryNotificationService: TelemetryNotificationService,
     private motdNotificationService: MotdNotificationService
   ) {
     this.permissions = this.authStorageService.getPermissions();
@@ -51,11 +49,6 @@ export class WorkbenchLayoutComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.authStorageService.isPwdDisplayed$.subscribe((isDisplayed) => {
         this.showTopNotification('isPwdDisplayed', isDisplayed);
-      })
-    );
-    this.subs.add(
-      this.telemetryNotificationService.update.subscribe((visible: boolean) => {
-        this.showTopNotification('telemetryNotificationEnabled', visible);
       })
     );
     this.subs.add(

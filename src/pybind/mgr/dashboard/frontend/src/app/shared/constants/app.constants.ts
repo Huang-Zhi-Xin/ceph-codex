@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from '~/environments/environment';
-
 export class AppConstants {
-  public static readonly organization = 'ceph';
-  public static readonly projectName = 'Ceph Dashboard';
+  public static readonly organization = 'KX Storage';
+  public static readonly projectName = 'KX Storage 分布式存储管理系统';
   public static readonly defaultUser = 'dashboard';
-  public static readonly license = 'Free software (LGPL 2.1).';
-  public static readonly copyright = 'Copyright(c) ' + environment.year + ' Ceph contributors.';
-  public static readonly cephLogo = 'assets/Ceph_Logo.svg';
+  public static readonly license = '';
+  public static readonly copyright = '';
+  public static readonly cephLogo = 'assets/kx-registry-logo.svg';
 }
 
 export enum URLVerbs {
