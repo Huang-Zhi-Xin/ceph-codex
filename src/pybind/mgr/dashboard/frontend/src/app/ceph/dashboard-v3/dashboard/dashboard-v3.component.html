@@ -12,7 +12,7 @@
           <dt>{{ clusterIdLabel }}</dt>
           <dd>{{ detailsCardData.fsid }}</dd>
           <dt>{{ orchestratorLabel }}</dt>
-          <dd i18n>{{ detailsCardData.orchestrator || 'Orchestrator is not available' }}</dd>
+          <dd>{{ detailsCardData.orchestrator || orchestratorUnavailableLabel }}</dd>
           <dt>{{ cephVersionLabel }}</dt>
           <dd>
             {{ detailsCardData.cephVersion }}
@@ -26,23 +26,6 @@
               <i class="fa fa-external-link"></i>
             </a>
           </dd>
-          <ng-container>
-            <dt>{{ telemetryDashboardLabel }}
-              <span
-                class="badge"
-                [ngClass]="telemetryEnabled ? 'badge-success' : 'badge-secondary'"
-                [ngbTooltip]="getTelemetryText()" >
-                {{ telemetryEnabled ? telemetryActiveLabel : telemetryInactiveLabel }}
-              </span>
-            </dt>
-            <dd>
-              <a target="_blank"
-                 [href]="telemetryURL">
-                 {{ telemetryURL }}
-                <i class="fa fa-external-link"></i>
-              </a>
-            </dd>
-          </ng-container>
           <ng-container *ngIf="managedByConfig$ | async as managedByConfig">
             <span *ngIf="managedByConfig['MANAGED_BY_CLUSTERS'].length > 0">
               <dt>{{ managedByLabel }}</dt>
@@ -143,16 +126,14 @@
                     [ngStyle]="healthCardData.status | healthColor"
                     [title]="healthCardData.status">
                 </i>
-              <span class="ms-2 mt-n1 lead"
-                    *ngIf="!hasHealthChecks"
-                    i18n>Cluster</span>
+              <span class="ms-2 cluster-status-label"
+                    *ngIf="!hasHealthChecks">{{ clusterLabel }}</span>
               <cds-toggletip  [dropShadow]="true"
                               [autoAlign]="true">
               <div cdsToggletipButton>
-                <a class="ms-2 mt-n1 lead text-primary"
+                <a class="ms-2 cluster-status-label text-primary"
                    popoverClass="info-card-popover-cluster-status"
-                   *ngIf="hasHealthChecks"
-                   i18n>Cluster
+                   *ngIf="hasHealthChecks">{{ clusterLabel }}
                 </a>
               </div>
               <div cdsToggletipContent
@@ -220,12 +201,17 @@
                    [fullHeight]="true"
                    aria-label="Capacity card">
             <ng-container class="ms-4 me-4"
-                          *ngIf="totalCapacity && usedCapacity">
+                          *ngIf="totalCapacity !== null && usedCapacity !== null; else capacityEmpty">
               <cd-dashboard-pie [data]="{max: totalCapacity, current: usedCapacity}"
                                 [lowThreshold]="capacityCardData.osdNearfull"
                                 [highThreshold]="capacityCardData.osdFull">
               </cd-dashboard-pie>
             </ng-container>
+            <ng-template #capacityEmpty>
+              <div class="capacity-empty-state">
+                {{ capacityEmptyLabel }}
+              </div>
+            </ng-template>
           </cd-card>
         </div>
 
@@ -259,13 +245,15 @@
             <cd-dashboard-area-chart chartTitle="Client Throughput"
                                      dataUnits="B/s"
                                      decimals="2"
-                                     [labelsArray]="['Reads', 'Writes']"
+                                     [chartTitle]="clientThroughputTitle"
+                                     [labelsArray]="throughputLabels"
                                      [dataArray]="[queriesResults.READCLIENTTHROUGHPUT, queriesResults.WRITECLIENTTHROUGHPUT]">
             </cd-dashboard-area-chart>
-            <cd-dashboard-area-chart chartTitle="Recovery Throughput"
+            <cd-dashboard-area-chart
+                                     [chartTitle]="recoveryThroughputTitle"
                                      dataUnits="B/s"
                                      decimals="2"
-                                     [labelsArray]="['Recovery Throughput']"
+                                     [labelsArray]="recoveryLabels"
                                      [dataArray]="[queriesResults.RECOVERYBYTES]">
             </cd-dashboard-area-chart>
           </div>

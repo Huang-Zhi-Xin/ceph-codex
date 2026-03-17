@@ -3,23 +3,19 @@
   <li>
     <a routerLink="/api-docs"
        target="_blank"
-       class="cds--overflow-menu-options__btn"
-       i18n>API
+       class="cds--overflow-menu-options__btn">{{ apiLabel }}
       <svg cdsIcon="launch"
            class="ms-2"
            size="16"></svg>
     </a>
   </li>
-  <cds-overflow-menu-option (click)="openAboutModal()"
-                            i18n>About</cds-overflow-menu-option>
+  <cds-overflow-menu-option (click)="openAboutModal()">{{ aboutLabel }}</cds-overflow-menu-option>
 </cds-overflow-menu>
 
 <ng-template #customTrigger>
   <svg cdsIcon="help"
        size="20"
-       i18n-title
-       title="Help"
+       [attr.title]="helpLabel"
        role="button"></svg>
-  <span i18n
-        class="d-md-none">Help</span>
+  <span class="d-md-none">{{ helpLabel }}</span>
 </ng-template>

@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { BaseModal } from 'carbon-components-angular';
 import { detect } from 'detect-browser';
 import { Subscription } from 'rxjs';
 import { UserService } from '~/app/shared/api/user.service';
-import { AppConstants, USER, VERSION_PREFIX } from '~/app/shared/constants/app.constants';
+import { AppConstants, USER } from '~/app/shared/constants/app.constants';
 import { LocalStorage } from '~/app/shared/enum/local-storage-enum';
 import { Permission } from '~/app/shared/models/permissions';
 import { AuthStorageService } from '~/app/shared/services/auth-storage.service';
@@ -17,33 +17,34 @@ import { SummaryService } from '~/app/shared/services/summary.service';
 export class AboutComponent extends BaseModal implements OnInit, OnDestroy {
   modalVariables: any;
   versionNumber: string;
-  versionHash: string;
-  versionName: string;
+  backendVersion: string;
   subs: Subscription;
   userPermission: Permission;
   projectConstants: typeof AppConstants;
   hostAddr: string;
   copyright: string;
+  managementNodeLabel: string;
 
   constructor(
     private summaryService: SummaryService,
     private userService: UserService,
-    private authStorageService: AuthStorageService
+    private authStorageService: AuthStorageService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.userPermission = this.authStorageService.getPermissions().user;
+    this.managementNodeLabel = localeId.startsWith('zh') ? '管理节点' : 'Management Node';
   }
 
   ngOnInit() {
     this.projectConstants = AppConstants;
     this.hostAddr = window.location.hostname;
     this.modalVariables = this.setVariables();
+    this.versionNumber = AppConstants.productVersion;
+    this.backendVersion = AppConstants.baseVersion;
     this.subs = this.summaryService.subscribe((summary) => {
-      const version = summary.version.replace(`${VERSION_PREFIX} `, '').split(' ');
       this.hostAddr = summary.mgr_host.replace(/(^\w+:|^)\/\//, '').replace(/\/$/, '');
-      this.versionNumber = version[0];
-      this.versionHash = version[1];
-      this.versionName = version.slice(2, version.length).join(' ');
+      this.backendVersion = summary.version.replace('ceph version ', '');
     });
   }
 

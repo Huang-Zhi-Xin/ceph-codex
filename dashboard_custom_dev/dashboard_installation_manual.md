@@ -7,8 +7,8 @@
 适用范围：
 
 - 开发机构建环境：macOS
-- 测试集群节点：`node11 (192.168.100.111)`
-- Dashboard 发布方式：自定义镜像滚动更新
+- 测试集群节点：`node11`
+- Dashboard 发布方式：开发期临时覆盖 + 日终自定义镜像滚动更新
 
 ## 2. 版本矩阵
 
@@ -73,6 +73,11 @@ bash dashboard_custom_dev/build_kx_dashboard_release.sh
 - 安装前端依赖
 - 构建 `en-US` 与 `zh-Hans`
 - 生成 `/tmp/kx-dashboard.tgz`
+
+说明：
+
+- 日常开发验证直接使用 `/tmp/kx-dashboard.tgz`
+- 每天最后一次发布时，再基于最新构建结果制作 `linux/amd64` 持久镜像
 
 ### 4.2 手工构建方式
 
@@ -159,7 +164,8 @@ docker push your.registry.local/kx/kx-storage-dashboard:v20.2.0-kx.202603161530
 推荐方案：
 
 - 方案 A：使用独立私有仓库
-- 方案 B：在 `node11` 或同网段节点部署本地仓库，例如 `registry:2`
+- 方案 B：使用阿里云容器镜像服务等公网仓库
+- 方案 C：在 `node11` 或同网段节点部署本地仓库，例如 `registry:2`
 
 示例：
 
@@ -170,11 +176,11 @@ docker run -d --restart=always -p 5000:5000 --name registry registry:2
 然后将镜像标记并推送到该仓库：
 
 ```bash
-docker tag kx-storage-dashboard:v20.2.0-kx.20260316-amd64 192.168.100.111:5000/kx/kx-storage-dashboard:v20.2.0-kx.20260316
-docker push 192.168.100.111:5000/kx/kx-storage-dashboard:v20.2.0-kx.20260316
+docker tag kx-storage-dashboard:v20.2.0-kx.20260316-amd64 <registry>/kx/kx-storage-dashboard:v20.2.0-kx.20260316
+docker push <registry>/kx/kx-storage-dashboard:v20.2.0-kx.20260316
 ```
 
-若仓库使用 HTTP，需要在 `node11` 的 Docker 配置中加入 `insecure-registries`，然后重启 Docker。
+若仓库使用 HTTP，需要在目标节点的 Docker 配置中加入 `insecure-registries`，然后重启 Docker。
 
 ### 5.5 离线导出镜像
 
@@ -191,12 +197,13 @@ ls -lh /tmp/kx-storage-dashboard-v20.2.0-kx.202603161530.tar.gz
 docker save kx-storage-dashboard:v20.2.0-kx.local | gzip > /tmp/kx-storage-dashboard-v20.2.0-kx.local.tar.gz
 ```
 
-## 6. node11 正式更新流程
+## 6. node11 更新流程
 
 说明：
 
 - 以下步骤需要 `node11` 可通过 SSH 正常访问。
 - 当前若 SSH 不通，应先修复网络或 SSH 服务，再执行更新。
+- 本章分为“开发期临时覆盖”和“日终正式固化”两条流程。
 
 ### 6.1 更新前检查
 
@@ -216,15 +223,55 @@ sudo docker images | grep ceph
 - 当前 Dashboard 访问地址
 - 当前正在使用的 Ceph 镜像标签或镜像 ID
 
-### 6.2 正式持久化更新
+### 6.2 开发期临时覆盖更新
 
-推荐使用私有仓库镜像地址执行更新。以下命令中的镜像名以本地仓库为例：
+适用场景：
+
+- 当天开发过程中频繁改动前端
+- 只需要快速验证页面效果
+- 暂不需要将最新前端固化到仓库镜像
+
+执行步骤：
+
+1. 从开发机把 `/tmp/kx-dashboard.tgz` 传到目标节点。
+2. 在目标节点解压到 `/tmp/kx-dashboard`。
+3. 将 `dist/` 覆盖到两个 `mgr` 容器的 `/usr/share/ceph/mgr/dashboard/frontend/dist/`。
+4. 执行 `ceph mgr fail` 触发新的 active `mgr` 使用最新前端资源。
+
+示例命令：
 
 ```bash
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config set mgr container_image 192.168.100.111:5000/kx/kx-storage-dashboard:v20.2.0-kx.20260316
+scp /tmp/kx-dashboard.tgz <user>@<dashboard-host>:/tmp/
+
+ssh <user>@<dashboard-host>
+mkdir -p /tmp/kx-dashboard
+tar -xzf /tmp/kx-dashboard.tgz -C /tmp
+
+for cid in $(sudo docker ps --format '{{.ID}} {{.Names}}' | awk '/mgr-/{print $1}'); do
+  sudo docker exec "$cid" sh -c 'rm -rf /usr/share/ceph/mgr/dashboard/frontend/dist/*'
+  sudo docker cp /tmp/kx-dashboard/dist/. "$cid":/usr/share/ceph/mgr/dashboard/frontend/dist/
+  sudo docker cp /tmp/kx-dashboard/package.json "$cid":/usr/share/ceph/mgr/dashboard/frontend/package.json
+done
+
+sudo cephadm shell -- ceph mgr fail
+```
+
+说明：
+
+- 该方式适合当天调试，不适合作为长期稳定方案
+- `mgr` 重建或后续镜像切换后，手工覆盖内容会丢失
+
+### 6.3 日终正式持久化更新
+
+推荐在每天最后一次验证通过后，将最新前端固化到 `linux/amd64` 镜像并推送到仓库，再执行持久化更新。
+
+以下命令中的镜像名使用参数化占位：
+
+```bash
+sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config set mgr container_image <registry>/kx/kx-storage-dashboard:<daily-tag>
 sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config get mgr container_image
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch daemon redeploy mgr.node11.fyfdob --image 192.168.100.111:5000/kx/kx-storage-dashboard:v20.2.0-kx.20260316
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch daemon redeploy mgr.node11.puvban --image 192.168.100.111:5000/kx/kx-storage-dashboard:v20.2.0-kx.20260316
+sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch daemon redeploy mgr.<host>.<active-id> --image <registry>/kx/kx-storage-dashboard:<daily-tag>
+sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch daemon redeploy mgr.<host>.<standby-id> --image <registry>/kx/kx-storage-dashboard:<daily-tag>
 ```
 
 这种方式的特点：
@@ -233,19 +280,19 @@ sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch daemon redeplo
 - 节点重启、`mgr` 切换、容器重建后不会丢失二次开发内容
 - 不再依赖手工 `docker cp`
 
-### 6.3 登录镜像仓库
+### 6.4 登录镜像仓库
 
 ```bash
-sudo docker login your.registry.local
+sudo docker login <registry>
 ```
 
-### 6.4 拉取新镜像
+### 6.5 拉取新镜像
 
 ```bash
-sudo docker pull your.registry.local/kx/kx-storage-dashboard:v20.2.0-kx.202603161530
+sudo docker pull <registry>/kx/kx-storage-dashboard:<daily-tag>
 ```
 
-### 6.5 离线导入镜像（仅临时测试使用）
+### 6.6 离线导入镜像（仅临时测试使用）
 
 将镜像压缩包复制到 `node11` 后执行：
 
@@ -266,14 +313,14 @@ sudo docker tag kx-storage-dashboard:v20.2.0-kx.local your.registry.local/kx/kx-
 - `cephadm orch upgrade start` 在更新时通常仍会尝试向镜像仓库执行 `docker pull`
 - 因此，若没有一个 `node11` 可访问的私有仓库，离线导入后的本地镜像无法作为长期稳定的正式发布方案
 
-### 6.6 执行 mgr 滚动更新
+### 6.7 执行 mgr 滚动更新
 
 ```bash
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config set mgr container_image your.registry.local/kx/kx-storage-dashboard:v20.2.0-kx.202603161530
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch upgrade start --image your.registry.local/kx/kx-storage-dashboard:v20.2.0-kx.202603161530 --daemon-types mgr
+sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config set mgr container_image <registry>/kx/kx-storage-dashboard:<daily-tag>
+sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch upgrade start --image <registry>/kx/kx-storage-dashboard:<daily-tag> --daemon-types mgr
 ```
 
-### 6.7 更新状态检查
+### 6.8 更新状态检查
 
 ```bash
 sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch upgrade status
@@ -292,7 +339,7 @@ sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph -s
 - 浏览器标签页标题为 `KX Storage`
 - favicon 为 KX 图标，且无右上角状态点
 - About 弹窗已替换品牌信息且无 Ceph copyright 文案
-- 帮助菜单仅保留 `API` 与 `About`
+- 帮助菜单仅保留 `API 文档` 与 `关于系统`
 - 左侧导航主要菜单已汉化
 
 ### 7.2 集群验收
@@ -355,14 +402,14 @@ node -v
 4. 再次检查 mgr 镜像是否已切换完成
 ```
 
-### 9.3 无法更新到 node11
+### 9.3 无法更新到目标节点
 
 检查项：
 
-- `node11` SSH 是否可访问
+- 目标节点 SSH 是否可访问
 - `ssh` 服务是否启动
 - 防火墙是否放通
-- node11 到镜像仓库是否可达
+- 目标节点到镜像仓库是否可达
 - `docker pull` 是否成功
 
 ### 9.4 自定义镜像已更新，但 Dashboard 资源未生效

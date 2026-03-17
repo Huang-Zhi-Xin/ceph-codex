@@ -18,15 +18,14 @@
         <strong i18n>Version</strong>
         <br>
         {{ versionNumber }}
-        {{ versionHash }}
         <br>
-        {{ versionName }}
+        <small class="text-muted">{{ backendVersion }}</small>
       </div>
 
       <br>
 
       <dl>
-        <dt i18n>Ceph Manager</dt>
+        <dt>{{ managementNodeLabel }}</dt>
         <dd>{{ hostAddr }}</dd>
         <dt i18n>User</dt>
         <dd>{{ modalVariables.user }}</dd>

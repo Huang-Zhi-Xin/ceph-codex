@@ -16,6 +16,27 @@
     right: 2rem;
     top: 2rem;
   }
+
+  .cluster-status-label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+}
+
+.capacity-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 18rem;
+  padding: 1.5rem;
+  color: #6f6f6f;
+  font-size: 1rem;
+  text-align: center;
 }
 
 .alerts {

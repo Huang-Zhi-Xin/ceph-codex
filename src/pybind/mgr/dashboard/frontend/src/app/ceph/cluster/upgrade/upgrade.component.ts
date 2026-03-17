@@ -16,6 +16,7 @@ import { SummaryService } from '~/app/shared/services/summary.service';
 import { ExecutingTask } from '~/app/shared/models/executing-task';
 import { Router } from '@angular/router';
 import { RefreshIntervalService } from '~/app/shared/services/refresh-interval.service';
+import { AppConstants } from '~/app/shared/constants/app.constants';
 
 @Component({
   selector: 'cd-upgrade',
@@ -24,6 +25,7 @@ import { RefreshIntervalService } from '~/app/shared/services/refresh-interval.s
 })
 export class UpgradeComponent implements OnInit, OnDestroy {
   version: string;
+  backendVersion: string;
   info$: Observable<UpgradeInfoInterface>;
   permission: Permission;
   healthData$: Observable<any>;
@@ -38,6 +40,8 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   columns: CdTableColumn[] = [];
 
   icons = Icons;
+  releaseImage = AppConstants.releaseImage;
+  imageRegistry = AppConstants.imageRegistry;
 
   upgradeStatus$: Observable<any>;
   subject = new ReplaySubject<any>();
@@ -76,8 +80,8 @@ export class UpgradeComponent implements OnInit, OnDestroy {
 
     this.subs.add(
       this.summaryService.subscribe((summary) => {
-        const version = summary.version.replace('ceph version ', '').split('-');
-        this.version = version[0];
+        this.version = AppConstants.productVersion;
+        this.backendVersion = summary.version.replace('ceph version ', '');
         this.executingTasks = summary.executing_tasks.filter((tasks) =>
           tasks.name.includes('progress/Upgrade')
         )[0];

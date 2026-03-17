@@ -68,15 +68,15 @@ export class PerformanceCounterBreadcrumbsResolver extends BreadcrumbsResolver {
     let fromText = '';
     switch (fromPath) {
       case '/monitor':
-        fromText = 'Monitors';
+        fromText = '监视器';
         break;
       case '/hosts':
-        fromText = 'Hosts';
+        fromText = '主机';
         break;
     }
-    result.push({ text: 'Cluster', path: null });
+    result.push({ text: '集群', path: null });
     result.push({ text: fromText, path: fromPath });
-    result.push({ text: 'Performance Counters', path: '' });
+    result.push({ text: '性能计数器', path: '' });
 
     return result;
   }
@@ -115,13 +115,13 @@ const routes: Routes = [
             redirectTo: 'dashboard',
             backend: 'cephadm'
           },
-          breadcrumbs: 'Cluster/Expand Cluster'
+          breadcrumbs: '集群/扩容集群'
         }
       },
       {
         path: 'hosts',
         component: HostsComponent,
-        data: { breadcrumbs: 'Cluster/Hosts' },
+        data: { breadcrumbs: '集群/主机' },
         children: [
           {
             path: URLVerbs.ADD,
@@ -134,7 +134,7 @@ const routes: Routes = [
         path: 'ceph-users',
         component: CRUDTableComponent,
         data: {
-          breadcrumbs: 'Administration/Ceph Users',
+          breadcrumbs: '管理/存储用户',
           resource: 'api.cluster.user@1.0'
         }
       },
@@ -142,7 +142,7 @@ const routes: Routes = [
         path: 'cluster/user/create',
         component: CrudFormComponent,
         data: {
-          breadcrumbs: 'Administration/Ceph Users/Create',
+          breadcrumbs: '管理/存储用户/创建',
           resource: 'api.cluster.user@1.0'
         }
       },
@@ -150,7 +150,7 @@ const routes: Routes = [
         path: 'cluster/user/import',
         component: CrudFormComponent,
         data: {
-          breadcrumbs: 'Administration/Ceph Users/Import',
+          breadcrumbs: '管理/存储用户/导入',
           resource: 'api.cluster.user@1.0'
         }
       },
@@ -158,14 +158,14 @@ const routes: Routes = [
         path: 'cluster/user/edit',
         component: CrudFormComponent,
         data: {
-          breadcrumbs: 'Administration/Ceph Users/Edit',
+          breadcrumbs: '管理/存储用户/编辑',
           resource: 'api.cluster.user@1.0'
         }
       },
       {
         path: 'monitor',
         component: MonitorComponent,
-        data: { breadcrumbs: 'Cluster/Monitors' }
+        data: { breadcrumbs: '集群/监视器' }
       },
       {
         path: 'services',
@@ -176,10 +176,10 @@ const routes: Routes = [
             uiApiPath: 'orchestrator',
             redirectTo: 'error',
             section: 'orch',
-            section_info: 'Orchestrator',
-            header: 'Orchestrator is not available'
+            section_info: '编排器',
+            header: '编排器不可用'
           },
-          breadcrumbs: 'Administration/Services'
+          breadcrumbs: '管理/服务'
         },
         children: [
           {
@@ -210,7 +210,7 @@ const routes: Routes = [
             path: 'manage-clusters',
             component: MultiClusterListComponent,
             data: {
-              breadcrumbs: 'Multi-Cluster/Manage Clusters'
+              breadcrumbs: '多集群/管理集群'
             },
             children: [
               {
@@ -230,15 +230,15 @@ const routes: Routes = [
             uiApiPath: 'orchestrator',
             redirectTo: 'error',
             section: 'orch',
-            section_info: 'Orchestrator',
-            header: 'Orchestrator is not available'
+            section_info: '编排器',
+            header: '编排器不可用'
           },
-          breadcrumbs: 'Cluster/Physical Disks'
+          breadcrumbs: '集群/物理磁盘'
         }
       },
       {
         path: 'osd',
-        data: { breadcrumbs: 'Cluster/OSDs' },
+        data: { breadcrumbs: '集群/OSD' },
         children: [
           { path: '', component: OsdListComponent },
           {
@@ -250,7 +250,7 @@ const routes: Routes = [
       },
       {
         path: 'configuration',
-        data: { breadcrumbs: 'Administration/Configuration' },
+        data: { breadcrumbs: '管理/配置' },
         children: [
           { path: '', component: ConfigurationComponent },
           {
@@ -263,31 +263,31 @@ const routes: Routes = [
       {
         path: 'crush-map',
         component: CrushmapComponent,
-        data: { breadcrumbs: 'Cluster/CRUSH map' }
+        data: { breadcrumbs: '集群/CRUSH 图' }
       },
       {
         path: 'logs',
         component: LogsComponent,
-        data: { breadcrumbs: 'Observability/Logs' }
+        data: { breadcrumbs: '可观测性/日志' }
       },
       {
         path: 'monitoring',
-        data: { breadcrumbs: 'Observability/Alerts' },
+        data: { breadcrumbs: '可观测性/告警' },
         children: [
           { path: '', redirectTo: 'active-alerts', pathMatch: 'full' },
           {
             path: 'active-alerts',
-            data: { breadcrumbs: 'Active Alerts' },
+            data: { breadcrumbs: '活动告警' },
             component: ActiveAlertListComponent
           },
           {
             path: 'alerts',
-            data: { breadcrumbs: 'Alerts' },
+            data: { breadcrumbs: '告警规则' },
             component: RulesListComponent
           },
           {
             path: 'silences',
-            data: { breadcrumbs: 'Silences' },
+            data: { breadcrumbs: '静默规则' },
             children: [
               {
                 path: '',
@@ -296,7 +296,7 @@ const routes: Routes = [
               {
                 path: URLVerbs.CREATE,
                 component: SilenceFormComponent,
-                data: { breadcrumbs: `${ActionLabels.CREATE} Silence` }
+                data: { breadcrumbs: '创建静默规则' }
               },
               {
                 path: `${URLVerbs.CREATE}/:id`,
@@ -326,10 +326,10 @@ const routes: Routes = [
             redirectTo: 'error',
             backend: 'cephadm',
             section: 'orch',
-            section_info: 'Orchestrator',
-            header: 'Orchestrator is not available'
+            section_info: '编排器',
+            header: '编排器不可用'
           },
-          breadcrumbs: 'Administration/Upgrade'
+          breadcrumbs: '管理/升级'
         },
         children: [
           {
@@ -339,7 +339,7 @@ const routes: Routes = [
           {
             path: 'progress',
             component: UpgradeProgressComponent,
-            data: { breadcrumbs: 'Progress' }
+            data: { breadcrumbs: '进度' }
           }
         ]
       },
@@ -353,7 +353,7 @@ const routes: Routes = [
       // Mgr modules
       {
         path: 'mgr-modules',
-        data: { breadcrumbs: 'Administrator/Manager Modules' },
+        data: { breadcrumbs: '管理/管理器模块' },
         children: [
           {
             path: '',
@@ -371,13 +371,13 @@ const routes: Routes = [
       // Pools
       {
         path: 'pool',
-        data: { breadcrumbs: 'Cluster/Pools' },
+        data: { breadcrumbs: '集群/存储池' },
         loadChildren: () => import('./ceph/pool/pool.module').then((m) => m.RoutedPoolModule)
       },
       // Block
       {
         path: 'block',
-        data: { breadcrumbs: true, text: 'Block', path: null },
+        data: { breadcrumbs: true, text: '块设备', path: null },
         loadChildren: () => import('./ceph/block/block.module').then((m) => m.RoutedBlockModule)
       },
       // File Systems
@@ -388,7 +388,7 @@ const routes: Routes = [
           {
             path: 'fs',
             component: CephfsListComponent,
-            data: { breadcrumbs: 'File/File Systems' }
+            data: { breadcrumbs: '文件存储/文件系统' }
           },
           {
             path: `fs/${URLVerbs.CREATE}`,
@@ -409,9 +409,9 @@ const routes: Routes = [
                 redirectTo: 'error',
                 section: 'nfs-ganesha',
                 section_info: 'NFS GANESHA',
-                header: 'NFS-Ganesha is not configured'
+                header: 'NFS-Ganesha 未配置'
               },
-              breadcrumbs: 'File/NFS'
+              breadcrumbs: '文件存储/NFS'
             },
             children: [
               { path: '', component: NfsClusterComponent },
@@ -439,17 +439,17 @@ const routes: Routes = [
               moduleStatusGuardConfig: {
                 uiApiPath: 'smb',
                 redirectTo: 'error',
-                header: 'SMB module is not enabled',
+                header: 'SMB 模块未启用',
                 module_name: 'smb',
                 navigate_to: 'cephfs/smb'
               },
-              breadcrumbs: 'File/SMB'
+              breadcrumbs: '文件存储/SMB'
             },
             children: [
               { path: '', component: SmbClusterListComponent },
               {
                 path: 'cluster',
-                data: { breadcrumbs: 'Cluster' },
+                data: { breadcrumbs: '集群' },
                 children: [
                   { path: '', component: SmbClusterListComponent },
                   {
@@ -466,7 +466,7 @@ const routes: Routes = [
               },
               {
                 path: 'active-directory',
-                data: { breadcrumbs: 'Active Directory' },
+                data: { breadcrumbs: '活动目录' },
                 children: [
                   { path: '', component: SmbJoinAuthListComponent },
                   {

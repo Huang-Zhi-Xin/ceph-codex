@@ -7,7 +7,8 @@
            [ngClass]="[icons.large, icons.wrench]">
         </i>
       <div class="mt-4 text-center">
-        <h4 class="mt-3">This cluster is already managed by cluster -
+        <h4 class="mt-3"
+            i18n>This cluster is already managed by cluster -
           <a target="_blank"
              [href]="managedByConfig['MANAGED_BY_CLUSTERS'][0]['url']">
             {{ managedByConfig['MANAGED_BY_CLUSTERS'][0]['fsid'] }}
@@ -83,7 +84,9 @@
     <i i18n-title
        title="Cluster's token has expired"
        class="{{ icons.danger }}"></i>
-    <span class="text-danger">Token expired</span>
+    <span class="text-danger"
+          i18n>Token expired</span>
   </span>
-  <span *ngIf="row.cluster_alias === 'local-cluster'">N/A</span>
+  <span *ngIf="row.cluster_alias === 'local-cluster'"
+        i18n>N/A</span>
 </ng-template>

@@ -1,0 +1,24 @@
+.version-card-body {
+  min-height: 5rem;
+  text-align: center;
+}
+
+.version-primary {
+  max-width: 100%;
+  margin-bottom: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.version-secondary {
+  max-width: 100%;
+  color: #6f6f6f;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.break-long-value {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

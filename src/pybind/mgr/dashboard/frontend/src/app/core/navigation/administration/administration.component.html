@@ -2,8 +2,7 @@
                    [flip]="true">
   <li class="cds--overflow-menu-options__option mb-2">
     <button routerLink="/user-management"
-            class="cds--overflow-menu-options__btn"
-            i18n>User management</button>
+            class="cds--overflow-menu-options__btn">{{ userManagementLabel }}</button>
   </li>
 </cds-overflow-menu>
 
@@ -12,6 +11,5 @@
        size="20"
        title="user"
        *ngIf="userPermission.read"></svg>
-  <span i18n
-        class="d-md-none">Dashboard Settings</span>
+  <span class="d-md-none">{{ settingsLabel }}</span>
 </ng-template>

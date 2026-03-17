@@ -326,10 +326,9 @@
                             class="tc_submenuitem tc_submenuitem_admin_upgrade"><span i18n>Upgrade</span></cds-sidenav-item>
           <cds-sidenav-item route="/ceph-users"
                             [useRouter]="true"
-                            title="Ceph Users"
-                            i18n-title
+                            [title]="storageUsersLabel"
                             *ngIf="permissions.configOpt.read"
-                            class="tc_submenuitem tc_submenuitem_admin_users"><span i18n>Ceph Users</span></cds-sidenav-item>
+                            class="tc_submenuitem tc_submenuitem_admin_users"><span>{{ storageUsersLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/mgr-modules"
                             [useRouter]="true"
                             title="Manager Modules"

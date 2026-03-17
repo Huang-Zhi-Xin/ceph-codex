@@ -50,6 +50,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   currentClusterName: string;
   isZhHans: boolean;
   dashboardLabel: string;
+  storageUsersLabel: string;
 
   constructor(
     public notificationService: NotificationService,
@@ -67,6 +68,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.enabledFeature$ = this.featureToggles.get();
     this.isZhHans = this.localeId.startsWith('zh');
     this.dashboardLabel = this.isZhHans ? '仪表盘' : 'Dashboard';
+    this.storageUsersLabel = this.isZhHans ? '存储用户' : 'Storage Users';
   }
 
   ngOnInit() {

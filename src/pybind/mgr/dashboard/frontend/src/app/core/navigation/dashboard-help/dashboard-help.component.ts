@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 
 import { AboutComponent } from '../about/about.component';
 import { ModalCdsService } from '~/app/shared/services/modal-cds.service';
@@ -9,7 +9,19 @@ import { ModalCdsService } from '~/app/shared/services/modal-cds.service';
   styleUrls: ['./dashboard-help.component.scss']
 })
 export class DashboardHelpComponent {
-  constructor(private modalCdsService: ModalCdsService) {}
+  apiLabel: string;
+  aboutLabel: string;
+  helpLabel: string;
+
+  constructor(
+    private modalCdsService: ModalCdsService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    const isZhHans = localeId.startsWith('zh');
+    this.apiLabel = isZhHans ? 'API 文档' : 'API Documentation';
+    this.aboutLabel = isZhHans ? '关于系统' : 'About System';
+    this.helpLabel = isZhHans ? '系统帮助' : 'System Help';
+  }
 
   openAboutModal() {
     this.modalCdsService.show(AboutComponent);

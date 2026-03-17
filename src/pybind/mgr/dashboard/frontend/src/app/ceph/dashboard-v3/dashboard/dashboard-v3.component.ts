@@ -25,7 +25,6 @@ import {
   FeatureTogglesService
 } from '~/app/shared/services/feature-toggles.service';
 import { RefreshIntervalService } from '~/app/shared/services/refresh-interval.service';
-import { SummaryService } from '~/app/shared/services/summary.service';
 import { PrometheusListHelper } from '~/app/shared/helpers/prometheus-list-helper';
 import { PrometheusAlertService } from '~/app/shared/services/prometheus-alert.service';
 import { OrchestratorService } from '~/app/shared/api/orchestrator.service';
@@ -39,6 +38,7 @@ import {
   IscsiMap,
   PgStateCount
 } from '~/app/shared/models/health.interface';
+import { AppConstants } from '~/app/shared/constants/app.constants';
 
 @Component({
   selector: 'cd-dashboard-v3',
@@ -46,7 +46,6 @@ import {
   styleUrls: ['./dashboard-v3.component.scss']
 })
 export class DashboardV3Component extends PrometheusListHelper implements OnInit, OnDestroy {
-  telemetryURL = 'https://telemetry-public.ceph.com/';
   origin = window.location.origin;
   icons = Icons;
   isZhHans: boolean;
@@ -57,12 +56,10 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
   clusterUtilizationTitle: string;
   clusterIdLabel: string;
   orchestratorLabel: string;
+  orchestratorUnavailableLabel: string;
   cephVersionLabel: string;
   clusterApiLabel: string;
-  telemetryDashboardLabel: string;
   managedByLabel: string;
-  telemetryActiveLabel: string;
-  telemetryInactiveLabel: string;
   viewAlertsLabel: string;
   hostLabel: string;
   monitorLabel: string;
@@ -75,8 +72,14 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
   usedCapacityRawTitle: string;
   iopsTitle: string;
   osdLatenciesTitle: string;
+  clientThroughputTitle: string;
+  recoveryThroughputTitle: string;
+  clusterLabel: string;
+  capacityEmptyLabel: string;
   usedCapacityLabels: string[];
   iopsLabels: string[];
+  throughputLabels: string[];
+  recoveryLabels: string[];
 
   permissions: Permissions;
 
@@ -112,7 +115,6 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
     WRITEIOPS: []
   };
 
-  telemetryEnabled: boolean;
   detailsCardData: DashboardDetails = {};
   capacityCardData: CapacityCardDetails = {
     osdNearfull: null,
@@ -136,7 +138,6 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
   iscsiMap: IscsiMap = null;
 
   constructor(
-    private summaryService: SummaryService,
     private orchestratorService: OrchestratorService,
     private authStorageService: AuthStorageService,
     private featureToggles: FeatureTogglesService,
@@ -160,12 +161,10 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
     this.clusterUtilizationTitle = this.isZhHans ? '集群利用率' : 'Cluster Utilization';
     this.clusterIdLabel = this.isZhHans ? '集群 ID' : 'Cluster ID';
     this.orchestratorLabel = this.isZhHans ? '编排器' : 'Orchestrator';
-    this.cephVersionLabel = this.isZhHans ? 'Ceph 版本' : 'Ceph version';
+    this.orchestratorUnavailableLabel = this.isZhHans ? '编排器不可用' : 'Orchestrator is not available';
+    this.cephVersionLabel = this.isZhHans ? '版本信息' : 'Version';
     this.clusterApiLabel = this.isZhHans ? '集群 API' : 'Cluster API';
-    this.telemetryDashboardLabel = this.isZhHans ? '遥测仪表盘' : 'Telemetry Dashboard';
     this.managedByLabel = this.isZhHans ? '管理方' : 'Managed By';
-    this.telemetryActiveLabel = this.isZhHans ? '已启用' : 'Active';
-    this.telemetryInactiveLabel = this.isZhHans ? '未启用' : 'Inactive';
     this.viewAlertsLabel = this.isZhHans ? '查看告警' : 'View alerts';
     this.hostLabel = this.isZhHans ? '主机' : 'Host';
     this.monitorLabel = this.isZhHans ? '监视器' : 'Monitor';
@@ -178,8 +177,14 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
     this.usedCapacityRawTitle = this.isZhHans ? '已用容量（裸容量）' : 'Used Capacity (RAW)';
     this.iopsTitle = 'IOPS';
     this.osdLatenciesTitle = this.isZhHans ? 'OSD 延迟' : 'OSD Latencies';
+    this.clientThroughputTitle = this.isZhHans ? '客户端吞吐量' : 'Client Throughput';
+    this.recoveryThroughputTitle = this.isZhHans ? '恢复吞吐量' : 'Recovery Throughput';
+    this.clusterLabel = this.isZhHans ? '集群' : 'Cluster';
+    this.capacityEmptyLabel = this.isZhHans ? '未配置 OSD，暂无容量数据' : 'No OSD configured. Capacity data is unavailable.';
     this.usedCapacityLabels = [this.isZhHans ? '已用容量' : 'Used Capacity'];
     this.iopsLabels = [this.isZhHans ? '读取' : 'Reads', this.isZhHans ? '写入' : 'Writes'];
+    this.throughputLabels = [this.isZhHans ? '读取' : 'Reads', this.isZhHans ? '写入' : 'Writes'];
+    this.recoveryLabels = [this.isZhHans ? '恢复吞吐量' : 'Recovery Throughput'];
   }
 
   ngOnInit() {
@@ -202,15 +207,8 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
     this.loadInventories();
     this.getPrometheusData(this.prometheusService.lastHourDateObject);
     this.getDetailsCardData();
-    this.getTelemetryReport();
     this.getCapacityCardData();
     this.prometheusAlertService.getAlerts(true);
-  }
-
-  getTelemetryText(): string {
-    return this.telemetryEnabled
-      ? $localize`Cluster telemetry is active`
-      : $localize`Cluster telemetry is inactive.`;
   }
 
   ngOnDestroy() {
@@ -228,13 +226,7 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
     this.orchestratorService.getName().subscribe((data: string) => {
       this.detailsCardData.orchestrator = data;
     });
-    this.subs.add(
-      this.summaryService.subscribe((summary) => {
-        const version = summary.version.replace('ceph version ', '').split(' ');
-        this.detailsCardData.cephVersion =
-          version[0] + ' ' + version.slice(2, version.length).join(' ');
-      })
-    );
+    this.detailsCardData.cephVersion = AppConstants.productVersion;
   }
 
   public getPrometheusData(selectedTime: any) {
@@ -267,12 +259,6 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
         this.capacityCardData.osdFull = this.prometheusService.formatGuageMetric(osdFull);
         this.capacityCardData.osdNearfull = this.prometheusService.formatGuageMetric(osdNearfull);
       });
-  }
-
-  private getTelemetryReport() {
-    this.healthService.getTelemetryStatus().subscribe((enabled: boolean) => {
-      this.telemetryEnabled = enabled;
-    });
   }
 
   trackByFn(index: any) {

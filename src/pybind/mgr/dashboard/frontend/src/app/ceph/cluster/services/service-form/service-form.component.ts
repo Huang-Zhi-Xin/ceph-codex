@@ -1,5 +1,5 @@
 import { HttpParams } from '@angular/common/http';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -107,6 +107,10 @@ export class ServiceFormComponent extends CdForm implements OnInit {
     selected: false
   }));
   showMgmtGatewayMessage: boolean = false;
+  managementNodeHelpHtml: string;
+  storageUsersLabel: string;
+  storageUsersListHelp: string;
+  storageUsersCephxHelp: string;
 
   constructor(
     public actionLabels: ActionLabelsI18n,
@@ -125,10 +129,22 @@ export class ServiceFormComponent extends CdForm implements OnInit {
     public rgwMultisiteService: RgwMultisiteService,
     private route: ActivatedRoute,
     public activeModal: NgbActiveModal,
-    public modalService: ModalService
+    public modalService: ModalService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.resource = $localize`service`;
+    const isZhHans = localeId.startsWith('zh');
+    this.managementNodeHelpHtml = isZhHans
+      ? '请在此处添加 <b>管理节点</b> IP 地址，否则 iSCSI 网关将无法访问。'
+      : 'Please add the <b>management node</b> IP addresses here, otherwise the iSCSI gateways can&#39;t be reached.';
+    this.storageUsersLabel = isZhHans ? '存储用户' : 'Storage users';
+    this.storageUsersListHelp = isZhHans
+      ? '以逗号分隔的存储用户列表。'
+      : 'Comma separated list of storage users.';
+    this.storageUsersCephxHelp = isZhHans
+      ? 'Samba 容器可使用的 cephx 用户名列表。'
+      : 'A list of cephx user names that the Samba Containers may use.';
     this.hosts = {
       options: [],
       messages: new SelectMessages({

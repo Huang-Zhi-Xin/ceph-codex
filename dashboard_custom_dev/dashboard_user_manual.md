@@ -19,7 +19,7 @@ KX Storage 分布式存储管理系统基于 Ceph Dashboard 二次开发，提�
 通过浏览器访问 Dashboard 地址，例如：
 
 ```text
-https://192.168.100.111:8443
+https://<dashboard-host>:<dashboard-port>
 ```
 
 输入管理员用户名和密码后登录系统。
@@ -45,8 +45,8 @@ https://192.168.100.111:8443
 
 帮助菜单保留：
 
-- `API`
-- `About`
+- `API 文档`
+- `关于系统`
 
 ## 3. 首页与导航说明
 

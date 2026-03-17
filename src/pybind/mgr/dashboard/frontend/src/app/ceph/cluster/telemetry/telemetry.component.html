@@ -11,15 +11,15 @@
           <div class="card-header"
                i18n>Step {{ step }} of 2: Telemetry report configuration</div>
           <div class="card-body">
-            <p i18n>The telemetry module sends anonymous data about this Ceph cluster back to the Ceph developers
-              to help understand how Ceph is used and what problems users may be experiencing.<br/>
-              This data is visualized on <a href="https://telemetry-public.ceph.com/">public dashboards</a>
-              that allow the community to quickly see summary statistics on how many clusters are reporting,
-              their total capacity and OSD count, and version distribution trends.<br/><br/>
+            <p i18n>The telemetry module sends anonymous data about this storage cluster to the configured telemetry endpoint
+              to help analyze usage patterns and operational issues.<br/>
+              Submitted data can be visualized on the configured public dashboards
+              to review summary statistics such as the number of reporting clusters,
+              total capacity, OSD counts, and version distribution trends.<br/><br/>
               The data being reported does <b>not</b> contain any sensitive data like pool names, object names, object contents,
               hostnames, or device serial numbers. It contains counters and statistics on how the cluster has been
-              deployed, the version of Ceph, the distribution of the hosts and other parameters which help the project
-              to gain a better understanding of the way Ceph is used. The data is sent secured to {{ sendToUrl }} and
+              deployed, the software version, the distribution of the hosts and other parameters needed for capacity and
+              behavior analysis. The data is sent secured to {{ sendToUrl }} and
               {{ sendToDeviceUrl }} (device report).</p>
             <div *ngIf="moduleEnabled">
               The plugin is already <b>enabled</b>. Click <b>Deactivate</b> to disable it.&nbsp;
@@ -181,7 +181,7 @@
                        class="form-control"
                        type="text"
                        formControlName="description"
-                       placeholder="My first Ceph cluster"
+                       placeholder="My first storage cluster"
                        i18n-placeholder>
               </div>
             </div>
@@ -224,7 +224,7 @@
                 <ng-container i18n>Proxy</ng-container>
                 <cd-helper>
                   <p i18n>If the cluster cannot directly connect to the configured telemetry endpoint
-                    (default telemetry.ceph.com), you can configure a HTTP/HTTPS proxy server by e.g. adding
+                    you can configure a HTTP/HTTPS proxy server by e.g. adding
                     https://10.0.0.1:8080</p>
                   <p i18n>You can also include a user:pass if needed e.g. https://ceph:telemetry&#64;10.0.0.1:8080</p>
                 </cd-helper>

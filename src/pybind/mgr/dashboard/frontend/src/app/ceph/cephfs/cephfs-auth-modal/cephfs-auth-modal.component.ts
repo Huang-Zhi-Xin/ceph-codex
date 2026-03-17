@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
+  LOCALE_ID,
   OnInit,
   Optional
 } from '@angular/core';
@@ -35,6 +36,9 @@ export class CephfsAuthModalComponent extends CdForm implements OnInit, AfterVie
   action: string;
   resource: string;
   icons = Icons;
+  storageUsersLabel: string;
+  storageUsersHelperPrefix: string;
+  storageUsersHelperSuffix: string;
 
   clientPermissions = [
     {
@@ -67,12 +71,17 @@ export class CephfsAuthModalComponent extends CdForm implements OnInit, AfterVie
     private modalService: ModalCdsService,
     private changeDetectorRef: ChangeDetectorRef,
 
+    @Inject(LOCALE_ID) localeId: string,
     @Optional() @Inject('fsName') public fsName: string,
     @Optional() @Inject('id') public id: number
   ) {
     super();
     this.action = this.actionLabels.UPDATE;
     this.resource = $localize`access`;
+    const isZhHans = localeId.startsWith('zh');
+    this.storageUsersLabel = isZhHans ? '存储用户' : 'Storage Users';
+    this.storageUsersHelperPrefix = isZhHans ? '你可以在' : 'You can manage users from the';
+    this.storageUsersHelperSuffix = isZhHans ? '页面管理用户' : 'page';
   }
 
   ngAfterViewInit(): void {
