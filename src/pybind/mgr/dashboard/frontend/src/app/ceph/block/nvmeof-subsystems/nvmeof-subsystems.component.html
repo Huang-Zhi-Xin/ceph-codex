@@ -16,10 +16,10 @@
   </cds-combo-box>
 </div>
 
-<legend i18n>
-  Subsystems
+<legend>
+  {{ titleLabel }}
   <cd-help-text>
-    A subsystem provides access control to which hosts can access the namespaces within the subsystem.
+    {{ descriptionLabel }}
   </cd-help-text>
 </legend>
 <cd-table [data]="subsystems"

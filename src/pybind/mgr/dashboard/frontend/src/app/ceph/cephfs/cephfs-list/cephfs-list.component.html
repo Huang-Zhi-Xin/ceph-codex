@@ -5,13 +5,11 @@
   [cacheActive]="true"
   >
   <cds-tab
-    heading="File systems"
-    i18n-heading
+    [heading]="fileSystemsTabLabel"
     [tabContent]="fileSystemListContent">
   </cds-tab>
   <cds-tab
-    heading="Overview"
-    i18n-heading
+    [heading]="overviewTabLabel"
     [tabContent]="grafanaContent">
   </cds-tab>
 </cds-tabs>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 
 import _ from 'lodash';
 import { Observable, ReplaySubject, Subscription, combineLatest, of } from 'rxjs';
@@ -25,6 +25,7 @@ import { catchError, shareReplay, switchMap, tap } from 'rxjs/operators';
 })
 export class RgwOverviewDashboardComponent implements OnInit, OnDestroy {
   icons = Icons;
+  isZhHans = false;
 
   interval = new Subscription();
   permissions: Permissions;
@@ -62,6 +63,27 @@ export class RgwOverviewDashboardComponent implements OnInit, OnDestroy {
   subject = new ReplaySubject<any>();
   syncCardLoading = true;
   fetchDataSub: Subscription;
+  inventoryTitle = 'Inventory';
+  performanceStatisticsTitle = 'Performance Statistics';
+  usedCapacityTitle = 'Used Capacity';
+  averageObjectSizeTitle = 'Average Object Size';
+  gatewayLabel = 'Gateway';
+  realmLabel = 'Realm';
+  zoneGroupLabel = 'Zone Group';
+  zoneLabel = 'Zone';
+  bucketLabel = 'Bucket';
+  userLabel = 'User';
+  objectLabel = 'Object';
+  requestsPerSecondTitle = 'Requests/sec';
+  latencyTitle = 'Latency';
+  bandwidthTitle = 'Bandwidth';
+  multisiteSyncStatusTitle = 'Multi-Site Sync Status';
+  primarySourceZoneTitle = 'Primary Source Zone';
+  sourceZonesTitle = 'Source Zones';
+  metadataSyncTitle = 'Metadata Sync';
+  dataSyncTitle = 'Data Sync';
+  multisiteNotConfiguredText =
+    '需要先配置多站点功能，才能查看多站点同步状态。请参考文档完成多站点功能的配置与启用。';
 
   constructor(
     private authStorageService: AuthStorageService,
@@ -72,9 +94,33 @@ export class RgwOverviewDashboardComponent implements OnInit, OnDestroy {
     private rgwZoneService: RgwZoneService,
     private rgwBucketService: RgwBucketService,
     private prometheusService: PrometheusService,
-    private rgwMultisiteService: RgwMultisiteService
+    private rgwMultisiteService: RgwMultisiteService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     this.permissions = this.authStorageService.getPermissions();
+    this.isZhHans = this.localeId.startsWith('zh');
+    this.inventoryTitle = this.isZhHans ? '清单' : 'Inventory';
+    this.performanceStatisticsTitle = this.isZhHans ? '性能统计' : 'Performance Statistics';
+    this.usedCapacityTitle = this.isZhHans ? '已用容量' : 'Used Capacity';
+    this.averageObjectSizeTitle = this.isZhHans ? '平均对象大小' : 'Average Object Size';
+    this.gatewayLabel = this.isZhHans ? '网关' : 'Gateway';
+    this.realmLabel = this.isZhHans ? 'Realm' : 'Realm';
+    this.zoneGroupLabel = this.isZhHans ? 'Zone Group' : 'Zone Group';
+    this.zoneLabel = this.isZhHans ? 'Zone' : 'Zone';
+    this.bucketLabel = this.isZhHans ? '存储桶' : 'Bucket';
+    this.userLabel = this.isZhHans ? '用户' : 'User';
+    this.objectLabel = this.isZhHans ? '对象' : 'Object';
+    this.requestsPerSecondTitle = this.isZhHans ? '请求次数/秒' : 'Requests/sec';
+    this.latencyTitle = this.isZhHans ? '时延' : 'Latency';
+    this.bandwidthTitle = this.isZhHans ? '带宽' : 'Bandwidth';
+    this.multisiteSyncStatusTitle = this.isZhHans ? '多站点同步状态' : 'Multi-Site Sync Status';
+    this.primarySourceZoneTitle = this.isZhHans ? '主源 Zone' : 'Primary Source Zone';
+    this.sourceZonesTitle = this.isZhHans ? '源 Zone 列表' : 'Source Zones';
+    this.metadataSyncTitle = this.isZhHans ? '元数据同步' : 'Metadata Sync';
+    this.dataSyncTitle = this.isZhHans ? '数据同步' : 'Data Sync';
+    this.multisiteNotConfiguredText = this.isZhHans
+      ? '需要先配置多站点功能，才能查看多站点同步状态。请参考文档完成多站点功能的配置与启用。'
+      : 'Multi-site needs to be configured in order to see the multi-site sync status. Please consult the documentation on how to configure and enable the multi-site functionality.';
   }
 
   ngOnInit() {

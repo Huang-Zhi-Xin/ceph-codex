@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Permissions } from '~/app/shared/models/permissions';
 import { Router } from '@angular/router';
 
@@ -48,6 +48,9 @@ export class CephfsListComponent extends ListWithDetails implements OnInit {
   icons = Icons;
   monAllowPoolDelete = false;
   modalRef!: NgbModalRef;
+  isZhHans: boolean;
+  fileSystemsTabLabel: string;
+  overviewTabLabel: string;
 
   constructor(
     private authStorageService: AuthStorageService,
@@ -60,10 +63,14 @@ export class CephfsListComponent extends ListWithDetails implements OnInit {
     private taskWrapper: TaskWrapperService,
     public notificationService: NotificationService,
     private healthService: HealthService,
-    private cdsModalService: ModalCdsService
+    private cdsModalService: ModalCdsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.permissions = this.authStorageService.getPermissions();
+    this.isZhHans = localeId.startsWith('zh');
+    this.fileSystemsTabLabel = this.isZhHans ? '文件系统' : 'File systems';
+    this.overviewTabLabel = this.isZhHans ? '概览' : 'Overview';
   }
 
   ngOnInit() {

@@ -30,31 +30,27 @@
   isNavigation="true"
   [cacheActive]="false">
   <cds-tab
-    heading="Gateways"
+    [heading]="gatewaysTabLabel"
     [tabContent]="gateways_content"
-    i18n-heading
     (selected)="onSelected(Tabs.gateways)">
   </cds-tab>
   <cds-tab
-    heading="Overview"
+    [heading]="overviewTabLabel"
     [tabContent]="overview_content"
-    i18n-heading
     (selected)="onSelected(Tabs.overview)">
   </cds-tab>
   <cds-tab
-    heading="Performance"
+    [heading]="performanceTabLabel"
     [tabContent]="performance_content"
-    i18n-heading
     (selected)="onSelected(Tabs.overview)">
   </cds-tab>
 </cds-tabs>
 
 <ng-template #gateways_content>
-  <legend *ngIf="selectedTab === Tabs.gateways"
-          i18n>
-    Gateways
+  <legend *ngIf="selectedTab === Tabs.gateways">
+    {{ gatewaysLegendLabel }}
     <cd-help-text>
-      Ceph NVMe-oF gateways provide Ceph Block Device storage through NVMe/TCP. For VMware clients the NVMe/TCP volumes display as  VMFS Datastores. For Linux clients the NVMe/TCP volumes display as as block devices.
+      {{ gatewaysLegendDescription }}
     </cd-help-text>
   </legend>
   <div>

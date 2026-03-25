@@ -247,10 +247,10 @@ const routes: Routes = [
     redirectTo: 'rbd',
     pathMatch: 'full' // Required for a clean reload on daemon selection.
   },
-  { path: 'daemon', component: RgwDaemonListComponent, data: { breadcrumbs: 'Gateways' } },
+  { path: 'daemon', component: RgwDaemonListComponent, data: { breadcrumbs: '网关' } },
   {
     path: 'user',
-    data: { breadcrumbs: 'Users' },
+    data: { breadcrumbs: '用户' },
     children: [
       { path: '', component: RgwUserListComponent },
       {
@@ -267,7 +267,7 @@ const routes: Routes = [
   },
   {
     path: 'accounts',
-    data: { breadcrumbs: 'Accounts' },
+    data: { breadcrumbs: '账号' },
     children: [
       { path: '', component: RgwUserAccountsComponent },
       {
@@ -285,19 +285,19 @@ const routes: Routes = [
   {
     path: 'roles',
     data: {
-      breadcrumbs: 'Roles',
+      breadcrumbs: '角色',
       resource: 'api.rgw.roles@1.0',
       tabs: [
         {
-          name: 'Users',
+          name: '用户',
           url: '/rgw/user'
         },
         {
-          name: 'Accounts',
+          name: '账号',
           url: '/rgw/accounts'
         },
         {
-          name: 'Roles',
+          name: '角色',
           url: '/rgw/roles'
         }
       ]
@@ -325,7 +325,7 @@ const routes: Routes = [
   },
   {
     path: 'bucket',
-    data: { breadcrumbs: 'Buckets' },
+    data: { breadcrumbs: '存储桶' },
     children: [
       { path: '', component: RgwBucketListComponent },
       {
@@ -342,18 +342,18 @@ const routes: Routes = [
   },
   {
     path: 'overview',
-    data: { breadcrumbs: 'Overview' },
+    data: { breadcrumbs: '概览' },
     children: [{ path: '', component: RgwOverviewDashboardComponent }]
   },
   {
     path: 'multisite',
-    data: { breadcrumbs: 'Multi-site' },
+    data: { breadcrumbs: '多站点' },
     children: [
       { path: '', redirectTo: 'configuration', pathMatch: 'full' },
       {
         path: 'configuration',
         component: RgwMultisiteDetailsComponent,
-        data: { breadcrumbs: 'Configuration' },
+        data: { breadcrumbs: '配置' },
         children: [
           {
             path: 'setup-multisite-replication',
@@ -365,7 +365,7 @@ const routes: Routes = [
       {
         path: 'sync-policy',
         component: RgwMultisiteSyncPolicyComponent,
-        data: { breadcrumbs: 'Sync-policy' },
+        data: { breadcrumbs: '同步策略' },
         children: [
           {
             path: `${URLVerbs.CREATE}`,
@@ -388,7 +388,7 @@ const routes: Routes = [
   },
   {
     path: 'tiering',
-    data: { breadcrumbs: 'Tiering' },
+    data: { breadcrumbs: '分层' },
     children: [
       { path: '', component: RgwStorageClassListComponent },
       {
@@ -432,12 +432,12 @@ const routes: Routes = [
   },
   {
     path: 'configuration',
-    data: { breadcrumbs: 'Configuration' },
+    data: { breadcrumbs: '配置' },
     children: [{ path: '', component: RgwConfigurationPageComponent }]
   },
   {
     path: 'topic',
-    data: { breadcrumbs: 'Topic' },
+    data: { breadcrumbs: '主题' },
     children: [
       { path: '', component: RgwTopicListComponent },
       {

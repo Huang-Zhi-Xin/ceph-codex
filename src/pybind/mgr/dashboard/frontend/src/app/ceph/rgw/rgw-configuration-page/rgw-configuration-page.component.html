@@ -3,7 +3,7 @@
      class="nav-tabs">
   <ng-container ngbNavItem>
     <a ngbNavLink
-       i18n>Server-side Encryption</a>
+       >{{ encryptionTabTitle }}</a>
     <ng-template ngbNavContent>
       <cd-table #table
                 [data]="encryptionConfigValues"

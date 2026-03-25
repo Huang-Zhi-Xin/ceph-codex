@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import _ from 'lodash';
 
@@ -31,6 +31,12 @@ const DEFAULT_PLACEHOLDER = $localize`Enter group name`;
 })
 export class NvmeofGatewayComponent implements OnInit {
   selectedTab: TABS;
+  isZhHans: boolean;
+  gatewaysTabLabel: string;
+  overviewTabLabel: string;
+  performanceTabLabel: string;
+  gatewaysLegendLabel: string;
+  gatewaysLegendDescription: string;
 
   onSelected(tab: TABS) {
     this.selectedTab = tab;
@@ -55,8 +61,18 @@ export class NvmeofGatewayComponent implements OnInit {
   constructor(
     private nvmeofService: NvmeofService,
     private cephServiceService: CephServiceService,
-    public actionLabels: ActionLabelsI18n
-  ) {}
+    public actionLabels: ActionLabelsI18n,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+    this.gatewaysTabLabel = this.isZhHans ? '网关' : 'Gateways';
+    this.overviewTabLabel = this.isZhHans ? '概览' : 'Overview';
+    this.performanceTabLabel = this.isZhHans ? '性能' : 'Performance';
+    this.gatewaysLegendLabel = this.isZhHans ? '网关' : 'Gateways';
+    this.gatewaysLegendDescription = this.isZhHans
+      ? 'Ceph NVMe-oF 网关通过 NVMe/TCP 提供 Ceph 块设备存储。对 VMware 客户端，这些卷会显示为 VMFS 数据存储；对 Linux 客户端，这些卷会显示为块设备。'
+      : 'Ceph NVMe-oF gateways provide Ceph Block Device storage through NVMe/TCP. For VMware clients the NVMe/TCP volumes display as VMFS Datastores. For Linux clients the NVMe/TCP volumes display as block devices.';
+  }
 
   ngOnInit() {
     this.setGatewayGroups();

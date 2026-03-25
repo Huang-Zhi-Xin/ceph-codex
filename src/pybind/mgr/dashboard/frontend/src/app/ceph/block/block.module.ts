@@ -165,7 +165,7 @@ const routes: Routes = [
         component: 'Default Pool',
         uiConfig: true
       },
-      breadcrumbs: 'Images'
+      breadcrumbs: '映像'
     },
     children: [
       { path: '', component: RbdListComponent },
@@ -225,7 +225,7 @@ const routes: Routes = [
         component: 'Block Mirroring',
         uiConfig: true
       },
-      breadcrumbs: 'Mirroring'
+      breadcrumbs: '镜像'
     },
     children: [
       {
@@ -242,7 +242,7 @@ const routes: Routes = [
     data: { breadcrumbs: 'iSCSI' },
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: IscsiComponent, data: { breadcrumbs: 'Overview' } },
+      { path: 'overview', component: IscsiComponent, data: { breadcrumbs: '概览' } },
       {
         path: 'targets',
         data: { breadcrumbs: 'Targets' },
@@ -285,7 +285,7 @@ const routes: Routes = [
       {
         path: 'subsystems',
         component: NvmeofSubsystemsComponent,
-        data: { breadcrumbs: 'Subsystems' },
+        data: { breadcrumbs: '子系统' },
         children: [
           // subsystems
           { path: '', component: NvmeofSubsystemsComponent },

@@ -1,4 +1,4 @@
-import { Component, Input, NgZone, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, NgZone, OnChanges, OnDestroy } from '@angular/core';
 
 import _ from 'lodash';
 import { Subscription, timer } from 'rxjs';
@@ -40,13 +40,16 @@ export class CephfsTabsComponent implements OnChanges, OnDestroy {
 
   private data: any;
   private reloadSubscriber: Subscription;
+  overviewTabLabel: string;
 
   constructor(
     private ngZone: NgZone,
     private authStorageService: AuthStorageService,
-    private cephfsService: CephfsService
+    private cephfsService: CephfsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.grafanaPermission = this.authStorageService.getPermissions().grafana;
+    this.overviewTabLabel = localeId.startsWith('zh') ? '概览' : 'Overview';
   }
 
   ngOnChanges() {

@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, NgZone, OnInit, ViewChild } from '@angular/core';
 
 import { ActionLabelsI18n, URLVerbs } from '~/app/shared/constants/app.constants';
 import { TableComponent } from '~/app/shared/datatable/table/table.component';
@@ -38,6 +38,9 @@ export class RgwUserAccountsComponent extends ListWithDetails implements OnInit 
   accounts: Account[] = [];
   selection: CdTableSelection = new CdTableSelection();
   declare staleTimeout: number;
+  isZhHans: boolean;
+  pageTitle: string;
+  pageDescription: string;
 
   constructor(
     private authStorageService: AuthStorageService,
@@ -46,9 +49,15 @@ export class RgwUserAccountsComponent extends ListWithDetails implements OnInit 
     private rgwUserAccountsService: RgwUserAccountsService,
     private cdsModalService: ModalCdsService,
     private taskWrapper: TaskWrapperService,
-    protected ngZone: NgZone
+    protected ngZone: NgZone,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
+    this.pageTitle = this.isZhHans ? '用户账号' : 'User Accounts';
+    this.pageDescription = this.isZhHans
+      ? '管理员可以为用户或应用分配独立凭证，实现更细粒度的访问控制并提升集群安全性。'
+      : 'Administrators can assign unique credentials to users or applications, enabling granular access control and enhancing security across the cluster.';
   }
 
   ngOnInit() {
@@ -65,63 +74,63 @@ export class RgwUserAccountsComponent extends ListWithDetails implements OnInit 
         flexGrow: 1
       },
       {
-        name: $localize`Account id`,
+        name: this.isZhHans ? '账号 ID' : $localize`Account id`,
         prop: 'id',
         flexGrow: 1
       },
       {
-        name: $localize`Email address`,
+        name: this.isZhHans ? '邮箱地址' : $localize`Email address`,
         prop: 'email',
         flexGrow: 1
       },
       {
-        name: $localize`Max users`,
+        name: this.isZhHans ? '用户数上限' : $localize`Max users`,
         prop: 'max_users',
         flexGrow: 1,
         cellTransformation: CellTemplate.map,
         customTemplateConfig: {
-          '-1': $localize`Disabled`,
-          0: $localize`Unlimited`
+          '-1': this.isZhHans ? '禁用' : $localize`Disabled`,
+          0: this.isZhHans ? '不限' : $localize`Unlimited`
         }
       },
       {
-        name: $localize`Max roles`,
+        name: this.isZhHans ? '角色数上限' : $localize`Max roles`,
         prop: 'max_roles',
         flexGrow: 1,
         cellTransformation: CellTemplate.map,
         customTemplateConfig: {
-          '-1': $localize`Disabled`,
-          0: $localize`Unlimited`
+          '-1': this.isZhHans ? '禁用' : $localize`Disabled`,
+          0: this.isZhHans ? '不限' : $localize`Unlimited`
         }
       },
       {
-        name: $localize`Max groups`,
+        name: this.isZhHans ? '组数上限' : $localize`Max groups`,
         prop: 'max_groups',
         flexGrow: 1,
         cellTransformation: CellTemplate.map,
         customTemplateConfig: {
-          '-1': $localize`Disabled`,
-          0: $localize`Unlimited`
+          '-1': this.isZhHans ? '禁用' : $localize`Disabled`,
+          0: this.isZhHans ? '不限' : $localize`Unlimited`
         }
       },
       {
-        name: $localize`Max. buckets`,
+        name: this.isZhHans ? '存储桶数目上限' : $localize`Max. buckets`,
         prop: 'max_buckets',
         flexGrow: 1,
         cellTransformation: CellTemplate.map,
         customTemplateConfig: {
-          '-1': $localize`Disabled`,
-          0: $localize`Unlimited`
+          '-1': this.isZhHans ? '禁用' : $localize`Disabled`,
+          0: this.isZhHans ? '不限' : $localize`Unlimited`
         }
       },
       {
-        name: $localize`Max access keys`,
+        name: this.isZhHans ? '访问密钥上限' : $localize`Max access keys`,
         prop: 'max_access_keys',
         flexGrow: 1,
         cellTransformation: CellTemplate.map,
         customTemplateConfig: {
-          '-1': $localize`Disabled`,
-          0: $localize`Unlimited`
+          '-1': this.isZhHans ? '禁用' : $localize`Disabled`,
+          0: this.isZhHans ? '不限' : $localize`Unlimited`
         }
       }
     ];

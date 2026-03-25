@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
@@ -42,6 +42,9 @@ export class SmbUsersgroupsListComponent extends ListWithDetails implements OnIn
   usersGroups$: Observable<SMBUsersGroups[]>;
   subject$ = new BehaviorSubject<SMBUsersGroups[]>([]);
   selection: CdTableSelection = new CdTableSelection();
+  isZhHans = false;
+  headerTitle = 'Standalone access resoruces';
+  headerDescription = 'Logical management units for authorization on Standalone servers';
 
   constructor(
     private router: Router,
@@ -50,10 +53,16 @@ export class SmbUsersgroupsListComponent extends ListWithDetails implements OnIn
     public actionLabels: ActionLabelsI18n,
     private smbService: SmbService,
     private modalService: ModalCdsService,
-    private taskWrapper: TaskWrapperService
+    private taskWrapper: TaskWrapperService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
     this.permission = this.authStorageService.getPermissions().smb;
+    this.isZhHans = this.localeId.startsWith('zh');
+    this.headerTitle = this.isZhHans ? '独立模式访问资源' : 'Standalone access resoruces';
+    this.headerDescription = this.isZhHans
+      ? '用于独立模式服务器授权管理的逻辑资源单元'
+      : 'Logical management units for authorization on Standalone servers';
   }
 
   ngOnInit() {
@@ -83,7 +92,7 @@ export class SmbUsersgroupsListComponent extends ListWithDetails implements OnIn
 
     this.tableActions = [
       {
-        name: `${this.actionLabels.CREATE} standalone`,
+        name: this.isZhHans ? '创建独立模式资源' : `${this.actionLabels.CREATE} standalone`,
         permission: 'create',
         icon: Icons.add,
         click: () => this.router.navigate([this.urlBuilder.getCreate()]),

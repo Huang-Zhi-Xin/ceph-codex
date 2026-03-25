@@ -50,7 +50,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
   currentClusterName: string;
   isZhHans: boolean;
   dashboardLabel: string;
+  blockImagesLabel: string;
+  blockMirroringLabel: string;
   storageUsersLabel: string;
+  rgwOverviewLabel: string;
+  rgwUsersLabel: string;
+  rgwBucketsLabel: string;
+  rgwTopicsLabel: string;
+  rgwTieringLabel: string;
+  rgwMultisiteLabel: string;
+  rgwGatewaysLabel: string;
+  rgwConfigurationLabel: string;
 
   constructor(
     public notificationService: NotificationService,
@@ -68,7 +78,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.enabledFeature$ = this.featureToggles.get();
     this.isZhHans = this.localeId.startsWith('zh');
     this.dashboardLabel = this.isZhHans ? '仪表盘' : 'Dashboard';
+    this.blockImagesLabel = this.isZhHans ? '映像' : 'Images';
+    this.blockMirroringLabel = this.isZhHans ? '镜像' : 'Mirroring';
     this.storageUsersLabel = this.isZhHans ? '存储用户' : 'Storage Users';
+    this.rgwOverviewLabel = this.isZhHans ? '概览' : 'Overview';
+    this.rgwUsersLabel = this.isZhHans ? '用户' : 'Users';
+    this.rgwBucketsLabel = this.isZhHans ? '存储桶' : 'Buckets';
+    this.rgwTopicsLabel = this.isZhHans ? '主题' : 'Topics';
+    this.rgwTieringLabel = this.isZhHans ? '分层' : 'Tiering';
+    this.rgwMultisiteLabel = this.isZhHans ? '多站点' : 'Multi-site';
+    this.rgwGatewaysLabel = this.isZhHans ? '网关' : 'Gateways';
+    this.rgwConfigurationLabel = this.isZhHans ? '配置' : 'Configuration';
   }
 
   ngOnInit() {

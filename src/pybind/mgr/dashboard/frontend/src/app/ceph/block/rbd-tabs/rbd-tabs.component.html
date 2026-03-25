@@ -4,24 +4,21 @@
        routerLink="/block/rbd"
        routerLinkActive="active"
        ariaCurrentWhenActive="page"
-       [routerLinkActiveOptions]="{exact: true}"
-       i18n>Images</a>
+       [routerLinkActiveOptions]="{exact: true}">{{ imagesLabel }}</a>
   </li>
   <li class="nav-item">
     <a class="nav-link"
        routerLink="/block/rbd/namespaces"
        routerLinkActive="active"
        ariaCurrentWhenActive="page"
-       [routerLinkActiveOptions]="{exact: true}"
-       i18n>Namespaces</a>
+       [routerLinkActiveOptions]="{exact: true}">{{ namespacesLabel }}</a>
   </li>
   <li class="nav-item">
     <a class="nav-link"
        routerLink="/block/rbd/trash"
        routerLinkActive="active"
        ariaCurrentWhenActive="page"
-       [routerLinkActiveOptions]="{exact: true}"
-       i18n>Trash</a>
+       [routerLinkActiveOptions]="{exact: true}">{{ trashLabel }}</a>
   </li>
   <li class="nav-item"
       *ngIf="grafanaPermission.read">
@@ -29,7 +26,6 @@
        routerLink="/block/rbd/performance"
        routerLinkActive="active"
        ariaCurrentWhenActive="page"
-       [routerLinkActiveOptions]="{exact: true}"
-       i18n>Overall Performance</a>
+       [routerLinkActiveOptions]="{exact: true}">{{ performanceLabel }}</a>
   </li>
 </ul>

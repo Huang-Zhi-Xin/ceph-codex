@@ -91,7 +91,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'users', pathMatch: 'full' },
   {
     path: 'users',
-    data: { breadcrumbs: 'Users' },
+    data: { breadcrumbs: '用户' },
     children: [
       { path: '', component: UserListComponent },
       {
@@ -108,7 +108,7 @@ const routes: Routes = [
   },
   {
     path: 'roles',
-    data: { breadcrumbs: 'Roles' },
+    data: { breadcrumbs: '角色' },
     children: [
       { path: '', component: RoleListComponent },
       {

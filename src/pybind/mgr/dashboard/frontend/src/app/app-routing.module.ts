@@ -483,7 +483,7 @@ const routes: Routes = [
               },
               {
                 path: 'standalone',
-                data: { breadcrumbs: 'Standalone' },
+                data: { breadcrumbs: '独立模式' },
                 children: [
                   { path: '', component: SmbUsersgroupsListComponent },
                   {
@@ -500,7 +500,7 @@ const routes: Routes = [
               {
                 path: 'overview',
                 component: SmbOverviewComponent,
-                data: { breadcrumbs: 'Overview' }
+                data: { breadcrumbs: '概览' }
               },
               {
                 path: `share/${URLVerbs.CREATE}/:clusterId`,
@@ -529,7 +529,7 @@ const routes: Routes = [
             header: 'The Object Gateway Service is not configured'
           },
           breadcrumbs: true,
-          text: 'Object',
+          text: '对象存储',
           path: null
         },
         loadChildren: () => import('./ceph/rgw/rgw.module').then((m) => m.RoutedRgwModule)
@@ -537,13 +537,13 @@ const routes: Routes = [
       // User/Role Management
       {
         path: 'user-management',
-        data: { breadcrumbs: 'User management', path: null },
+        data: { breadcrumbs: '用户管理', path: null },
         loadChildren: () => import('./core/auth/auth.module').then((m) => m.RoutedAuthModule)
       },
       // User Profile
       {
         path: 'user-profile',
-        data: { breadcrumbs: 'User profile', path: null },
+        data: { breadcrumbs: '用户资料', path: null },
         children: [
           {
             path: URLVerbs.EDIT,

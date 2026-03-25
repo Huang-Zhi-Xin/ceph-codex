@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NfsService } from '~/app/shared/api/nfs.service';
 import { ListWithDetails } from '~/app/shared/classes/list-with-details.class';
 import { ActionLabelsI18n } from '~/app/shared/constants/app.constants';
@@ -37,15 +37,18 @@ export class NfsClusterComponent extends ListWithDetails implements OnInit {
   orchStatus: OrchestratorStatus;
   clusters$: Observable<NFSCluster[]>;
   subject = new BehaviorSubject<NFSCluster[]>([]);
+  isZhHans: boolean;
 
   constructor(
     public actionLabels: ActionLabelsI18n,
     protected ngZone: NgZone,
     private authStorageService: AuthStorageService,
     private nfsService: NfsService,
-    private orchService: OrchestratorService
+    private orchService: OrchestratorService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
   }
 
   ngOnInit(): void {
@@ -61,7 +64,7 @@ export class NfsClusterComponent extends ListWithDetails implements OnInit {
         flexGrow: 1
       },
       {
-        name: $localize`Hostnames`,
+        name: this.isZhHans ? '主机名' : $localize`Hostnames`,
         prop: 'backend',
         flexGrow: 2,
         cellTemplate: this.hostnameTpl
@@ -73,7 +76,7 @@ export class NfsClusterComponent extends ListWithDetails implements OnInit {
         cellTemplate: this.ipAddrTpl
       },
       {
-        name: $localize`Virtual IP Address`,
+        name: this.isZhHans ? '虚拟 IP 地址' : $localize`Virtual IP Address`,
         prop: 'virtual_ip',
         flexGrow: 1,
         cellTemplate: this.virtualIpTpl

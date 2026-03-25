@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import _ from 'lodash';
 import { Observable, Subscriber } from 'rxjs';
@@ -83,6 +83,7 @@ export class RbdListComponent extends ListWithDetails implements OnInit {
   count = 0;
   private tableContext: CdTableFetchDataContext = null;
   errorMessage: string;
+  isZhHans: boolean;
   builders = {
     'rbd/create': (metadata: object) =>
       this.createRbdFromTask(metadata['pool_name'], metadata['namespace'], metadata['image_name']),
@@ -127,10 +128,12 @@ export class RbdListComponent extends ListWithDetails implements OnInit {
     public taskListService: TaskListService,
     private urlBuilder: URLBuilderService,
     public actionLabels: ActionLabelsI18n,
-    protected cdsModalService: ModalCdsService
+    protected cdsModalService: ModalCdsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.permission = this.authStorageService.getPermissions().rbdImage;
+    this.isZhHans = localeId.startsWith('zh');
     const getImageUri = () =>
       this.selection.first() &&
       new ImageSpec(
@@ -414,6 +417,13 @@ export class RbdListComponent extends ListWithDetails implements OnInit {
       this.count = 0;
     }
     return images;
+  }
+
+  getMirrorModeLabel(value: string) {
+    if (this.isZhHans && value === 'Disabled') {
+      return '禁用';
+    }
+    return value;
   }
 
   updateSelection(selection: CdTableSelection) {

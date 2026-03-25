@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ActionLabelsI18n, URLVerbs } from '~/app/shared/constants/app.constants';
@@ -35,6 +35,9 @@ export class NvmeofSubsystemsComponent extends ListWithDetails implements OnInit
   group: string = null;
   gwGroupsEmpty: boolean = false;
   gwGroupPlaceholder: string = DEFAULT_PLACEHOLDER;
+  isZhHans: boolean;
+  titleLabel: string;
+  descriptionLabel: string;
 
   constructor(
     private nvmeofService: NvmeofService,
@@ -43,10 +46,16 @@ export class NvmeofSubsystemsComponent extends ListWithDetails implements OnInit
     private router: Router,
     private modalService: ModalCdsService,
     private taskWrapper: TaskWrapperService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.permissions = this.authStorageService.getPermissions();
+    this.isZhHans = localeId.startsWith('zh');
+    this.titleLabel = this.isZhHans ? '子系统' : 'Subsystems';
+    this.descriptionLabel = this.isZhHans
+      ? '子系统用于控制哪些主机可以访问该子系统中的命名空间。'
+      : 'A subsystem provides access control to which hosts can access the namespaces within the subsystem.';
   }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Observable, Subscriber, Subscription } from 'rxjs';
@@ -27,6 +27,8 @@ const BASE_URL = '/block/mirroring';
 export class PoolListComponent implements OnInit, OnDestroy {
   @ViewChild('healthTmpl', { static: true })
   healthTmpl: TemplateRef<any>;
+  @ViewChild('modeTmpl', { static: true })
+  modeTmpl: TemplateRef<any>;
   @ViewChild('localTmpl', { static: true })
   localTmpl: TemplateRef<any>;
   @ViewChild('remoteTmpl', { static: true })
@@ -40,6 +42,7 @@ export class PoolListComponent implements OnInit, OnDestroy {
 
   data: [];
   columns: {};
+  isZhHans: boolean;
 
   tableStatus = new TableStatusViewCache();
 
@@ -48,10 +51,12 @@ export class PoolListComponent implements OnInit, OnDestroy {
     private rbdMirroringService: RbdMirroringService,
     private modalService: ModalCdsService,
     private taskWrapper: TaskWrapperService,
-    private router: Router
+    private router: Router,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.data = [];
     this.permission = this.authStorageService.getPermissions().rbdMirroring;
+    this.isZhHans = localeId.startsWith('zh');
 
     const editModeAction: CdTableAction = {
       permission: 'update',
@@ -89,7 +94,7 @@ export class PoolListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.columns = [
       { prop: 'name', name: $localize`Name`, flexGrow: 2 },
-      { prop: 'mirror_mode', name: $localize`Mode`, flexGrow: 2 },
+      { prop: 'mirror_mode', name: $localize`Mode`, flexGrow: 2, cellTemplate: this.modeTmpl },
       { prop: 'leader_id', name: $localize`Leader`, flexGrow: 2 },
       {
         prop: 'image_local_count',
@@ -183,5 +188,31 @@ export class PoolListComponent implements OnInit, OnDestroy {
 
   updateSelection(selection: CdTableSelection) {
     this.selection = selection;
+  }
+
+  getModeLabel(value: string) {
+    if (!this.isZhHans) {
+      return value;
+    }
+    if (value === 'disabled') {
+      return '禁用';
+    }
+    if (value === 'image') {
+      return '映像';
+    }
+    if (value === 'pool') {
+      return '存储池';
+    }
+    return value;
+  }
+
+  getHealthLabel(value: string) {
+    if (!this.isZhHans) {
+      return value;
+    }
+    if (value === 'Disabled') {
+      return '禁用';
+    }
+    return value;
   }
 }

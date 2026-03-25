@@ -4,26 +4,22 @@
   isNavigation="true"
   [cacheActive]="false">
   <cds-tab
-    heading="Cluster"
-    i18n-heading
+    [heading]="clusterLabel"
     [active]="activeTab === Tabs.cluster"
     (selected)="onSelected(Tabs.cluster)">
   </cds-tab>
   <cds-tab
-    heading="Active Directory"
-    i18n-heading
+    [heading]="activeDirectoryLabel"
     [active]="activeTab === Tabs.activeDirectory"
     (selected)="onSelected(Tabs.activeDirectory)">
   </cds-tab>
   <cds-tab
-    heading="Standalone"
-    i18n-heading
+    [heading]="standaloneLabel"
     [active]="activeTab === Tabs.standalone"
     (selected)="onSelected(Tabs.standalone)">
   </cds-tab>
   <cds-tab
-    heading="Overview"
-    i18n-heading
+    [heading]="overviewLabel"
     [active]="activeTab === Tabs.overview"
     (selected)="onSelected(Tabs.overview)">
   </cds-tab>

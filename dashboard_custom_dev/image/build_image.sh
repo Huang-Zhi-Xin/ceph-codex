@@ -6,8 +6,8 @@ FRONTEND_DIR="${ROOT_DIR}/src/pybind/mgr/dashboard/frontend"
 IMAGE_DIR="${ROOT_DIR}/dashboard_custom_dev/image"
 NODE20_BIN="/opt/homebrew/opt/node@20/bin"
 
-BASE_IMAGE="${BASE_IMAGE:-quay.io/ceph/ceph:v20.2.0}"
-REGISTRY="${REGISTRY:-}"
+BASE_IMAGE="${BASE_IMAGE:-registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0}"
+REGISTRY="${REGISTRY:-registry.cn-hangzhou.aliyuncs.com/kaixinlab}"
 IMAGE_NAME="${IMAGE_NAME:-kx-storage-dashboard}"
 IMAGE_TAG="${IMAGE_TAG:-v20.2.0-kx.$(date +%Y%m%d%H%M)}"
 PLATFORM="${PLATFORM:-linux/amd64}"
@@ -20,6 +20,8 @@ fi
 export PATH="${NODE20_BIN}:$PATH"
 export DASHBOARD_FRONTEND_LANGS="zh-Hans"
 export CI=1
+export SHELL="/bin/sh"
+export npm_config_script_shell="/bin/sh"
 
 cd "${FRONTEND_DIR}"
 node "${ROOT_DIR}/dashboard_custom_dev/translation_tools/fill_zh_cn_glossary.js"
@@ -31,10 +33,7 @@ rm -rf "${IMAGE_DIR}/dist" "${IMAGE_DIR}/package.json"
 cp -r "${FRONTEND_DIR}/dist" "${IMAGE_DIR}/dist"
 cp "${FRONTEND_DIR}/package.json" "${IMAGE_DIR}/package.json"
 
-FULL_IMAGE="${IMAGE_NAME}:${IMAGE_TAG}"
-if [[ -n "${REGISTRY}" ]]; then
-  FULL_IMAGE="${REGISTRY}/${FULL_IMAGE}"
-fi
+FULL_IMAGE="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
 
 cd "${IMAGE_DIR}"
 docker buildx build \

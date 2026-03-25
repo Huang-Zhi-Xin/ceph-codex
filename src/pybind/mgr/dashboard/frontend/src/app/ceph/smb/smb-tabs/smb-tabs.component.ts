@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 const SMB_PATH = 'cephfs/smb';
@@ -18,8 +18,19 @@ enum TABS {
 export class SmbTabsComponent implements OnInit {
   selectedTab: TABS;
   activeTab: TABS = TABS.cluster;
+  isZhHans = false;
+  clusterLabel = 'Cluster';
+  activeDirectoryLabel = 'Active Directory';
+  standaloneLabel = 'Standalone';
+  overviewLabel = 'Overview';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, @Inject(LOCALE_ID) private localeId: string) {
+    this.isZhHans = this.localeId.startsWith('zh');
+    this.clusterLabel = this.isZhHans ? '集群' : 'Cluster';
+    this.activeDirectoryLabel = this.isZhHans ? '活动目录' : 'Active Directory';
+    this.standaloneLabel = this.isZhHans ? '独立模式' : 'Standalone';
+    this.overviewLabel = this.isZhHans ? '概览' : 'Overview';
+  }
 
   ngOnInit(): void {
     const currentPath = this.router.url;

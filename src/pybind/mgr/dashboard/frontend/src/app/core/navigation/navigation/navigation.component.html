@@ -164,17 +164,15 @@
                size="20"></svg>
           <cds-sidenav-item route="/block/rbd"
                             [useRouter]="true"
-                            title="Images"
-                            i18n-title
+                            [title]="blockImagesLabel"
                             *ngIf="permissions.rbdImage.read && enabledFeature.rbd"
-                            class="tc_submenuitem tc_submenuitem_block_images"><span i18n>Images</span></cds-sidenav-item>
+                            class="tc_submenuitem tc_submenuitem_block_images"><span>{{ blockImagesLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/block/mirroring"
                             [useRouter]="true"
-                            title="Mirroring"
-                            i18n-title
+                            [title]="blockMirroringLabel"
                             *ngIf="permissions.rbdMirroring.read && enabledFeature.mirroring"
                             class="tc_submenuitem tc_submenuitem_block_mirroring">
-            <span i18n>Mirroring
+            <span>{{ blockMirroringLabel }}
               <small *ngIf="summaryData?.rbd_mirroring?.warnings !== 0"
                      class="badge badge-warning">{{ summaryData?.rbd_mirroring?.warnings }}</small>
               <small *ngIf="summaryData?.rbd_mirroring?.errors !== 0"
@@ -202,40 +200,33 @@
                icon
                size="20"></svg>
           <cds-sidenav-item route="/rgw/overview"
-                            title="Overview"
-                            i18n-title
+                            [title]="rgwOverviewLabel"
                             [useRouter]="true"
-                            class="tc_submenuitem tc_submenuitem_rgw_overview"><span i18n>Overview</span></cds-sidenav-item>
+                            class="tc_submenuitem tc_submenuitem_rgw_overview"><span>{{ rgwOverviewLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/rgw/user"
-                            title="Users"
-                            i18n-title
+                            [title]="rgwUsersLabel"
                             [useRouter]="true"
-                            class="tc_submenuitem tc_submenuitem_rgw_users"><span i18n>Users</span></cds-sidenav-item>
+                            class="tc_submenuitem tc_submenuitem_rgw_users"><span>{{ rgwUsersLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/rgw/bucket"
-                            title="Buckets"
-                            i18n-title
+                            [title]="rgwBucketsLabel"
                             [useRouter]="true"
-                            class="tc_submenuitem tc_submenuitem_rgw_buckets"><span i18n>Buckets</span></cds-sidenav-item>
+                            class="tc_submenuitem tc_submenuitem_rgw_buckets"><span>{{ rgwBucketsLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/rgw/topic"
                             [useRouter]="true"
-                            title="Topics"
-                            i18n-title
-                            class="tc_submenuitem tc_submenuitem_rgw_topics"><span i18n>Topics</span></cds-sidenav-item>
+                            [title]="rgwTopicsLabel"
+                            class="tc_submenuitem tc_submenuitem_rgw_topics"><span>{{ rgwTopicsLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/rgw/tiering"
-                            title="Tiering"
-                            i18n-title
+                            [title]="rgwTieringLabel"
                             [useRouter]="true"
-                            class="tc_submenuitem tc_submenuitem_rgw_tiering"><span i18n>Tiering</span></cds-sidenav-item>
+                            class="tc_submenuitem tc_submenuitem_rgw_tiering"><span>{{ rgwTieringLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/rgw/multisite"
-                            title="Multi-site"
-                            i18n-title
+                            [title]="rgwMultisiteLabel"
                             [useRouter]="true"
-                            class="tc_submenuitem tc_submenuitem_rgw_multi-site"><span i18n>Multi-site</span></cds-sidenav-item>
+                            class="tc_submenuitem tc_submenuitem_rgw_multi-site"><span>{{ rgwMultisiteLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/rgw/daemon"
-                            title="Gateways"
-                            i18n-title
+                            [title]="rgwGatewaysLabel"
                             [useRouter]="true"
-                            class="tc_submenuitem tc_submenuitem_rgw_daemons"><span i18n>Gateways</span></cds-sidenav-item>
+                            class="tc_submenuitem tc_submenuitem_rgw_daemons"><span>{{ rgwGatewaysLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/rgw/nfs"
                             [useRouter]="true"
                             title="NFS"
@@ -244,9 +235,8 @@
                             class="tc_submenuitem tc_submenuitem_rgw_nfs"><span i18n>NFS</span></cds-sidenav-item>
           <cds-sidenav-item route="/rgw/configuration"
                             [useRouter]="true"
-                            title="Configuration"
-                            i18n-title
-                            class="tc_submenuitem tc_submenuitem_rgw_configuration"><span i18n>Configuration</span></cds-sidenav-item>
+                            [title]="rgwConfigurationLabel"
+                            class="tc_submenuitem tc_submenuitem_rgw_configuration"><span>{{ rgwConfigurationLabel }}</span></cds-sidenav-item>
         </cds-sidenav-menu>
         <!-- Filesystem -->
         <cds-sidenav-menu title="File"

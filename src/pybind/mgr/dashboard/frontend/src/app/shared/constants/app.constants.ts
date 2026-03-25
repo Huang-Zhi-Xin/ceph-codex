@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 export class AppConstants {
   public static readonly organization = 'KX Storage';
   public static readonly projectName = 'KX Storage 分布式存储管理系统';
-  public static readonly productVersion = 'KX Storage 1.0.0';
+  public static readonly releaseTag = 'v20.2.0-kx.20260323.1';
+  public static readonly productVersion = `KX Storage ${AppConstants.releaseTag}`;
   public static readonly baseVersion = 'Ceph 20.2.0';
   public static readonly releaseImage = 'registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard';
   public static readonly imageRegistry = 'registry.cn-hangzhou.aliyuncs.com';

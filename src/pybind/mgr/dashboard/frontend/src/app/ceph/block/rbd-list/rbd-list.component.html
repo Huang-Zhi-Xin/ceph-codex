@@ -38,7 +38,7 @@
              let-value="data.value"
              let-row="data.row">
   <span *ngIf="value?.length === 3; else probb"
-        class="badge badge-info">{{ value[0] }}</span>&nbsp;
+        class="badge badge-info">{{ getMirrorModeLabel(value[0]) }}</span>&nbsp;
   <span *ngIf="value?.length === 3"
         class="badge badge-info">{{ value[1] }}</span>&nbsp;
   <span *ngIf="row?.primary === true"
@@ -48,7 +48,7 @@
         class="badge badge-info"
         i18n>secondary</span>
   <ng-template #probb>
-    <span class="badge badge-info">{{ value }}</span>
+    <span class="badge badge-info">{{ getMirrorModeLabel(value) }}</span>
   </ng-template>
 </ng-template>
 

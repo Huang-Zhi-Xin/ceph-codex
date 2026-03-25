@@ -1,70 +1,68 @@
 <div class="container-fluid">
   <div class="row">
-    <cd-card cardTitle="Inventory"
-             i18n-title
+    <cd-card [cardTitle]="inventoryTitle"
              class="col-sm-3 px-3 d-flex"
              aria-label="Inventory card">
 
       <cd-card-row [data]="rgwDaemonCount"
                    link="/rgw/daemon"
-                   title="Gateway"
+                   [title]="gatewayLabel"
                    summaryType="simplified"
                    *ngIf="rgwDaemonCount != null"></cd-card-row>
 
       <cd-card-row [data]="rgwRealmCount"
                    link="/rgw/multisite"
-                   title="Realm"
+                   [title]="realmLabel"
                    summaryType="simplified"
                    *ngIf="rgwRealmCount != null"></cd-card-row>
 
       <cd-card-row [data]="rgwZonegroupCount"
                    link="/rgw/multisite"
-                   title="Zone Group"
+                   [title]="zoneGroupLabel"
                    summaryType="simplified"
                    *ngIf="rgwZonegroupCount != null"></cd-card-row>
 
       <cd-card-row [data]="rgwZoneCount"
                    link="/rgw/multisite"
-                   title="Zone"
+                   [title]="zoneLabel"
                    summaryType="simplified"
                    *ngIf="rgwZoneCount != null"></cd-card-row>
 
       <cd-card-row [data]="rgwBucketCount"
                    link="/rgw/bucket"
-                   title="Bucket"
+                   [title]="bucketLabel"
                    summaryType="simplified"
                    *ngIf="rgwBucketCount != null"></cd-card-row>
 
       <cd-card-row [data]="UserCount"
                    link="/rgw/user"
-                   title="User"
+                   [title]="userLabel"
                    summaryType="simplified"
                    *ngIf="UserCount != null"></cd-card-row>
 
       <cd-card-row [data]="objectCount"
-                   title="Object"
+                   [title]="objectLabel"
                    summaryType="simplified"
                    *ngIf="objectCount != null"></cd-card-row>
     </cd-card>
-    <cd-card cardTitle="Performance Statistics"
-             i18n-title
+    <cd-card [cardTitle]="performanceStatisticsTitle"
              class="col-sm-6 d-flex"
              ria-label="Performance Statistics card">
       <div class="ms-4 me-4 mt-0">
         <cd-dashboard-time-selector (selectedTime)="getPrometheusData($event)">
         </cd-dashboard-time-selector>
-        <cd-dashboard-area-chart chartTitle="Requests/sec"
+        <cd-dashboard-area-chart [chartTitle]="requestsPerSecondTitle"
                                  dataUnits=""
-                                 [labelsArray]="['Requests/sec']"
+                                 [labelsArray]="[requestsPerSecondTitle]"
                                  [dataArray]="[queriesResults.RGW_REQUEST_PER_SECOND]">
         </cd-dashboard-area-chart>
-        <cd-dashboard-area-chart chartTitle="Latency"
+        <cd-dashboard-area-chart [chartTitle]="latencyTitle"
                                  dataUnits="ms"
                                  decimals="2"
                                  [labelsArray]="['GET', 'PUT']"
                                  [dataArray]="[queriesResults.AVG_GET_LATENCY, queriesResults.AVG_PUT_LATENCY]">
         </cd-dashboard-area-chart>
-        <cd-dashboard-area-chart chartTitle="Bandwidth"
+        <cd-dashboard-area-chart [chartTitle]="bandwidthTitle"
                                  dataUnits="B"
                                  [labelsArray]="['GET', 'PUT']"
                                  [dataArray]="[queriesResults.GET_BANDWIDTH, queriesResults.PUT_BANDWIDTH]">
@@ -72,8 +70,7 @@
       </div>
     </cd-card>
     <div class="col-lg-3">
-      <cd-card cardTitle="Used Capacity"
-               i18n-title
+      <cd-card [cardTitle]="usedCapacityTitle"
                class="col-sm-2 d-flex w-100 h-50 pb-3"
                aria-label="Used Capacity"
                [alignItemsCenter]="true"
@@ -82,8 +79,7 @@
           <h1>{{ totalPoolUsedBytes | dimlessBinary}}</h1>
         </span>
       </cd-card>
-      <cd-card cardTitle="Average Object Size"
-               i18n-title
+      <cd-card [cardTitle]="averageObjectSizeTitle"
                class="col-sm-2 d-flex w-100 h-50 pt-3"
                aria-label="Avg Object Size"
                [alignItemsCenter]="true"
@@ -96,14 +92,13 @@
   </div>
 
   <div class="row pt-4 pb-4">
-    <cd-card cardTitle="Multi-Site Sync Status"
-             i18n-title>
+    <cd-card [cardTitle]="multisiteSyncStatusTitle">
       <ng-template #notConfigured>
         <span class="pe-5 ps-5">
-          <cd-alert-panel type="info"
-                          i18n>
-            Multi-site needs to be configured in order to see the multi-site sync status.
-            Please consult the&nbsp;<cd-doc section="multisite"></cd-doc>&nbsp;on how to configure and enable the multi-site functionality.
+          <cd-alert-panel type="info">
+            {{ multisiteNotConfiguredText }}
+            <span *ngIf="isZhHans">请参考&nbsp;<cd-doc section="multisite"></cd-doc>&nbsp;完成配置。</span>
+            <span *ngIf="!isZhHans">Please consult the&nbsp;<cd-doc section="multisite"></cd-doc>&nbsp;on how to configure and enable the multi-site functionality.</span>
           </cd-alert-panel>
         </span>
       </ng-template>
@@ -115,7 +110,7 @@
            *ngIf="multisiteSyncStatus$ | async">
         <div class="row pt-2"
              *ngIf="showMultisiteCard; else notConfigured">
-          <cd-card cardTitle="Primary Source Zone"
+          <cd-card [cardTitle]="primarySourceZoneTitle"
                    class="col-lg-3 d-flex justify-content-center align-primary-zone"
                    [alignItemsCenter]="true"
                    [justifyContentCenter]="true">
@@ -132,7 +127,7 @@
             </span>
           </cd-card>
           <div class="col-lg-9">
-            <cd-card cardTitle="Source Zones"
+            <cd-card [cardTitle]="sourceZonesTitle"
                      class="d-flex h-100">
               <span *ngIf="loading"
                     class="d-flex justify-content-center">
@@ -149,8 +144,7 @@
                          aria-label="Source Zones Card">
                   <div class="row pb-4 ps-3 pe-3">
                     <cd-card *ngFor="let title of chartTitles"
-                             [cardTitle]="title"
-                             i18n-title
+                             [cardTitle]="title === 'Metadata Sync' ? metadataSyncTitle : dataSyncTitle"
                              cardType="syncCards"
                              removeBorder="true"
                              class="col-sm-9 col-lg-6"
@@ -179,4 +173,3 @@
     </cd-card>
   </div>
 </div>
-

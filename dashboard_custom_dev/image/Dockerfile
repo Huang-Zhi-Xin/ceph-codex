@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=quay.io/ceph/ceph:v20.2.0
+ARG BASE_IMAGE=registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0
 FROM ${BASE_IMAGE}
 
 LABEL org.opencontainers.image.title="KX Storage Dashboard"

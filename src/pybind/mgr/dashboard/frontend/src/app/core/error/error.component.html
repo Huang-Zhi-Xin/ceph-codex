@@ -13,9 +13,14 @@
           <h3><b>{{ header }}</b></h3>
           <h4 class="mt-3"
               *ngIf="header !== message">{{ message }}</h4>
-          <h4 *ngIf="section"
-              i18n>Please consult the&nbsp;<a href="{{ docUrl }}">documentation</a>&nbsp;on how to configure and enable
-                   the {{ sectionInfo }} management functionality.
+          <h4 *ngIf="section">
+            <ng-container *ngIf="isZhHans; else errorDocumentationEn">
+              {{ documentationHint }}&nbsp;<a href="{{ docUrl }}">文档</a>&nbsp;后启用{{ sectionInfoLabel }}管理功能。
+            </ng-container>
+            <ng-template #errorDocumentationEn>
+              {{ documentationHint }}&nbsp;<a href="{{ docUrl }}">documentation</a>&nbsp;on how to configure and enable
+              the {{ sectionInfoLabel }} management functionality.
+            </ng-template>
           </h4>
         </div>
       </div>

@@ -2,13 +2,14 @@
 
 ## 1. 文档目的
 
-本文档用于指导在 `Ceph v20.2.0` 基线之上，完成 KX Storage Dashboard 的本地构建、镜像制作、发布更新、回滚和验收。
+本文档用于指导在 `Ceph v20.2.0` 基线之上，完成 KX Storage Dashboard 的本地构建、镜像同步、私有仓库发布、集群安装、正式更新、回滚与验收。
 
 适用范围：
 
 - 开发机构建环境：macOS
+- 私有仓库：`registry.cn-hangzhou.aliyuncs.com/kaixinlab`
 - 测试集群节点：`node11`
-- Dashboard 发布方式：开发期临时覆盖 + 日终自定义镜像滚动更新
+- 正式发布方式：全部镜像从阿里云私有仓库拉取
 
 ## 2. 版本矩阵
 
@@ -22,17 +23,34 @@
 - 容器运行时：`docker`
 - 正式发布镜像平台：`linux/amd64`
 
-## 3. 开发机构建前提
+## 3. 阿里云私有仓库镜像清单
 
-### 3.1 Homebrew
+正式安装与更新仅使用以下镜像：
 
-本机需已安装 Homebrew：
+- `registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0`
+- `registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:v20.2.0-kx.<date.build>`
+- `registry.cn-hangzhou.aliyuncs.com/kaixinlab/grafana:12.2.0`
+- `registry.cn-hangzhou.aliyuncs.com/kaixinlab/prometheus:v3.6.0`
+- `registry.cn-hangzhou.aliyuncs.com/kaixinlab/alertmanager:v0.28.1`
+- `registry.cn-hangzhou.aliyuncs.com/kaixinlab/node-exporter:v1.9.1`
+- `registry.cn-hangzhou.aliyuncs.com/kaixinlab/nvmeof:1.5`
+
+说明：
+
+- `ceph` 镜像用于 `cephadm bootstrap`、`mon/mgr/osd/mds/rgw` 及相关基础守护进程。
+- `kx-storage-dashboard` 为 KX 二开后的正式 `mgr` 镜像。
+- `nvmeof` 为可选镜像，默认不启用，但需预同步到私有仓库。
+- `NFS/SMB/iSCSI` 当前仍依赖 `ceph` 基础镜像，不单独维护公共镜像条目。
+
+## 4. 开发机构建前提
+
+### 4.1 Homebrew
 
 ```bash
 brew --version
 ```
 
-### 3.2 安装 Node 20
+### 4.2 安装 Node 20
 
 ```bash
 brew install node@20
@@ -45,21 +63,56 @@ npm -v
 要求：
 
 - `node -v` 不低于 `18.19`
-- 推荐实际版本为 `20.x`
+- 推荐使用 `20.x`
 
-### 3.3 Docker
+### 4.3 Docker
 
 ```bash
 docker version
 ```
 
-要求本机 Docker Desktop 或等效 Docker 环境已正常启动。
+## 5. 私有仓库镜像同步
 
-## 4. Dashboard 正式构建
+### 5.1 登录阿里云私有仓库
 
-### 4.1 执行前端构建
+```bash
+docker login registry.cn-hangzhou.aliyuncs.com
+```
 
-推荐直接使用项目内脚本：
+### 5.2 同步基础镜像与可选镜像
+
+使用项目内同步脚本：
+
+```bash
+cd /Users/huangzx/workspace/ceph
+bash dashboard_custom_dev/image/sync_registry_images.sh
+```
+
+脚本会执行：
+
+- 从上游拉取基础镜像
+- 重标记到 `registry.cn-hangzhou.aliyuncs.com/kaixinlab/...`
+- 推送到阿里云私有仓库
+- 输出镜像与 digest 清单
+
+输出清单：
+
+- `dashboard_custom_dev/image/aliyun-image-manifest.txt`
+
+### 5.3 校验私有仓库镜像
+
+```bash
+docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0
+docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/grafana:12.2.0
+docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/prometheus:v3.6.0
+docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/alertmanager:v0.28.1
+docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/node-exporter:v1.9.1
+docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/nvmeof:1.5
+```
+
+## 6. Dashboard 正式构建
+
+### 6.1 前端正式构建
 
 ```bash
 cd /Users/huangzx/workspace/ceph
@@ -74,20 +127,15 @@ bash dashboard_custom_dev/build_kx_dashboard_release.sh
 - 构建 `en-US` 与 `zh-Hans`
 - 生成 `/tmp/kx-dashboard.tgz`
 
-说明：
-
-- 日常开发验证直接使用 `/tmp/kx-dashboard.tgz`
-- 每天最后一次发布时，再基于最新构建结果制作 `linux/amd64` 持久镜像
-
-### 4.2 手工构建方式
-
-如需手工执行：
+### 6.2 手工构建方式
 
 ```bash
 export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
 export DASHBOARD_FRONTEND_LANGS="zh-Hans"
 export CI=1
 export COPYFILE_DISABLE=1
+export SHELL="/bin/sh"
+export npm_config_script_shell="/bin/sh"
 
 cd /Users/huangzx/workspace/ceph/src/pybind/mgr/dashboard/frontend
 node /Users/huangzx/workspace/ceph/dashboard_custom_dev/translation_tools/fill_zh_cn_glossary.js
@@ -103,32 +151,15 @@ ls -1 dist
 - `dist/en-US`
 - `dist/zh-Hans`
 
-## 5. 自定义镜像制作
+## 7. 自定义镜像制作
 
-### 5.1 镜像构建目录
-
-镜像构建目录位于：
-
-`/Users/huangzx/workspace/ceph/dashboard_custom_dev/image`
-
-目录内容：
-
-- `Dockerfile`
-- `build_image.sh`
-
-### 5.2 构建镜像
-
-默认基线镜像：
-
-- `quay.io/ceph/ceph:v20.2.0`
-
-构建示例：
+### 7.1 构建镜像
 
 ```bash
 cd /Users/huangzx/workspace/ceph
 
-export BASE_IMAGE="quay.io/ceph/ceph:v20.2.0"
-export REGISTRY="your.registry.local/kx"
+export BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0"
+export REGISTRY="registry.cn-hangzhou.aliyuncs.com/kaixinlab"
 export IMAGE_NAME="kx-storage-dashboard"
 export IMAGE_TAG="v20.2.0-kx.$(date +%Y%m%d%H%M)"
 export PLATFORM="linux/amd64"
@@ -136,109 +167,83 @@ export PLATFORM="linux/amd64"
 bash dashboard_custom_dev/image/build_image.sh
 ```
 
-构建完成后会输出完整镜像名，例如：
+构建完成后会输出：
 
 ```text
-your.registry.local/kx/kx-storage-dashboard:v20.2.0-kx.202603161530
+registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:v20.2.0-kx.<date.build>
 ```
 
-镜像构建逻辑会先清理上游镜像中的原始 Dashboard 多语言目录，再仅写入本次构建生成的 `en-US` 与 `zh-Hans`，避免旧语言包残留。
-
-注意：
-
-- 开发机为 Mac 时，默认本地镜像可能是 `arm64`
-- `node11` 为 `amd64`
-- 正式镜像必须使用 `linux/amd64` 构建，否则即使镜像可以导入，也无法在 `node11` 上作为持久运行镜像使用
-
-### 5.3 推送镜像
+### 7.2 推送镜像
 
 ```bash
-docker login your.registry.local
-docker push your.registry.local/kx/kx-storage-dashboard:v20.2.0-kx.202603161530
+docker push registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:v20.2.0-kx.<date.build>
 ```
 
-### 5.4 推荐的持久化发布方式
-
-推荐在 `node11` 可访问的私有镜像仓库中保存自定义镜像，然后让 `cephadm` 按仓库地址拉取并重建 `mgr`。
-
-推荐方案：
-
-- 方案 A：使用独立私有仓库
-- 方案 B：使用阿里云容器镜像服务等公网仓库
-- 方案 C：在 `node11` 或同网段节点部署本地仓库，例如 `registry:2`
-
-示例：
+### 7.3 镜像校验
 
 ```bash
-docker run -d --restart=always -p 5000:5000 --name registry registry:2
+docker buildx imagetools inspect registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:v20.2.0-kx.<date.build>
 ```
-
-然后将镜像标记并推送到该仓库：
-
-```bash
-docker tag kx-storage-dashboard:v20.2.0-kx.20260316-amd64 <registry>/kx/kx-storage-dashboard:v20.2.0-kx.20260316
-docker push <registry>/kx/kx-storage-dashboard:v20.2.0-kx.20260316
-```
-
-若仓库使用 HTTP，需要在目标节点的 Docker 配置中加入 `insecure-registries`，然后重启 Docker。
-
-### 5.5 离线导出镜像
-
-若当前没有可用私有镜像仓库，可在本机导出镜像文件后再传输到 `node11`：
-
-```bash
-docker save your.registry.local/kx/kx-storage-dashboard:v20.2.0-kx.202603161530 | gzip > /tmp/kx-storage-dashboard-v20.2.0-kx.202603161530.tar.gz
-ls -lh /tmp/kx-storage-dashboard-v20.2.0-kx.202603161530.tar.gz
-```
-
-如仅使用本地测试标签，也可导出当前本机构建镜像：
-
-```bash
-docker save kx-storage-dashboard:v20.2.0-kx.local | gzip > /tmp/kx-storage-dashboard-v20.2.0-kx.local.tar.gz
-```
-
-## 6. node11 更新流程
 
 说明：
 
-- 以下步骤需要 `node11` 可通过 SSH 正常访问。
-- 当前若 SSH 不通，应先修复网络或 SSH 服务，再执行更新。
-- 本章分为“开发期临时覆盖”和“日终正式固化”两条流程。
+- 镜像默认基础镜像已切到阿里云私有仓库中的 `ceph:20.2.0`
+- 正式镜像必须使用 `linux/amd64` 构建
+- 文档与脚本不再使用 `quay.io` 作为默认正式源
 
-### 6.1 更新前检查
+## 8. node11 首次安装流程
 
-在 `node11` 执行：
+### 8.1 登录阿里云私有仓库
 
 ```bash
-sudo cephadm shell -- ceph -s
-sudo cephadm shell -- ceph orch ps --daemon_type mgr
-sudo cephadm shell -- ceph mgr services
-sudo docker images | grep ceph
+sudo docker login registry.cn-hangzhou.aliyuncs.com
 ```
 
-记录以下信息：
+### 8.2 预拉取基础镜像
 
-- 当前 Ceph 健康状态
-- 当前 `mgr` 守护进程数量
-- 当前 Dashboard 访问地址
-- 当前正在使用的 Ceph 镜像标签或镜像 ID
+```bash
+sudo docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0
+sudo docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/grafana:12.2.0
+sudo docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/prometheus:v3.6.0
+sudo docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/alertmanager:v0.28.1
+sudo docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/node-exporter:v1.9.1
+```
 
-### 6.2 开发期临时覆盖更新
+### 8.3 使用私有仓库镜像引导集群
+
+```bash
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 bootstrap \
+  --mon-ip 192.168.100.111 \
+  --single-host-defaults \
+  --initial-dashboard-user admin \
+  --initial-dashboard-password 'Admin@123456'
+```
+
+### 8.4 校验引导结果
+
+```bash
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph -s
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph mgr services
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph config dump | grep container_image
+```
+
+## 9. node11 更新流程
+
+### 9.1 更新前检查
+
+```bash
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph -s
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph orch ps --daemon_type mgr
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph mgr services
+```
+
+### 9.2 开发期临时覆盖更新
 
 适用场景：
 
-- 当天开发过程中频繁改动前端
+- 当天频繁改动前端
 - 只需要快速验证页面效果
-- 暂不需要将最新前端固化到仓库镜像
-
-执行步骤：
-
-1. 从开发机把 `/tmp/kx-dashboard.tgz` 传到目标节点。
-2. 在目标节点解压到 `/tmp/kx-dashboard`。
-3. 将 `dist/` 覆盖到两个 `mgr` 容器的 `/usr/share/ceph/mgr/dashboard/frontend/dist/`。
-4. 执行 `ceph mgr fail` 触发新的 active `mgr` 使用最新前端资源。
-
-示例命令：
+- 暂不需要将最新前端固化到正式镜像
 
 ```bash
 scp /tmp/kx-dashboard.tgz <user>@<dashboard-host>:/tmp/
@@ -253,145 +258,90 @@ for cid in $(sudo docker ps --format '{{.ID}} {{.Names}}' | awk '/mgr-/{print $1
   sudo docker cp /tmp/kx-dashboard/package.json "$cid":/usr/share/ceph/mgr/dashboard/frontend/package.json
 done
 
-sudo cephadm shell -- ceph mgr fail
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph mgr fail
 ```
 
 说明：
 
-- 该方式适合当天调试，不适合作为长期稳定方案
-- `mgr` 重建或后续镜像切换后，手工覆盖内容会丢失
+- 该方式只适合当天调试
+- `mgr` 重建或镜像切换后，手工覆盖内容会丢失
 
-### 6.3 日终正式持久化更新
-
-推荐在每天最后一次验证通过后，将最新前端固化到 `linux/amd64` 镜像并推送到仓库，再执行持久化更新。
-
-以下命令中的镜像名使用参数化占位：
+### 9.3 日终正式持久化更新
 
 ```bash
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config set mgr container_image <registry>/kx/kx-storage-dashboard:<daily-tag>
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config get mgr container_image
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch daemon redeploy mgr.<host>.<active-id> --image <registry>/kx/kx-storage-dashboard:<daily-tag>
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch daemon redeploy mgr.<host>.<standby-id> --image <registry>/kx/kx-storage-dashboard:<daily-tag>
+sudo docker pull registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:v20.2.0-kx.<date.build>
+
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- \
+  ceph config set mgr container_image registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:v20.2.0-kx.<date.build>
+
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- \
+  ceph orch daemon redeploy mgr.<host>.<active-id> --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:v20.2.0-kx.<date.build>
+
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- \
+  ceph orch daemon redeploy mgr.<host>.<standby-id> --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:v20.2.0-kx.<date.build>
 ```
 
-这种方式的特点：
+### 9.4 组件服务使用私有仓库镜像
 
-- `cephadm` 后续重建 `mgr` 时仍会从你指定的仓库镜像启动
-- 节点重启、`mgr` 切换、容器重建后不会丢失二次开发内容
-- 不再依赖手工 `docker cp`
-
-### 6.4 登录镜像仓库
+示例：
 
 ```bash
-sudo docker login <registry>
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- \
+  ceph orch apply rgw default --placement=1
+
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- \
+  ceph orch apply mds cephfs --placement=1
 ```
 
-### 6.5 拉取新镜像
+监控与可选组件需要在 spec 或 apply 前确认私有镜像已可拉取。
+
+### 9.5 更新状态检查
 
 ```bash
-sudo docker pull <registry>/kx/kx-storage-dashboard:<daily-tag>
-```
-
-### 6.6 离线导入镜像（仅临时测试使用）
-
-将镜像压缩包复制到 `node11` 后执行：
-
-```bash
-gzip -dc /tmp/kx-storage-dashboard-v20.2.0-kx.202603161530.tar.gz | sudo docker load
-sudo docker images | grep kx-storage-dashboard
-```
-
-若使用的是本地测试标签导出的镜像，需要先为其重打正式标签：
-
-```bash
-sudo docker tag kx-storage-dashboard:v20.2.0-kx.local your.registry.local/kx/kx-storage-dashboard:v20.2.0-kx.202603161530
-```
-
-说明：
-
-- 离线导入只适合临时验证
-- `cephadm orch upgrade start` 在更新时通常仍会尝试向镜像仓库执行 `docker pull`
-- 因此，若没有一个 `node11` 可访问的私有仓库，离线导入后的本地镜像无法作为长期稳定的正式发布方案
-
-### 6.7 执行 mgr 滚动更新
-
-```bash
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config set mgr container_image <registry>/kx/kx-storage-dashboard:<daily-tag>
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch upgrade start --image <registry>/kx/kx-storage-dashboard:<daily-tag> --daemon-types mgr
-```
-
-### 6.8 更新状态检查
-
-```bash
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch upgrade status
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch ps --daemon_type mgr
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph -s
-```
-
-## 7. 更新后验收
-
-### 7.1 页面验收
-
-访问 Dashboard，检查以下内容：
-
-- 登录页品牌为 `KX Storage`
-- 登录页副标题为中文
-- 浏览器标签页标题为 `KX Storage`
-- favicon 为 KX 图标，且无右上角状态点
-- About 弹窗已替换品牌信息且无 Ceph copyright 文案
-- 帮助菜单仅保留 `API 文档` 与 `关于系统`
-- 左侧导航主要菜单已汉化
-
-### 7.2 集群验收
-
-```bash
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph -s
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph mgr services
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch ps --daemon_type mgr
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph orch ps --format json-pretty
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph config dump | grep container_image
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph -s
 ```
 
 验收要求：
 
-- Dashboard 可访问
+- `container_image_name` 全部来自 `registry.cn-hangzhou.aliyuncs.com/kaixinlab/...`
 - `mgr` 守护进程状态正常
 - `ceph -s` 无新增异常
 
-## 8. 回滚流程
-
-若更新后页面异常、品牌资源丢失或 Dashboard 无法访问，按以下步骤回滚：
-
-### 8.1 切回旧镜像
+## 10. 回滚流程
 
 ```bash
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph config set mgr container_image <上一版本镜像>
-sudo cephadm --image quay.io/ceph/ceph:v20.2.0 shell -- ceph orch upgrade start --image <上一版本镜像> --daemon-types mgr
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- \
+  ceph config set mgr container_image registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:<previous-tag>
+
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- \
+  ceph orch daemon redeploy mgr.<host>.<active-id> --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:<previous-tag>
+
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- \
+  ceph orch daemon redeploy mgr.<host>.<standby-id> --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard:<previous-tag>
 ```
 
-### 8.2 回滚后检查
+回滚后检查：
 
 ```bash
-sudo cephadm shell -- ceph orch upgrade status
-sudo cephadm shell -- ceph orch ps --daemon_type mgr
-sudo cephadm shell -- ceph -s
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph orch ps --daemon_type mgr
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph -s
 ```
 
-## 9. 常见问题
+## 11. 常见问题
 
-### 9.1 `npm run build:localize` 失败，提示 Node 版本过低
-
-原因：
-
-- 本机 Node 版本低于 Angular CLI 要求
-
-处理：
+### 11.1 `npm run build:localize` 失败
 
 ```bash
 brew install node@20
 export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
+export SHELL="/bin/sh"
+export npm_config_script_shell="/bin/sh"
 node -v
 ```
 
-### 9.2 页面更新后仍显示旧内容
+### 11.2 页面更新后仍显示旧内容
 
 处理顺序：
 
@@ -402,21 +352,16 @@ node -v
 4. 再次检查 mgr 镜像是否已切换完成
 ```
 
-### 9.3 无法更新到目标节点
+### 11.3 目标节点仍尝试拉取公网镜像
 
-检查项：
+检查：
 
-- 目标节点 SSH 是否可访问
-- `ssh` 服务是否启动
-- 防火墙是否放通
-- 目标节点到镜像仓库是否可达
-- `docker pull` 是否成功
+```bash
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph config dump | grep container_image
+sudo cephadm --image registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0 shell -- ceph orch ps --format json-pretty
+```
 
-### 9.4 自定义镜像已更新，但 Dashboard 资源未生效
+要求：
 
-检查项：
-
-- 镜像中是否包含 `/usr/share/ceph/mgr/dashboard/frontend/dist/zh-Hans`
-- `mgr` 是否确实使用了新镜像
-- `ceph orch upgrade status` 是否完成
-- 浏览器缓存是否已清除
+- 配置和运行时镜像名都来自阿里云私有仓库
+- 正式文档、脚本和集群配置中不再使用 `quay.io`

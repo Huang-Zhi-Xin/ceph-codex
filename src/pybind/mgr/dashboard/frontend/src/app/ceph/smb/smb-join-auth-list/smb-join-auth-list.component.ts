@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { SmbService } from '~/app/shared/api/smb.service';
@@ -35,6 +35,10 @@ export class SmbJoinAuthListComponent implements OnInit {
   joinAuth$: Observable<SMBJoinAuth[]>;
   subject$ = new BehaviorSubject<SMBJoinAuth[]>([]);
   selection: CdTableSelection = new CdTableSelection();
+  isZhHans = false;
+  headerTitle = 'Active directory access resources';
+  headerDescription =
+    'Logical management units for authorization on active directory (AD) servers';
 
   constructor(
     private router: Router,
@@ -43,9 +47,15 @@ export class SmbJoinAuthListComponent implements OnInit {
     public actionLabels: ActionLabelsI18n,
     private smbService: SmbService,
     private modalService: ModalCdsService,
-    private taskWrapper: TaskWrapperService
+    private taskWrapper: TaskWrapperService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     this.permission = this.authStorageService.getPermissions().smb;
+    this.isZhHans = this.localeId.startsWith('zh');
+    this.headerTitle = this.isZhHans ? '活动目录访问资源' : 'Active directory access resources';
+    this.headerDescription = this.isZhHans
+      ? '用于 Active Directory（AD）服务器授权管理的逻辑资源单元'
+      : 'Logical management units for authorization on active directory (AD) servers';
   }
 
   ngOnInit() {

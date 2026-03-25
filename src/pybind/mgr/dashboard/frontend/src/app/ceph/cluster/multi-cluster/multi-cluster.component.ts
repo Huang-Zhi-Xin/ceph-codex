@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { MultiClusterService } from '~/app/shared/api/multi-cluster.service';
@@ -26,6 +26,12 @@ import { NotificationService } from '~/app/shared/services/notification.service'
 })
 export class MultiClusterComponent implements OnInit, OnDestroy {
   COUNT_OF_UTILIZATION_CHARTS = 5;
+  isZhHans = false;
+  connectClusterTitle = 'Connect Cluster';
+  connectClusterDescription =
+    'Upgrade your current cluster to a multi-cluster setup effortlessly. Click on the "Connect Cluster" button to begin the process.';
+  clusterManagedByText = 'This cluster is already managed by cluster -';
+  connectClusterButtonText = 'Connect Cluster';
 
   @ViewChild('clusterUsageTpl', { static: true })
   clusterUsageTpl: TemplateRef<any>;
@@ -103,8 +109,18 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private router: Router,
     private prometheusService: PrometheusService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
+    this.isZhHans = this.localeId.startsWith('zh');
+    this.connectClusterTitle = this.isZhHans ? '接入集群' : 'Connect Cluster';
+    this.connectClusterDescription = this.isZhHans
+      ? '将当前集群接入多集群管理。点击“接入集群”按钮开始配置。'
+      : 'Upgrade your current cluster to a multi-cluster setup effortlessly. Click on the "Connect Cluster" button to begin the process.';
+    this.clusterManagedByText = this.isZhHans
+      ? '当前集群已由以下集群管理：'
+      : 'This cluster is already managed by cluster -';
+    this.connectClusterButtonText = this.isZhHans ? '接入集群' : 'Connect Cluster';
     this.multiClusterQueries = {
       cluster: {
         queries: ClusterUltilizationQueries,
@@ -136,9 +152,9 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
         cellTransformation: CellTemplate.badge,
         customTemplateConfig: {
           map: {
-            1: { value: 'DISCONNECTED', class: 'badge-danger' },
-            0: { value: 'CONNECTED', class: 'badge-success' },
-            2: { value: 'CHECKING..', class: 'badge-info' }
+            1: { value: this.isZhHans ? '未连接' : 'DISCONNECTED', class: 'badge-danger' },
+            0: { value: this.isZhHans ? '已连接' : 'CONNECTED', class: 'badge-success' },
+            2: { value: this.isZhHans ? '检查中' : 'CHECKING..', class: 'badge-info' }
           }
         }
       },
@@ -149,9 +165,9 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
         cellTransformation: CellTemplate.badge,
         customTemplateConfig: {
           map: {
-            1: { value: 'WARN', class: 'badge-warning' },
-            0: { value: 'OK', class: 'badge-success' },
-            2: { value: 'ERROR', class: 'badge-danger' }
+            1: { value: this.isZhHans ? '警告' : 'WARN', class: 'badge-warning' },
+            0: { value: this.isZhHans ? '正常' : 'OK', class: 'badge-success' },
+            2: { value: this.isZhHans ? '错误' : 'ERROR', class: 'badge-danger' }
           }
         }
       },

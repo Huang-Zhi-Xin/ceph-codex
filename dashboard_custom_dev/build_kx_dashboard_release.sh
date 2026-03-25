@@ -10,10 +10,12 @@ if [[ ! -x "${NODE20_BIN}/node" ]]; then
   exit 1
 fi
 
-export PATH="${NODE20_BIN}:$PATH"
+export PATH="${NODE20_BIN}:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${PATH:-}"
 export DASHBOARD_FRONTEND_LANGS="zh-Hans"
 export CI=1
 export COPYFILE_DISABLE=1
+export SHELL="/bin/sh"
+export npm_config_script_shell="/bin/sh"
 
 cd "${FRONTEND_DIR}"
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
@@ -43,6 +43,9 @@ export class SmbClusterListComponent extends ListWithDetails implements OnInit {
   subject$ = new BehaviorSubject<SMBCluster[]>([]);
   selection = new CdTableSelection();
   modalRef: NgbModalRef;
+  isZhHans: boolean;
+  headerTitle: string;
+  headerDescription: string;
 
   constructor(
     private authStorageService: AuthStorageService,
@@ -50,10 +53,16 @@ export class SmbClusterListComponent extends ListWithDetails implements OnInit {
     private smbService: SmbService,
     private modalService: ModalCdsService,
     private taskWrapper: TaskWrapperService,
-    private urlBuilder: URLBuilderService
+    private urlBuilder: URLBuilderService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.permission = this.authStorageService.getPermissions().smb;
+    this.isZhHans = localeId.startsWith('zh');
+    this.headerTitle = this.isZhHans ? '集群' : 'Clusters';
+    this.headerDescription = this.isZhHans
+      ? '用于管理一个或多个 Samba 服务实例的逻辑管理单元。'
+      : 'Logical management units that may map to one or more managed Samba service';
   }
 
   ngOnInit() {
@@ -64,7 +73,7 @@ export class SmbClusterListComponent extends ListWithDetails implements OnInit {
         flexGrow: 2
       },
       {
-        name: $localize`Authentication Mode`,
+        name: this.isZhHans ? '认证模式' : $localize`Authentication Mode`,
         prop: 'auth_mode',
         flexGrow: 2
       }

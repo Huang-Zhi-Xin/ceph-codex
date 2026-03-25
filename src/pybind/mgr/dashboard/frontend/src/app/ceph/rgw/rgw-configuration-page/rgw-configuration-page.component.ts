@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, OnInit, Output, ViewChild } from '@angular/core';
 
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import _ from 'lodash';
@@ -53,16 +53,21 @@ export class RgwConfigurationPageComponent extends ListWithDetails implements On
   excludeProps: any[] = [];
   disableCreate = true;
   allEncryptionValues: any;
+  isZhHans = false;
+  encryptionTabTitle = 'Server-side Encryption';
 
   constructor(
     public activeModal: NgbActiveModal,
     public actionLabels: ActionLabelsI18n,
     private rgwBucketService: RgwBucketService,
     public authStorageService: AuthStorageService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
     this.permissions = this.authStorageService.getPermissions();
+    this.isZhHans = this.localeId.startsWith('zh');
+    this.encryptionTabTitle = this.isZhHans ? '服务端加密' : 'Server-side Encryption';
   }
 
   ngOnInit() {
