@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, ContentChild, Inject, Input, LOCALE_ID, OnInit, TemplateRef } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl, NgForm, Validators } from '@angular/forms';
 
 import _ from 'lodash';
@@ -27,8 +27,29 @@ export class NfsFormClientComponent implements OnInit {
   nfsAccessType: any[] = [];
   icons = Icons;
   clientsFormArray: UntypedFormArray;
+  isZhHans = false;
 
-  constructor(private nfsService: NfsService) {}
+  constructor(private nfsService: NfsService, @Inject(LOCALE_ID) private localeId: string) {
+    this.isZhHans = this.localeId.startsWith('zh');
+  }
+
+  get removeClientTitle(): string {
+    return this.isZhHans ? '移除客户端' : 'Remove Client';
+  }
+
+  get addressesPlaceholder(): string {
+    return this.isZhHans
+      ? '例如：192.168.0.10, 192.168.1.0/8'
+      : 'e.g. 192.168.0.10, 192.168.1.0/8';
+  }
+
+  get accessTypeLabel(): string {
+    return this.isZhHans ? '访问类型' : 'Access Type';
+  }
+
+  get noAccessTypeText(): string {
+    return this.isZhHans ? '无访问类型' : 'No Access Type';
+  }
 
   ngOnInit() {
     this.nfsSquash = Object.keys(this.nfsService.nfsSquash);
@@ -44,7 +65,7 @@ export class NfsFormClientComponent implements OnInit {
     if (this.form.getValue('access_type')) {
       return `${this.form.getValue('access_type')} ${$localize`(inherited from global config)`}`;
     }
-    return $localize`-- Select the access type --`;
+    return this.isZhHans ? '-- 选择访问类型 --' : $localize`-- Select the access type --`;
   }
 
   getAccessTypeHelp(index: number) {
@@ -58,7 +79,9 @@ export class NfsFormClientComponent implements OnInit {
     if (this.form.getValue('squash')) {
       return `${this.form.getValue('squash')} (${$localize`inherited from global config`})`;
     }
-    return $localize`-- Select what kind of user id squashing is performed --`;
+    return this.isZhHans
+      ? '-- 选择执行哪种用户 ID squash --'
+      : $localize`-- Select what kind of user id squashing is performed --`;
   }
 
   isValidClientAddress(value: string): boolean {

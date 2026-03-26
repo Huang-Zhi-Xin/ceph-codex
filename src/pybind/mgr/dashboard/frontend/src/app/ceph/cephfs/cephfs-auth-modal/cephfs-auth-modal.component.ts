@@ -36,6 +36,7 @@ export class CephfsAuthModalComponent extends CdForm implements OnInit, AfterVie
   action: string;
   resource: string;
   icons = Icons;
+  isZhHans = false;
   storageUsersLabel: string;
   storageUsersHelperPrefix: string;
   storageUsersHelperSuffix: string;
@@ -78,10 +79,46 @@ export class CephfsAuthModalComponent extends CdForm implements OnInit, AfterVie
     super();
     this.action = this.actionLabels.UPDATE;
     this.resource = $localize`access`;
-    const isZhHans = localeId.startsWith('zh');
-    this.storageUsersLabel = isZhHans ? '存储用户' : 'Storage Users';
-    this.storageUsersHelperPrefix = isZhHans ? '你可以在' : 'You can manage users from the';
-    this.storageUsersHelperSuffix = isZhHans ? '页面管理用户' : 'page';
+    this.isZhHans = localeId.startsWith('zh');
+    this.storageUsersLabel = this.isZhHans ? '存储用户' : 'Storage Users';
+    this.storageUsersHelperPrefix = this.isZhHans ? '你可以在' : 'You can manage users from the';
+    this.storageUsersHelperSuffix = this.isZhHans ? '页面管理用户' : 'page';
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? '更新' : 'Update'} ${this.isZhHans ? '访问权限' : 'Access'}`;
+  }
+
+  get fsNameLabel(): string {
+    return this.isZhHans ? '文件系统名称' : 'FS name';
+  }
+
+  get userIdLabel(): string {
+    return this.isZhHans ? '用户 ID' : 'User ID';
+  }
+
+  get namePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get directoryLabel(): string {
+    return this.isZhHans ? '目录' : 'Directory';
+  }
+
+  get directoryHelperText(): string {
+    return this.isZhHans ? '用于限制访问的路径' : 'Path to restrict access to';
+  }
+
+  get directoryPlaceholder(): string {
+    return this.isZhHans ? '目录路径' : 'Directory path';
+  }
+
+  get permissionsLabel(): string {
+    return this.isZhHans ? '权限' : 'Permissions';
+  }
+
+  get submitText(): string {
+    return this.isZhHans ? '更新' : 'Update';
   }
 
   ngAfterViewInit(): void {

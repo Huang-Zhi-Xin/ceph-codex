@@ -3,7 +3,7 @@
            [hasScrollingContent]="true">
   <cds-modal-header (closeSelect)="closeModal()">
     <h3 cdsModalHeaderHeading
-        i18n>{{ action | titlecase }} {{ resource | upperFirst }}</h3>
+        >{{ formTitle }}</h3>
   </cds-modal-header>
   <ng-container *cdFormLoading="loading">
   <form name="hostForm"
@@ -16,10 +16,10 @@
         <cds-text-label for="hostname"
                         [invalid]="!hostForm.controls.hostname.valid && hostForm.controls.hostname.dirty"
                         [invalidText]="hostnameError">
-          <ng-container i18n>Hostname (required)</ng-container>
+          <ng-container>{{ hostnameLabel }}</ng-container>
           <input cdsText
                  type="text"
-                 placeholder="mon-123"
+                 [placeholder]="isZhHans ? '例如：mon-123' : 'mon-123'"
                  id="hostname"
                  name="hostname"
                  formControlName="hostname"
@@ -38,21 +38,18 @@
           </span>
         </ng-template>
         <cd-help-text>
-          To add multiple hosts at once, you can enter:
+          {{ hostHelpIntro }}
           <ul cdsList>
-            <li cdsListItem
-                i18n>a comma-separated list of hostnames <b>(e.g.: example-01,example-02,example-03)</b>,</li>
-            <li cdsListItem
-                i18n>a range expression <b>(e.g.: example-[01-03].ceph)</b>,</li>
-            <li cdsListItem
-                i18n>a comma separated range expression <b>(e.g.: example-[01-05].lab.com,example2-[1-4].lab.com,example3-[001-006].lab.com)</b></li>
+            <li cdsListItem>{{ commaSeparatedHostnamesHelp }}</li>
+            <li cdsListItem>{{ rangeExpressionHelp }}</li>
+            <li cdsListItem>{{ commaSeparatedRangeExpressionHelp }}</li>
           </ul>
         </cd-help-text>
       </div>
       <!-- Address -->
       <div class="form-item"
            *ngIf="!hostPattern">
-        <cds-text-label label="Network address"
+        <cds-text-label [label]="isZhHans ? '网络地址' : 'Network address'"
                         for="addr"
                         i18n>Network address
           <input cdsText
@@ -76,8 +73,7 @@
                        for="labels"
                        name="labels"
                        formControlName="labels"
-                       placeholder="Select Labels..."
-                       i18n-placeholder
+                       [placeholder]="isZhHans ? '选择标签...' : 'Select Labels...'"
                        [appendInline]="true"
                        [items]="labelsOption"
                        itemValueKey="content"
@@ -99,7 +95,7 @@
     </div>
     <cd-form-button-panel (submitActionEvent)="submit()"
                           [form]="hostForm"
-                          [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                          [submitText]="submitText"
                           [modalForm]="true">
     </cd-form-button-panel>
   </form>

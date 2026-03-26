@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NvmeofService } from '~/app/shared/api/nvmeof.service';
 import { DeleteConfirmationModalComponent } from '~/app/shared/components/delete-confirmation-modal/delete-confirmation-modal.component';
@@ -34,6 +34,8 @@ export class NvmeofInitiatorsListComponent implements OnInit {
   selection = new CdTableSelection();
   permission: Permission;
   initiators: NvmeofSubsystemInitiator[] = [];
+  initiatorHelpText: string;
+  allowAnyHostLabel: string;
 
   constructor(
     public actionLabels: ActionLabelsI18n,
@@ -41,9 +43,15 @@ export class NvmeofInitiatorsListComponent implements OnInit {
     private nvmeofService: NvmeofService,
     private modalService: ModalCdsService,
     private router: Router,
-    private taskWrapper: TaskWrapperService
+    private taskWrapper: TaskWrapperService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.permission = this.authStorageService.getPermissions().nvmeof;
+    const isZhHans = localeId.startsWith('zh');
+    this.initiatorHelpText = isZhHans
+      ? '发起端（或主机）是连接到 NVMe-oF 目标并访问 NVMe 存储的客户端。NVMe/TCP 协议允许发起端向作为目标的存储设备发送 NVMe-oF 命令。'
+      : 'An initiator (or host) is the client that connects to the NVMe-oF target to access NVMe storage. The NVMe/TCP protocol allows initiators to send NVMe-oF commands to storage devices, which are known as targets.';
+    this.allowAnyHostLabel = isZhHans ? '允许任意主机 (*)' : 'Any host allowed (*)';
   }
 
   ngOnInit() {

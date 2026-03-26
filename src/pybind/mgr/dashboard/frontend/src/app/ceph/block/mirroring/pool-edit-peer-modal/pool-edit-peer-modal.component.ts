@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Optional } from '@angular/core';
 import { AbstractControl, UntypedFormControl, Validators } from '@angular/forms';
 
 import { RbdMirroringService } from '~/app/shared/api/rbd-mirroring.service';
@@ -20,6 +20,7 @@ export class PoolEditPeerModalComponent extends BaseModal implements OnInit {
     containerClass: 'theme-default'
   };
   pattern: string;
+  isZhHans = false;
 
   response: PoolEditPeerResponseModel;
 
@@ -30,10 +31,50 @@ export class PoolEditPeerModalComponent extends BaseModal implements OnInit {
 
     @Inject('poolName') public poolName: string,
     @Optional() @Inject('peerUUID') public peerUUID = '',
-    @Optional() @Inject('mode') public mode = ''
+    @Optional() @Inject('mode') public mode = '',
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.createForm();
+  }
+
+  get modalTitle(): string {
+    return this.isZhHans
+      ? this.mode === 'edit'
+        ? '编辑池镜像对等端'
+        : '添加池镜像对等端'
+      : this.mode === 'edit'
+        ? 'Edit pool mirror peer'
+        : 'Add pool mirror peer';
+  }
+
+  get clusterNamePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get clientIdPlaceholder(): string {
+    return this.isZhHans ? 'CephX ID...' : 'CephX ID...';
+  }
+
+  get clusterNameLabel(): string {
+    return this.isZhHans ? '集群名称' : 'Cluster Name';
+  }
+
+  get clientIdLabel(): string {
+    return this.isZhHans ? 'CephX ID' : 'CephX ID';
+  }
+
+  get monitorAddressesPlaceholder(): string {
+    return this.isZhHans ? '逗号分隔的地址...' : 'Comma-delimited addresses...';
+  }
+
+  get cephxKeyPlaceholder(): string {
+    return this.isZhHans ? 'Base64 编码的 key...' : 'Base64-encoded key...';
+  }
+
+  get submitText(): string {
+    return this.isZhHans ? '提交' : this.actionLabels.SUBMIT;
   }
 
   createForm() {

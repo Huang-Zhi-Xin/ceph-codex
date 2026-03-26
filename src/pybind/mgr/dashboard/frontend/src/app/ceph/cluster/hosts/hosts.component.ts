@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -99,6 +99,10 @@ export class HostsComponent extends ListWithDetails implements OnDestroy, OnInit
   enableMaintenanceBtn: boolean;
   enableDrainBtn: boolean;
   bsModalRef: NgbModalRef;
+  isZhHans: boolean;
+  hostOverviewTitle: string;
+  hostOverviewUnavailableTooltip: string;
+  confirmContinueText: string;
 
   icons = Icons;
   private tableContext: CdTableFetchDataContext = null;
@@ -129,9 +133,16 @@ export class HostsComponent extends ListWithDetails implements OnDestroy, OnInit
     private router: Router,
     private notificationService: NotificationService,
     private orchService: OrchestratorService,
-    private cdsModalService: ModalCdsService
+    private cdsModalService: ModalCdsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
+    this.hostOverviewTitle = this.isZhHans ? '主机概览' : 'Host overview';
+    this.hostOverviewUnavailableTooltip = this.isZhHans
+      ? '不可用。无法从 Ceph 获取数据'
+      : 'Not available. Data could not be fetched from Ceph';
+    this.confirmContinueText = this.isZhHans ? '确定要继续吗？' : 'Are you sure you want to continue?';
     this.permissions = this.authStorageService.getPermissions();
     this.expandClusterActions = [
       {

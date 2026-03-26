@@ -2,7 +2,7 @@
            [open]="open"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()"
-                    i18n>{{editing ? 'Edit' : 'Create'}} Tiering configuration
+                    >{{ formTitle }}
     <cd-help-text [formAllFieldsRequired]="true"></cd-help-text>
   </cds-modal-header>
 
@@ -39,8 +39,7 @@
           [invalid]="!tieringForm.controls.name.valid && tieringForm.controls.name.dirty"
           [invalidText]="ruleNameError"
           [helperText]="ruleHelper"
-          i18n
-          >Rule Name
+          >{{ ruleNameLabel }}
           <input
             cdsText
             type="text"
@@ -67,14 +66,14 @@
       <div class="form-item">
         <cds-select id="storageClass"
                     formControlName="storageClass"
-                    label="Storage Class"
+                    [label]="storageClassLabel"
                     [helperText]="storageClassHelper">
           <option *ngIf="storageClassList === null"
-                  value="">Loading...</option>
+                  value="">{{ loadingText }}</option>
           <option *ngIf="storageClassList !== null && storageClassList.length === 0"
-                  value="">-- No storage class available --</option>
+                  value="">{{ noStorageClassText }}</option>
           <option *ngIf="storageClassList !== null && storageClassList.length > 0"
-                  value="">-- Select the storage class --</option>
+                  value="">{{ selectStorageClassText }}</option>
           <option *ngFor="let tier of storageClassList"
                   [value]="tier.storage_class">
             {{ tier.storage_class }}
@@ -85,7 +84,7 @@
           </span>
         </ng-template>
       </div>
-      <legend class="cds--label">Choose a configuration scope</legend>
+      <legend class="cds--label">{{ configurationScopeLabel }}</legend>
       <div>
         <cds-radio-group
           formControlName="hasPrefix"
@@ -128,7 +127,7 @@
       <!-- tags -->
       <div *ngIf="tieringForm.controls.hasPrefix.value">
         <div class="form-group-header">Tags</div>
-        <div>All the tags must exist in the object's tag set for the rule to apply.</div>
+        <div>{{ tagsRuleDescription }}</div>
         <ng-container formArrayName="tags"
                       *ngFor="let tags of tags.controls; index as i">
           <ng-container [formGroupName]="i">
@@ -143,7 +142,8 @@
                          type="text"
                          placeholder="Enter name of the object key"
                          formControlName="Key"
-                         i18n-placeholder
+                 i18n-placeholder
+                         [placeholder]="objectKeyNamePlaceholder"
                          [invalid]="tieringForm.controls['tags'].controls[i].controls['Key'].invalid && tieringForm.controls['tags'].controls[i].controls['Key'].dirty"/>
                 </cds-text-label>
                 <ng-template #tagKeyError>
@@ -157,9 +157,8 @@
                                 i18n>Value of the tag
                   <input cdsText
                          type="text"
-                         placeholder="Enter value of the tag"
+                         [placeholder]="tagValuePlaceholder"
                          formControlName="Value"
-                         i18n-placeholder
                          [invalid]="tieringForm.controls['tags'].controls[i].controls['Value'].invalid && tieringForm.controls['tags'].controls[i].controls['Value'].dirty"/>
                 </cds-text-label>
                 <ng-template #tagValueError>
@@ -205,7 +204,7 @@
       </div>
       <div class="form-item">
         <cds-number formControlName="days"
-                    label="Number of days"
+                    [label]="numberOfDaysLabel"
                     [min]="1"
                     [invalid]="!tieringForm.controls.days.valid && tieringForm.controls.days.dirty"
                     [invalidText]="daysError"
@@ -227,7 +226,7 @@
   <cd-form-button-panel
     (submitActionEvent)="submitTieringConfig()"
     [form]="tieringForm"
-    [submitText]="editing ? actionLabels.EDIT : actionLabels.CREATE"
+    [submitText]="submitText"
     [modalForm]="true"
     [disabled]="storageClassList?.length === 0 && isStorageClassFetched"
   ></cd-form-button-panel>

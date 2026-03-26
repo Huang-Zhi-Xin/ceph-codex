@@ -7,7 +7,7 @@
       <!-- Details Card-->
       <cd-card [cardTitle]="detailsTitle"
                class="details"
-               aria-label="Details card">
+               [attr.aria-label]="detailsCardAriaLabel">
         <dl class="ms-4 me-4">
           <dt>{{ clusterIdLabel }}</dt>
           <dd>{{ detailsCardData.fsid }}</dd>
@@ -44,7 +44,7 @@
       <!-- Inventory Card-->
       <cd-card [cardTitle]="inventoryTitle"
                class="pt-4"
-               aria-label="Inventory card">
+               [attr.aria-label]="inventoryCardAriaLabel">
         <ng-container *ngIf="enabledFeature$ | async as enabledFeature">
           <!-- Hosts -->
           <cd-card-row [data]="hostsCount"
@@ -108,7 +108,7 @@
         <!-- This column will hold Status and Capacity cards-->
         <div class="col-sm-8">
           <cd-card [cardTitle]="statusTitle"
-                   aria-label="Status card"
+                   [attr.aria-label]="statusCardAriaLabel"
                    class="status"
                    [alignItemsCenter]="true"
                    [cardFooter]="isAlertmanagerConfigured && prometheusAlertService.alerts.length"
@@ -199,7 +199,7 @@
         <div class="col-sm-4 ps-0">
           <cd-card [cardTitle]="capacityTitle"
                    [fullHeight]="true"
-                   aria-label="Capacity card">
+                   [attr.aria-label]="capacityCardAriaLabel">
             <ng-container class="ms-4 me-4"
                           *ngIf="totalCapacity !== null && usedCapacity !== null; else capacityEmpty">
               <cd-dashboard-pie [data]="{max: totalCapacity, current: usedCapacity}"
@@ -218,7 +218,7 @@
       <!-- This column will hold Cluster Utlization card -->
       <div class="col-sm-12 d-flex flex-column pt-4">
         <cd-card [cardTitle]="clusterUtilizationTitle"
-                 aria-label="Cluster utilization card">
+                 [attr.aria-label]="clusterUtilizationCardAriaLabel">
           <div class="ms-4 me-4 mt-0">
             <cd-dashboard-time-selector (selectedTime)="getPrometheusData($event)">
             </cd-dashboard-time-selector>

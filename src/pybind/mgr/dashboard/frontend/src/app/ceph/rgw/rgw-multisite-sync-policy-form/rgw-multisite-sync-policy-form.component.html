@@ -1,6 +1,5 @@
 <cd-modal [pageURL]="pageURL">
-  <span class="modal-title"
-        i18n>{{ action | titlecase }} {{ resource | upperFirst }}</span>
+  <span class="modal-title">{{ formTitle }}</span>
   <ng-container class="modal-content">
     <form
       #frm="ngForm"
@@ -20,8 +19,7 @@
               name="group_id"
               class="form-control"
               type="text"
-              i18n-placeholder
-              placeholder="Group Name..."
+              [placeholder]="groupNamePlaceholder"
               formControlName="group_id"
               [readonly]="editing"/>
             <span
@@ -70,8 +68,7 @@
               name="bucket_name"
               class="form-control"
               type="text"
-              i18n-placeholder
-              placeholder="Bucket Name..."
+              [placeholder]="bucketNamePlaceholder"
               formControlName="bucket_name"
               [ngbTypeahead]="bucketDataSource"/>
             <span
@@ -87,7 +84,7 @@
           <cd-form-button-panel (submitActionEvent)="submit()"
                                 [form]="syncPolicyForm"
                                 [disabled]="syncPolicyForm.pending || syncPolicyForm.pristine || syncPolicyForm.invalid"
-                                [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"></cd-form-button-panel>
+                                [submitText]="submitText"></cd-form-button-panel>
         </div>
       </div>
     </form>

@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
+  LOCALE_ID,
   OnDestroy,
   OnInit,
   Optional
@@ -34,16 +35,39 @@ export class BootstrapCreateModalComponent
   subs: Subscription;
 
   createBootstrapForm: CdFormGroup;
+  isZhHans = false;
 
   constructor(
     private rbdMirroringService: RbdMirroringService,
     private taskWrapper: TaskWrapperService,
     private changeDetectorRef: ChangeDetectorRef,
 
-    @Inject('siteName') @Optional() public siteName?: string
+    @Inject('siteName') @Optional() public siteName?: string,
+    @Inject(LOCALE_ID) private localeId?: string
   ) {
     super();
+    this.isZhHans = this.localeId?.startsWith('zh') || false;
     this.createForm();
+  }
+
+  get modalTitle(): string {
+    return this.isZhHans ? '创建 Bootstrap Token' : 'Create Bootstrap Token';
+  }
+
+  get siteNameLabel(): string {
+    return this.isZhHans ? '站点名称' : 'Site Name';
+  }
+
+  get namePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get tokenPlaceholder(): string {
+    return this.isZhHans ? '生成的令牌...' : 'Generated token...';
+  }
+
+  get closeText(): string {
+    return this.isZhHans ? '关闭' : 'Close';
   }
 
   ngAfterViewInit(): void {

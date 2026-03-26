@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RgwMultisiteService } from '~/app/shared/api/rgw-multisite.service';
@@ -24,6 +24,7 @@ export class CreateRgwServiceEntitiesComponent {
   realm: RgwRealm;
   zonegroup: RgwZonegroup;
   zone: RgwZone;
+  isZhHans = false;
 
   @Output()
   submitAction = new EventEmitter();
@@ -36,9 +37,37 @@ export class CreateRgwServiceEntitiesComponent {
     public notificationService: NotificationService,
     public rgwZonegroupService: RgwZonegroupService,
     public rgwRealmService: RgwRealmService,
-    public modalService: ModalService
+    public modalService: ModalService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
+    this.isZhHans = this.localeId.startsWith('zh');
     this.createForm();
+  }
+
+  get formTitle(): string {
+    return this.isZhHans ? '创建 Realm/Zone Group/Zone' : 'Create Realm/Zone Group/Zone';
+  }
+
+  get defaultMasterNotice(): string {
+    return this.isZhHans
+      ? '新建的 realm/zone group/zone 将被设为默认且为 master。'
+      : 'The realm/zone group/zone created will be set as default and master.';
+  }
+
+  get realmNamePlaceholder(): string {
+    return this.isZhHans ? 'Realm 名称...' : 'Realm name...';
+  }
+
+  get zoneGroupNamePlaceholder(): string {
+    return this.isZhHans ? 'Zone Group 名称...' : 'Zone group name...';
+  }
+
+  get zoneNamePlaceholder(): string {
+    return this.isZhHans ? 'Zone 名称...' : 'Zone name...';
+  }
+
+  get submitText(): string {
+    return this.isZhHans ? '创建' : this.actionLabels.CREATE;
   }
 
   createForm() {

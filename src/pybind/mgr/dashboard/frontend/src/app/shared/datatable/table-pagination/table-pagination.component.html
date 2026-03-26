@@ -3,8 +3,7 @@
      i18n-aria-label>
   <button
     class="pagination__btn pagination__btn_first"
-    aria-label="Go to first page"
-    i18n-aria-label
+    [attr.aria-label]="firstPageAriaLabel"
     [disabled]="!canPrevious()"
     (click)="selectPage(1)"
   >
@@ -13,8 +12,7 @@
   </button>
   <button
     class="pagination__btn pagination__btn_prev"
-    aria-label="Go to previous page"
-    i18n-aria-label
+    [attr.aria-label]="previousPageAriaLabel"
     [disabled]="!canPrevious()"
     (click)="prevPage()"
   >
@@ -25,8 +23,7 @@
     <input
       #pageNumber
       class="pagination__page_input"
-      aria-label="Current page"
-      i18n-aria-label
+      [attr.aria-label]="currentPageAriaLabel"
       type="number"
       min="1"
       [max]="totalPages"
@@ -37,8 +34,7 @@
   </div>
   <button
     class="pagination__btn pagination__btn_next"
-    aria-label="Go to next page"
-    i18n-aria-label
+    [attr.aria-label]="nextPageAriaLabel"
     (click)="nextPage()"
     [disabled]="!canNext()"
   >
@@ -47,8 +43,7 @@
   </button>
   <button
     class="pagination__btn pagination__btn_last"
-    aria-label="Go to last page"
-    i18n-aria-label
+    [attr.aria-label]="lastPageAriaLabel"
     [disabled]="!canNext()"
     (click)="selectPage(totalPages)"
   >

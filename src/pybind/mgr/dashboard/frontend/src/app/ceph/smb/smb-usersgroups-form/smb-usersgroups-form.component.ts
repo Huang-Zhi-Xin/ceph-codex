@@ -3,6 +3,8 @@ import {
   Component,
   computed,
   effect,
+  Inject,
+  LOCALE_ID,
   OnInit,
   Signal,
   OnDestroy
@@ -34,6 +36,7 @@ export class SmbUsersgroupsFormComponent extends CdForm implements OnInit, OnDes
   editing: boolean;
   icons = Icons;
   hideUploader: boolean = false;
+  isZhHans: boolean;
 
   smbClusters$: Observable<SMBCluster[]>;
   uploadedData: Signal<SMBUsersGroups> = computed(() => {
@@ -48,9 +51,11 @@ export class SmbUsersgroupsFormComponent extends CdForm implements OnInit, OnDes
     private router: Router,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.editing = this.router.url.startsWith(`/${USERSGROUPS_PATH}/${URLVerbs.EDIT}`);
     this.resource = $localize`users and groups access resource`;
     effect(() => {
@@ -60,6 +65,11 @@ export class SmbUsersgroupsFormComponent extends CdForm implements OnInit, OnDes
         this.hideUploader = true;
       }
     });
+  }
+
+  get formTitle(): string {
+    const resourceLabel = this.isZhHans ? '用户和组访问资源' : this.resource;
+    return `${this.action || ''} ${resourceLabel}`.trim();
   }
 
   ngOnInit() {

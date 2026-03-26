@@ -34,8 +34,7 @@
                      class="input-group cd-mb my-1">
                   <input class="cd-form-control"
                          type="text"
-                         i18n-placeholder
-                         placeholder="Add host nqn"
+                         [placeholder]="addHostPlaceholder"
                          [required]="!initiatorForm.getValue('allowAnyHost')"
                          [formControlName]="hi"/>
                   <button class="btn btn-light"
@@ -86,7 +85,7 @@
                      i18n>Allow any host</label>
               <cd-alert-panel *ngIf="initiatorForm.getValue('allowAnyHost')"
                               [showTitle]="false"
-                              type="warning">Allowing any host to connect to the NVMe/TCP gateway may pose security risks.
+                              type="warning">{{ allowAnyHostWarningText }}
               </cd-alert-panel>
             </div>
           </div>

@@ -57,8 +57,7 @@
           <div class="cd-col-form-input">
             <cds-number
               formControlName="nsCount"
-              helperText="The number of namespaces to create"
-              i18n-helperText
+              [helperText]="namespaceCountHelperText"
               [min]="MIN_NAMESPACE_CREATE"
               [max]="MAX_NAMESPACE_CREATE"
               [invalid]="nsForm.showError('nsCount', formDir, 'max') || nsForm.showError('nsCount', formDir, 'min') || nsForm.showError('nsCount', formDir, 'required')"

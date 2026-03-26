@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
 
 import { RgwBucketService } from '~/app/shared/api/rgw-bucket.service';
 
@@ -23,8 +23,59 @@ export class RgwBucketDetailsComponent implements OnChanges {
   aclPermissions: Record<string, string[]> = {};
   replicationStatus = $localize`Disabled`;
   bucketRateLimit: RgwRateLimitConfig;
+  isZhHans: boolean;
 
-  constructor(private rgwBucketService: RgwBucketService, private cd: ChangeDetectorRef) {}
+  get mfaDeleteLabel(): string {
+    return this.isZhHans ? 'MFA 删除' : 'MFA Delete';
+  }
+
+  get indexTypeLabel(): string {
+    return this.isZhHans ? '索引类型' : 'Index type';
+  }
+
+  get placementRuleLabel(): string {
+    return this.isZhHans ? '放置规则' : 'Placement rule';
+  }
+
+  get lastModifiedLabel(): string {
+    return this.isZhHans ? '最后修改时间' : 'Last modification time';
+  }
+
+  get maximumSizeLabel(): string {
+    return this.isZhHans ? '最大大小' : 'Maximum size';
+  }
+
+  get maximumObjectsLabel(): string {
+    return this.isZhHans ? '最大对象数' : 'Maximum objects';
+  }
+
+  get bucketPolicyLabel(): string {
+    return this.isZhHans ? '桶策略' : 'Bucket policy';
+  }
+
+  get lifecycleProgressLabel(): string {
+    return this.isZhHans ? '生命周期进度' : 'Lifecycle progress';
+  }
+
+  get replicationPolicyLabel(): string {
+    return this.isZhHans ? '复制策略' : 'Replication policy';
+  }
+
+  get bucketOwnerLabel(): string {
+    return this.isZhHans ? '桶所有者' : 'Bucket Owner';
+  }
+
+  get authenticatedUsersGroupLabel(): string {
+    return this.isZhHans ? '已认证用户组' : 'Authenticated users group';
+  }
+
+  constructor(
+    private rgwBucketService: RgwBucketService,
+    private cd: ChangeDetectorRef,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
 
   ngOnChanges() {
     this.updateBucketDetails(this.extraxtDetailsfromResponse.bind(this));

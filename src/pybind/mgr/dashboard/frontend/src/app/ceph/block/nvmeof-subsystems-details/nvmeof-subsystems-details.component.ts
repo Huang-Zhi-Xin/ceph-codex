@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
 import { NvmeofSubsystem } from '~/app/shared/models/nvmeof';
 import { Permissions } from '~/app/shared/models/permissions';
 
@@ -18,6 +18,15 @@ export class NvmeofSubsystemsDetailsComponent implements OnChanges {
   selectedItem: any;
   data: any;
   subsystemNQN: string;
+  isZhHans: boolean;
+
+  get performanceTitle(): string {
+    return this.isZhHans ? '子系统详情' : 'Subsystem details';
+  }
+
+  constructor(@Inject(LOCALE_ID) localeId: string) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
 
   ngOnChanges() {
     if (this.selection) {

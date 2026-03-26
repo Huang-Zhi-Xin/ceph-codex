@@ -3,6 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   HostBinding,
+  Inject,
+  LOCALE_ID,
   NgZone,
   OnDestroy,
   OnInit
@@ -49,6 +51,7 @@ export class NotificationsSidebarComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   icons = Icons;
+  isZhHans: boolean;
 
   // Tasks
   last_task = '';
@@ -68,9 +71,23 @@ export class NotificationsSidebarComponent implements OnInit, OnDestroy {
     private prometheusAlertService: PrometheusAlertService,
     private prometheusService: PrometheusService,
     private ngZone: NgZone,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.notifications = [];
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get removeNotificationTitle(): string {
+    return this.isZhHans ? '移除通知' : 'Remove notification';
+  }
+
+  get silenceAlertTitle(): string {
+    return this.isZhHans ? '静默告警' : 'Silence Alert';
+  }
+
+  get expireSilenceTitle(): string {
+    return this.isZhHans ? '结束静默' : 'Expire Silence';
   }
 
   ngOnDestroy() {

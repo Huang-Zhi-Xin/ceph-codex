@@ -7,14 +7,14 @@
 <div class="row"
      *ngIf="isSubVolumesAvailable; else noGroupsTpl">
   <div class="col-sm-2">
-    <cd-vertical-navigation title="Groups"
+    <cd-vertical-navigation [title]="groupsTitle"
                             [items]="subvolumeGroupList"
                             inputIdentifier="group-filter"
                             (emitActiveItem)="selectSubVolumeGroup($event)"></cd-vertical-navigation>
   </div>
   <div class="col-sm-2 vertical-line"
        *ngIf="subVolumes$ | async">
-    <cd-vertical-navigation title="Subvolumes"
+    <cd-vertical-navigation [title]="subvolumesTitle"
                             [items]="subVolumesList"
                             (emitActiveItem)="selectSubVolume($event)"
                             inputIdentifier="subvol-filter"></cd-vertical-navigation>
@@ -43,5 +43,5 @@
 <ng-template #noGroupsTpl>
   <cd-alert-panel type="info"
                   i18n
-                  *ngIf="!isLoading">No subvolumes are present. Please create subvolumes to manage snapshots.</cd-alert-panel>
+                  *ngIf="!isLoading">{{ noSubvolumesText }}</cd-alert-panel>
 </ng-template>

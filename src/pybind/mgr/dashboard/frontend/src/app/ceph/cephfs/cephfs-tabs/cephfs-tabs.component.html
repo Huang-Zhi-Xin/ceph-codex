@@ -81,8 +81,7 @@
       <a ngbNavLink>{{ overviewTabLabel }}</a>
       <ng-template ngbNavContent>
         <cd-grafana
-          i18n-title
-          title="CephFS performance"
+          [title]="performanceTitle"
           [grafanaPath]="'ceph-filesystem-overview?var-name=' + details.name"
           [type]="'metrics'"
           uid="718Bruins"

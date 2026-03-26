@@ -28,7 +28,7 @@
          class="nav-tabs">
       <ng-container ngbNavItem>
         <a ngbNavLink
-           i18n>Clusters List</a>
+           >{{ clustersListLabel }}</a>
         <ng-template ngbNavContent>
           <cd-table #table
                     [data]="data"
@@ -73,19 +73,17 @@
              let-row="data.row">
   <span *ngIf="row.remainingTimeWithoutSeconds > 0 && row.cluster_alias !== 'local-cluster'">
     <i *ngIf="row.remainingDays < 8"
-       i18n-title
-       title="Cluster's token is about to expire"
+       [title]="tokenAboutToExpireTitle"
        [class.icon-danger-color]="row.remainingDays < 2"
        [class.icon-warning-color]="row.remainingDays < 8"
        class="{{ icons.warning }}"></i>
     <span title="{{ row.expiryDate }}">{{ row.remainingTimeWithoutSeconds / 1000 | duration }}</span>
   </span>
-  <span *ngIf="row.remainingTimeWithoutSeconds <= 0 && row.remainingDays <=0 && row.cluster_alias !== 'local-cluster'">
-    <i i18n-title
-       title="Cluster's token has expired"
+    <span *ngIf="row.remainingTimeWithoutSeconds <= 0 && row.remainingDays <=0 && row.cluster_alias !== 'local-cluster'">
+    <i [title]="tokenHasExpiredTitle"
        class="{{ icons.danger }}"></i>
     <span class="text-danger"
-          i18n>Token expired</span>
+          >{{ tokenExpiredLabel }}</span>
   </span>
   <span *ngIf="row.cluster_alias === 'local-cluster'"
         i18n>N/A</span>

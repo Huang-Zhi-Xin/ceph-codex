@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -28,6 +28,7 @@ export class UserPasswordFormComponent {
   passwordStrengthLevelClass: string;
   passwordValuation: string;
   icons = Icons;
+  isZhHans: boolean;
 
   constructor(
     public actionLabels: ActionLabelsI18n,
@@ -36,11 +37,18 @@ export class UserPasswordFormComponent {
     public authStorageService: AuthStorageService,
     public formBuilder: CdFormBuilder,
     public router: Router,
-    public passwordPolicyService: PasswordPolicyService
+    public passwordPolicyService: PasswordPolicyService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.action = this.actionLabels.CHANGE;
     this.resource = $localize`password`;
     this.createForm();
+  }
+
+  get formTitle(): string {
+    const resourceLabel = this.isZhHans ? '密码' : this.resource;
+    return `${this.action || ''} ${resourceLabel}`.trim();
   }
 
   createForm() {

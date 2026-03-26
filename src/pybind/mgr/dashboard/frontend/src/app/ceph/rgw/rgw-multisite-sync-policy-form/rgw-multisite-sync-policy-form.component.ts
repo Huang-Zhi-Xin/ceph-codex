@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, timer as observableTimer, of } from 'rxjs';
@@ -31,6 +31,7 @@ export class RgwMultisiteSyncPolicyFormComponent extends CdForm implements OnIni
   editing = false;
   action: string;
   resource: string;
+  isZhHans = false;
   syncPolicyStatus = RgwMultisiteSyncPolicyStatus;
   pageURL: string;
   bucketDataSource = (text$: Observable<string>) => {
@@ -48,15 +49,33 @@ export class RgwMultisiteSyncPolicyFormComponent extends CdForm implements OnIni
     private fb: CdFormBuilder,
     private rgwMultisiteService: RgwMultisiteService,
     private notificationService: NotificationService,
-    private rgwBucketService: RgwBucketService
+    private rgwBucketService: RgwBucketService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.editing = this.router.url.includes('(modal:edit');
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
     this.resource = $localize`Sync Policy Group`;
     this.createForm();
     this.loadingReady();
     this.pageURL = 'rgw/multisite/sync-policy';
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? (this.editing ? '编辑' : '创建') : this.action} ${this.isZhHans ? '同步策略组' : 'Sync Policy Group'}`;
+  }
+
+  get groupNamePlaceholder(): string {
+    return this.isZhHans ? '组名称...' : 'Group Name...';
+  }
+
+  get bucketNamePlaceholder(): string {
+    return this.isZhHans ? '桶名称...' : 'Bucket Name...';
+  }
+
+  get submitText(): string {
+    return this.formTitle;
   }
 
   ngOnInit(): void {

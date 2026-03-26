@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -29,6 +29,11 @@ export class UpgradeProgressComponent implements OnInit, OnDestroy {
   modalRef: NgbModalRef;
   interval = new Subscription();
   executingTask: ExecutingTask;
+  isZhHans: boolean;
+  backAriaLabel: string;
+  pauseAriaLabel: string;
+  resumeAriaLabel: string;
+  stopAriaLabel: string;
 
   upgradeStatus$: Observable<UpgradeStatusInterface>;
   subject = new ReplaySubject<UpgradeStatusInterface>();
@@ -40,9 +45,15 @@ export class UpgradeProgressComponent implements OnInit, OnDestroy {
     private modalService: ModalCdsService,
     private summaryService: SummaryService,
     private router: Router,
-    private refreshIntervalService: RefreshIntervalService
+    private refreshIntervalService: RefreshIntervalService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.permission = this.authStorageService.getPermissions().configOpt;
+    this.isZhHans = localeId.startsWith('zh');
+    this.backAriaLabel = this.isZhHans ? '返回' : 'Go back';
+    this.pauseAriaLabel = this.isZhHans ? '暂停升级' : 'Pause Upgrade';
+    this.resumeAriaLabel = this.isZhHans ? '恢复升级' : 'Resume Upgrade';
+    this.stopAriaLabel = this.isZhHans ? '停止升级' : 'Stop Upgrade';
   }
 
   ngOnInit() {

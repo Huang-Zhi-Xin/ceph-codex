@@ -6,8 +6,7 @@
         [formGroup]="bucketForm"
         novalidate>
 
-    <div i18n="form title"
-         class="form-header">{{ action | titlecase }} {{ resource | upperFirst }}</div>
+    <div class="form-header">{{ formTitle }}</div>
 
     <!-- Id -->
     <div class="form-item"
@@ -30,8 +29,7 @@
                       [invalidText]="nameError"
                       i18n>Name
         <input cdsText
-               placeholder="Name..."
-               i18n-placeholder
+               [placeholder]="namePlaceholder"
                id="bid"
                name="bid"
                formControlName="bid"
@@ -77,17 +75,17 @@
     @if (bucketForm.get('isAccountOwner').value) {
       <!-- Account user -->
       <div class="form-item">
-        <cds-select label="Account user"
+        <cds-select [label]="accountUserLabel"
                     id="acc_user"
                     formControlName="accountUser"
                     [invalidText]="accountUserError"
                     [invalid]="!bucketForm.controls.accountUser.valid && bucketForm.controls.accountUser.dirty"
-                    cdRequiredField="Account user"
-                    i18n>Account user
+                    [cdRequiredField]="accountUserLabel"
+                    >{{ accountUserLabel }}
           <option *ngIf="accountusers === null"
-                  [ngValue]="null">Loading...</option>
+                  [ngValue]="null">{{ loadingText }}</option>
           <option *ngIf="accountusers !== null"
-                  value="">-- Select a user --</option>
+                  value="">{{ selectUserText }}</option>
           <option *ngFor="let user of accountUsers"
                   [value]="user.uid">{{ user.uid }}</option>
         </cds-select>
@@ -115,9 +113,9 @@
                     cdRequiredField="Owner"
                     i18n>Owner
           <option *ngIf="owners === null"
-                  [ngValue]="null">Loading...</option>
+                  [ngValue]="null">{{ loadingText }}</option>
           <option *ngIf="owners !== null"
-                  value="">-- Select a user --</option>
+                  value="">{{ selectUserText }}</option>
           <option *ngFor="let owner of owners"
                   [value]="owner.uid">{{ owner.uid }}</option>
         </cds-select>
@@ -141,7 +139,7 @@
                       (checkedChange)="setMfaDeleteValidators()"
                       i18n>Enabled
           <cd-help-text>
-            <span>Enables versioning for the objects in the bucket.</span>
+            <span>{{ versioningHelperText }}</span>
           </cd-help-text>
         </cds-checkbox>
       </div>
@@ -158,18 +156,17 @@
                       formControlName="mfa-delete"
                       id="mfa-delete"
                       (checkedChange)="setMfaDeleteValidators()"
-                      helperText="Enables MFA (multi-factor authentication) Delete, which requires additional authentication for changing the bucket versioning state."
-                      i18n-helperText
+                      [helperText]="mfaDeleteHelperText"
                       i18n>Delete enabled
         </cds-checkbox>
       </div>
       <div *ngIf="areMfaCredentialsRequired()"
            class="form-item">
         <cds-text-label for="mfa-token-serial"
-                        cdRequiredField="MFA Serial Number"
+                        [cdRequiredField]="mfaSerialLabel"
                         [invalid]="!bucketForm.controls['mfa-token-serial'].valid && bucketForm.controls['mfa-token-serial'].dirty"
                         [invalidText]="mfaSerialError"
-                        i18n>Token Serial Number
+                        >{{ mfaSerialLabel }}
           <input cdsText
                  id="mfa-token-serial"
                  name="mfa-token-serial"
@@ -185,10 +182,10 @@
       <div *ngIf="areMfaCredentialsRequired()"
            class="form-item">
         <cds-text-label for="mfa-token-pin"
-                        cdRequiredField="MFA Token PIN"
+                        [cdRequiredField]="mfaTokenPinLabel"
                         [invalid]="!bucketForm.controls['mfa-token-pin'].valid && (bucketForm.controls['mfa-token-pin'].dirty)"
                         [invalidText]="mfaPinError"
-                        i18n>Token PIN
+                        >{{ mfaTokenPinLabel }}
           <input cdsText
                  id="mfa-token-pin"
                  name="mfa-token-pin"
@@ -222,7 +219,7 @@
                       i18n>Enable
 
           <cd-help-text>
-            <span>Enables locking for the objects in the bucket. Locking can only be enabled while creating a bucket.</span>
+            <span>{{ objectLockingEnableHelperText }}</span>
           </cd-help-text>
         </cds-checkbox>
       </div>
@@ -258,12 +255,10 @@
                     formControlName="lock_retention_period_days"
                     id="lock_retention_period_days"
                     min="1"
-                    label="Retention period (days)"
-                    helperText="The number of days that you want to specify for the default retention period that will be applied to new objects placed in this bucket."
+                    [label]="retentionPeriodLabel"
+                    [helperText]="retentionPeriodHelperText"
                     [invalid]="bucketForm.controls.lock_retention_period_days.invalid && (bucketForm.controls.lock_retention_period_days.dirty)"
                     [invalidText]="retentionPeriodError"
-                    i18n-helperText
-                    i18n-label
                     i18n></cds-number>
         <ng-template #retentionPeriodError>
           <span class="invalid-feedback"
@@ -299,11 +294,10 @@
                       id="encryption_enabled"
                       [disabled]="!kmsConfigured && !s3Configured"
                       i18n>Enable
-          <cd-help-text aria-label="encryption helper">
-            <span>Enables encryption for the objects in the bucket.
-                To enable encryption on a bucket you need to set the configuration values for SSE-S3 or SSE-KMS.
-                To set the configuration values <a href="#/rgw/configuration"
-                                                   i18n-aria-label="click here">Click here</a></span>
+          <cd-help-text [attr.aria-label]="encryptionHelperAriaLabel">
+            <span>{{ encryptionHelperText }}
+                <a href="#/rgw/configuration"
+                   i18n-aria-label="click here">{{ isZhHans ? '点击此处' : 'Click here' }}</a></span>
           </cd-help-text>
         </cds-checkbox>
       </div>
@@ -314,25 +308,25 @@
           <cds-radio value="AES256"
                      [disabled]="!s3Configured">SSE-S3</cds-radio>
           <cds-radio value="aws:kms"
-                     [disabled]="!kmsConfigured">Connect to an external key management service</cds-radio>
+                     [disabled]="!kmsConfigured">{{ kmsExternalServiceText }}</cds-radio>
           </cds-radio-group>
         </div>
 
         <div *ngIf="bucketForm.getValue('encryption_type') === 'aws:kms'">
           <div class="form-item">
-            <cds-select label="KMS Provider"
+            <cds-select [label]="kmsProviderLabel"
                         for="kms_provider"
                         formControlName="kms_provider"
                         name="kms_provider"
                         id="kms_provider"
                         [invalidText]="kmsProviderError"
                         [invalid]="!bucketForm.controls.kms_provider.valid && (bucketForm.controls.kms_provider.dirty)"
-                        cdRequiredField="KMS Provider"
-                        i18n>KMS Provider
+                        [cdRequiredField]="kmsProviderLabel"
+                        >{{ kmsProviderLabel }}
               <option *ngIf="kmsProviders === null"
-                      [ngValue]="null">Loading...</option>
+                      [ngValue]="null">{{ loadingText }}</option>
               <option *ngIf="kmsProviders !== null"
-                      [ngValue]="null">-- Select a provider --</option>
+                      [ngValue]="null">{{ selectProviderText }}</option>
               <option *ngFor="let provider of kmsProviders"
                       [value]="provider">{{ provider }}</option>
             </cds-select>
@@ -345,10 +339,9 @@
 
           <div class="form-item">
             <cds-text-label for="keyId"
-                            cdRequiredField="Key Id"
+                            [cdRequiredField]="keyIdLabel"
                             [invalid]="!bucketForm.controls.keyId.valid && (bucketForm.controls.keyId.dirty)"
-                            [invalidText]="keyIdError"
-                            i18n>Key Id
+                            [invalidText]="keyIdError">{{ keyIdLabel }}
               <input cdsText
                      id="keyId"
                      name="keyId"
@@ -377,7 +370,7 @@
                         [disabled]="!multisiteStatus.isDefaultZg && !multisiteStatus.status.available"
                         i18n-helperText
                         i18n>Enable
-            <cd-help-text>Enables replication for the objects in the bucket.</cd-help-text>
+            <cd-help-text>{{ replicationHelperText }}</cd-help-text>
           </cds-checkbox>
 
           <cd-alert-panel type="info"
@@ -397,7 +390,7 @@
     <fieldset>
       <legend class="cd-header"
               i18n>Tags
-        <cd-help-text>Tagging provides a way to categorize storage</cd-help-text>
+        <cd-help-text>{{ taggingHelperText }}</cd-help-text>
       </legend>
       <span *ngFor="let tag of tags; let i=index;">
         <ng-container *ngTemplateOutlet="tagTpl; context:{index: i, tag: tag}"></ng-container>
@@ -497,7 +490,7 @@
                     (change)="textAreaOnChange('lifecycle')"
                     cols="200"
                     #lifecycleTextArea></textarea>
-          <cd-help-text>JSON or XML formatted document</cd-help-text>
+          <cd-help-text>{{ lifecycleDocumentHelperText }}</cd-help-text>
         </cds-textarea-label>
         <ng-template #lifecycleError>
           <span class="invalid-feedback"
@@ -549,7 +542,7 @@
                         name="grantee"
                         label="Grantee"
                         formControlName="grantee"
-                        helperText="Select a grantee (user group) to modify it's permisions"
+                        [helperText]="granteeHelperText"
                         [invalid]="!bucketForm.controls.grantee.valid && (bucketForm.controls.grantee.dirty)"
                         [invalidText]="granteeError"
                         (valueChange)="onSelectionFilter()"
@@ -569,7 +562,7 @@
                         [invalid]="!bucketForm.controls.aclPermission.valid && (bucketForm.controls.aclPermission.dirty)"
                         [invalidText]="aclPermissionError"
                         label="Permissions"
-                        helperText="Select the permision to give to the selected grantee. Regardless, the owner of the bucket will always have FULL CONTROL access"
+                        [helperText]="permissionsHelperText"
                         formControlName="aclPermission">
               <option *ngFor="let permission of aclPermissions"
                       [value]="permission"
@@ -590,18 +583,17 @@
       <!-- Placement target -->
       <div class="form-item"
            *ngIf="!editing">
-        <cds-select label="Placement target"
+        <cds-select [label]="placementTargetLabel"
                     for="placement-target"
                     formControlName="placement-target"
                     name="placement-target"
                     id="placement-target"
-                    helperText="When creating a bucket, a placement target can be provided as part of the LocationConstraint to override the default placement targets from the user and zonegroup."
-                    i18n-helperText
-                    i18n>Placement target
+                    [helperText]="placementTargetHelperText"
+                    >{{ placementTargetLabel }}
           <option *ngIf="placementTargets === null"
-                  [ngValue]="null">Loading...</option>
+                  [ngValue]="null">{{ loadingText }}</option>
           <option *ngIf="placementTargets !== null"
-                  [ngValue]="null">-- Select a placement target --</option>
+                  [ngValue]="null">{{ selectPlacementTargetText }}</option>
           <option *ngFor="let placementTarget of placementTargets"
                   [value]="placementTarget.name">{{ placementTarget.description }}</option>
         </cds-select>
@@ -656,4 +648,3 @@
 <ng-template #loadingTpl>
   <cd-loading-panel i18n>Checking multi-site status...</cd-loading-panel>
 </ng-template>
-

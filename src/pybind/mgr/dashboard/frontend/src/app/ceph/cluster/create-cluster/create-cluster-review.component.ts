@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 
 import _ from 'lodash';
 
@@ -25,14 +25,18 @@ export class CreateClusterReviewComponent implements OnInit {
   totalMemory = 0;
   deploymentDescText: string;
   isSimpleDeployment = true;
+  isZhHans = false;
 
   constructor(
     public wizardStepsService: WizardStepsService,
     public cephServiceService: CephServiceService,
     private dimlessBinary: DimlessBinaryPipe,
     public hostService: HostService,
-    private osdService: OsdService
-  ) {}
+    private osdService: OsdService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
 
   ngOnInit() {
     let dataDevices = 0;

@@ -6,10 +6,10 @@
           (click)="useClickAction(currentAction)"
           [disabled]="disableSelectionAction(currentAction)"
           [routerLink]="useRouterLink(currentAction)"
-          [attr.aria-label]="currentAction.name"
+          [attr.aria-label]="displayActionName(currentAction.name)"
           [preserveFragment]="currentAction.preserveFragment ? '' : null"
           data-testid="primary-action">
-    <span i18n>{{ currentAction.name }}</span>
+    <span>{{ displayActionName(currentAction.name) }}</span>
     <svg class="cds--btn__icon"
          cdsIcon="add"
          size="16"></svg>
@@ -33,10 +33,9 @@
                                   [routerLink]="useRouterLink(action)"
                                   [preserveFragment]="action.preserveFragment ? '' : null"
                                   [disabled]="disableSelectionAction(action)"
-                                  [attr.aria-label]="action.name"
-                                  data-testid="table-action-option-btn"
-                                  i18n>
-        {{ action.name }}
+                                  [attr.aria-label]="displayActionName(action.name)"
+                                  data-testid="table-action-option-btn">
+        {{ displayActionName(action.name) }}
         </cds-overflow-menu-option>
       </ng-container>
     </ng-template>
@@ -66,10 +65,9 @@
                                 [routerLink]="useRouterLink(action)"
                                 [preserveFragment]="action.preserveFragment ? '' : null"
                                 [disabled]="disableSelectionAction(action)"
-                                [attr.aria-label]="action.name"
-                                data-testid="table-action-option-btn"
-                                i18n>
-      {{ action.name }}
+                                [attr.aria-label]="displayActionName(action.name)"
+                                data-testid="table-action-option-btn">
+      {{ displayActionName(action.name) }}
       </cds-overflow-menu-option>
     </ng-container>
   </cds-overflow-menu>
@@ -77,7 +75,7 @@
 
 <ng-template #customTrigger>
   <button cdsButton="tertiary">
-    <span i18n>{{ dropDownOnly }}</span>
+    <span>{{ dropDownOnly }}</span>
     <svg class="cds--btn__icon"
          cdsIcon="caret--down"
          size="16"></svg>

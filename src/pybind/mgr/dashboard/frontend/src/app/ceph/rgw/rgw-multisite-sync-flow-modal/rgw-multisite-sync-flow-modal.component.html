@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">{{ action | titlecase }} {{ groupType | upperFirst }} Flow</ng-container>
+  <ng-container class="modal-title">{{ modalTitle }}</ng-container>
 
   <ng-container class="modal-content">
     <form name="flowForm"
@@ -15,7 +14,7 @@
           <div class="cd-col-form-input">
             <input class="form-control"
                    type="text"
-                   placeholder="Flow Name..."
+                   [placeholder]="flowNamePlaceholder"
                    id="flow_id"
                    name="flow_id"
                    formControlName="flow_id"/>
@@ -30,8 +29,7 @@
                    name="bucket"
                    class="form-control"
                    type="text"
-                   i18n-placeholder
-                   placeholder="Bucket Name..."
+                   [placeholder]="bucketNamePlaceholder"
                    formControlName="bucket_name"/>
             <span class="invalid-feedback"
                   *ngIf="currentFormGroupContext.showError('bucket_name', frm, 'bucketNameNotAllowed')"
@@ -44,7 +42,7 @@
                    for="zones">
               <ng-container i18n>Zones</ng-container>
               <cd-helper>
-                <span i18n>Flow need to be associated with atleast one zone</span>
+                <span>{{ zonesHelperText }}</span>
               </cd-helper>
             </label>
             <div class="cd-col-form-input">
@@ -75,7 +73,7 @@
       <div class="modal-footer">
         <cd-form-button-panel (submitActionEvent)="submit()"
                               [form]="currentFormGroupContext"
-                              [submitText]="(action | titlecase) + ' ' + (groupType | upperFirst) + ' ' + 'Flow'"></cd-form-button-panel>
+                              [submitText]="submitText"></cd-form-button-panel>
       </div>
     </form>
   </ng-container>
@@ -95,12 +93,12 @@
   </cd-select-badges>
   <i *ngIf="zone.data.selected.length <= 0"
      i18n-title
-     title="Flow should be associated with {{name?.split('_').join(' ')}}"
+     [title]="getSelectionTitle(name)"
      class="{{ icons.warning }} icon-warning-color">
   </i>
   <span class="invalid-feedback"
         *ngIf="currentFormGroupContext.showError(name, frm, 'required')"
-        i18n>{{name?.split('_').join(' ')}} selection is required!
+        >{{ getSelectionRequiredText(name) }}
   </span>
 </ng-template>
 
@@ -117,7 +115,7 @@
           [ngValue]="null">Loading...</option>
   <option i18n
           *ngIf="zones.data.available.length > 0"
-          [ngValue]="null">-- Select {{name.split('_').join(' ')}} --</option>
+          [ngValue]="null">{{ getSelectZoneText(name) }}</option>
   <option *ngFor="let destinationZone of zones.data.available"
           [value]="destinationZone.name">{{ destinationZone.name }}</option>
   </select>

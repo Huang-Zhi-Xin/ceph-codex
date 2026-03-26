@@ -54,7 +54,7 @@
 <ng-template #grafanaContent>
   <cd-grafana
     i18n-title
-    title="CephFS Overview"
+    [title]="overviewTitle"
     [grafanaPath]="'ceph-filesystem-overview?'"
     [type]="'metrics'"
     uid="718Bruins"

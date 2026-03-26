@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import {
   FormArray,
   Validators,
@@ -42,6 +42,7 @@ export class RgwNotificationFormComponent extends CdForm implements OnInit {
   notification_id: string;
   notificationList: TopicConfiguration[] = [];
   filterTypes: string[] = ['s3Key', 's3Metadata', 's3Tags'];
+  isZhHans = false;
   typeLabels: Record<string, string> = {
     s3Key: 'S3 Key configuration',
     s3Metadata: 'S3 Metadata configuration',
@@ -103,9 +104,92 @@ export class RgwNotificationFormComponent extends CdForm implements OnInit {
     private notificationService: NotificationService,
     private fb: CdFormBuilder,
     private router: Router,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
+    if (this.isZhHans) {
+      this.typeLabels = {
+        s3Key: 'S3 Key 配置',
+        s3Metadata: 'S3 Metadata 配置',
+        s3Tags: 'S3 Tags 配置'
+      };
+    }
+  }
+
+  get formTitle(): string {
+    return this.isZhHans
+      ? `${this.editing ? '编辑' : '创建'} Notification 配置`
+      : `${this.editing ? 'Edit' : 'Create'} Notification configuration`;
+  }
+
+  get allFieldsOptionalText(): string {
+    return this.isZhHans
+      ? '除标记为必填的字段外，其余字段均为可选。'
+      : 'All fields are optional, except where marked required.';
+  }
+
+  get topicNameLabel(): string {
+    return this.isZhHans ? '主题名称' : 'Topic Name';
+  }
+
+  get namePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get uniqueNotificationNameText(): string {
+    return this.isZhHans ? '输入唯一的通知名称' : 'Enter a unique notification name';
+  }
+
+  get topicLabel(): string {
+    return this.isZhHans ? '主题' : 'Topic';
+  }
+
+  get loadingText(): string {
+    return this.isZhHans ? '加载中...' : 'Loading...';
+  }
+
+  get selectTopicText(): string {
+    return this.isZhHans ? '选择一个主题...' : '-- Select a topic --';
+  }
+
+  get topicHelperText(): string {
+    return this.isZhHans
+      ? '该主题将定义并控制通知设置。'
+      : 'This topic will define and control the notification settings';
+  }
+
+  get eventLabel(): string {
+    return this.isZhHans ? '事件' : 'Event';
+  }
+
+  get selectEventPlaceholder(): string {
+    return this.isZhHans ? '选择事件...' : 'Select event...';
+  }
+
+  get eventHelperText(): string {
+    return this.isZhHans
+      ? '选择会触发通知的 S3 事件类型，例如对象创建或删除。'
+      : 'Choose the S3 event type that will trigger the notification, such as object creation or deletion';
+  }
+
+  get fieldNameLabel(): string {
+    return this.isZhHans ? '名称' : 'Name';
+  }
+
+  get fieldValueLabel(): string {
+    return this.isZhHans ? '值' : 'Value';
+  }
+
+  get submitText(): string {
+    return this.isZhHans
+      ? this.editing
+        ? '编辑'
+        : '创建'
+      : this.editing
+        ? this.actionLabels.EDIT
+        : this.actionLabels.CREATE;
   }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MultiClusterService } from '~/app/shared/api/multi-cluster.service';
 import { ActionLabelsI18n } from '~/app/shared/constants/app.constants';
@@ -51,6 +51,9 @@ export class MultiClusterListComponent extends ListWithDetails implements OnInit
   icons = Icons;
   managedByConfig$: Observable<any>;
   prometheusConnectionError: any[] = [];
+  isZhHans: boolean;
+  clustersListLabel: string;
+  tokenExpiredLabel: string;
 
   constructor(
     private multiClusterService: MultiClusterService,
@@ -62,9 +65,13 @@ export class MultiClusterListComponent extends ListWithDetails implements OnInit
     private cookieService: CookiesService,
     private settingsService: SettingsService,
     private cdsModalService: ModalCdsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
+    this.clustersListLabel = this.isZhHans ? '集群列表' : 'Clusters List';
+    this.tokenExpiredLabel = this.isZhHans ? '令牌已过期' : 'Token expired';
     this.tableActions = [
       {
         permission: 'create',
@@ -125,12 +132,12 @@ export class MultiClusterListComponent extends ListWithDetails implements OnInit
     this.columns = [
       {
         prop: 'cluster_alias',
-        name: $localize`Alias`,
+        name: this.isZhHans ? '别名' : $localize`Alias`,
         flexGrow: 2
       },
       {
         prop: 'cluster_connection_status',
-        name: $localize`Connection`,
+        name: this.isZhHans ? '连接状态' : $localize`Connection`,
         flexGrow: 2,
         cellTransformation: CellTemplate.badge,
         customTemplateConfig: {
@@ -159,7 +166,7 @@ export class MultiClusterListComponent extends ListWithDetails implements OnInit
       },
       {
         prop: 'ttl',
-        name: $localize`Token expires`,
+        name: this.isZhHans ? '令牌过期时间' : $localize`Token expires`,
         flexGrow: 2,
         cellTemplate: this.durationTpl
       }
@@ -192,6 +199,14 @@ export class MultiClusterListComponent extends ListWithDetails implements OnInit
 
   getRemainingTimeWithoutSeconds(time: number): number {
     return Math.floor(time / (1000 * 60)) * 60 * 1000;
+  }
+
+  get tokenAboutToExpireTitle(): string {
+    return this.isZhHans ? '集群令牌即将过期' : "Cluster's token is about to expire";
+  }
+
+  get tokenHasExpiredTitle(): string {
+    return this.isZhHans ? '集群令牌已过期' : "Cluster's token has expired";
   }
 
   checkClusterConnectionStatus() {

@@ -47,6 +47,11 @@ type TPaginationOutput = { start: number; end: number };
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
+  batchText = {
+    SINGLE: $localize`已选择 1 项`,
+    MULTIPLE: $localize`已选择 {{count}} 项`
+  };
+
   @ViewChild('tableCellBoldTpl', { static: true })
   tableCellBoldTpl: TemplateRef<any>;
   @ViewChild('sparklineTpl', { static: true })

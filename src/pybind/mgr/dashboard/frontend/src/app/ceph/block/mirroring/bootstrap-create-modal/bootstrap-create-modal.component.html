@@ -3,8 +3,7 @@
            [hasScrollingContent]="true"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>Create Bootstrap Token</h3>
+    <h3 cdsModalHeaderHeading>{{ modalTitle }}</h3>
   </cds-modal-header>
 
   <section cdsModalContent>
@@ -22,13 +21,12 @@
 
       <div class="form-item">
         <cds-text-label for="siteName"
-                        cdRequiredField="Site Name"
+                        [cdRequiredField]="siteNameLabel"
                         [invalid]="!createBootstrapForm.controls['siteName'].valid && (createBootstrapForm.controls['siteName'].dirty || createBootstrapForm.controls['siteName'].touched)"
                         [invalidText]="siteNameError"
-                        i18n>Site Name
+                        >{{ siteNameLabel }}
           <input cdsText
-                 placeholder="Name..."
-                 i18n-placeholder
+                 [placeholder]="namePlaceholder"
                  id="siteName"
                  name="siteName"
                  formControlName="siteName"
@@ -70,8 +68,7 @@
         <cds-textarea-label for="token"
                             i18n>Token
           <textarea cdsTextArea
-                    placeholder="Generated token..."
-                    i18n-placeholder
+                    [placeholder]="tokenPlaceholder"
                     id="token"
                     formControlName="token"
                     cols="200"
@@ -89,6 +86,6 @@
   <cd-form-button-panel (backAction)="closeModal()"
                         [showSubmit]="false"
                         [modalForm]="true"
-                        cancelText="Close"></cd-form-button-panel>
+                        [cancelText]="closeText"></cd-form-button-panel>
 
 </cds-modal>

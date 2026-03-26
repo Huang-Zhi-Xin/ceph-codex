@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Optional } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import expand from 'brace-expansion';
@@ -33,6 +33,7 @@ export class HostFormComponent extends CdForm implements OnInit {
   pageURL: string;
   hostPattern = false;
   labelsOption: ComboBoxItem[] = [];
+  isZhHans: boolean;
 
   messages = new SelectMessages({
     empty: $localize`There are no labels.`,
@@ -46,12 +47,49 @@ export class HostFormComponent extends CdForm implements OnInit {
     private hostService: HostService,
     private taskWrapper: TaskWrapperService,
     private route: ActivatedRoute,
-
+    @Inject(LOCALE_ID) localeId: string,
     @Inject('hideMaintenance') @Optional() public hideMaintenance?: boolean
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.resource = $localize`host`;
     this.action = this.actionLabels.ADD;
+  }
+
+  get formTitle(): string {
+    return this.isZhHans ? '添加主机' : `${this.action} ${this.resource}`;
+  }
+
+  get hostnameLabel(): string {
+    return this.isZhHans ? '主机名（必填）' : 'Hostname (required)';
+  }
+
+  get hostHelpIntro(): string {
+    return this.isZhHans
+      ? '如需一次添加多台主机，可以输入：'
+      : 'To add multiple hosts at once, you can enter:';
+  }
+
+  get commaSeparatedHostnamesHelp(): string {
+    return this.isZhHans
+      ? '以逗号分隔的主机名列表（例如：example-01,example-02,example-03）'
+      : 'a comma-separated list of hostnames (e.g.: example-01,example-02,example-03),';
+  }
+
+  get rangeExpressionHelp(): string {
+    return this.isZhHans
+      ? '范围表达式（例如：example-[01-03].ceph）'
+      : 'a range expression (e.g.: example-[01-03].ceph),';
+  }
+
+  get commaSeparatedRangeExpressionHelp(): string {
+    return this.isZhHans
+      ? '以逗号分隔的范围表达式（例如：example-[01-05].lab.com,example2-[1-4].lab.com,example3-[001-006].lab.com）'
+      : 'a comma separated range expression (e.g.: example-[01-05].lab.com,example2-[1-4].lab.com,example3-[001-006].lab.com)';
+  }
+
+  get submitText(): string {
+    return this.isZhHans ? '添加主机' : `${this.action} ${this.resource}`;
   }
 
   ngOnInit() {

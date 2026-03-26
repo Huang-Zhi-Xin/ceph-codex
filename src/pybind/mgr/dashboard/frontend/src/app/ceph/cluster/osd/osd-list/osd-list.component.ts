@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -75,6 +75,8 @@ export class OsdListComponent extends ListWithDetails implements OnInit {
   icons = Icons;
   osdSettings = new OsdSettings();
   count = 0;
+  isZhHans: boolean;
+  osdListTitle: string;
 
   selection = new CdTableSelection();
   osds: any[] = [];
@@ -115,9 +117,12 @@ export class OsdListComponent extends ListWithDetails implements OnInit {
     public actionLabels: ActionLabelsI18n,
     public notificationService: NotificationService,
     private orchService: OrchestratorService,
-    private cdsModalService: ModalCdsService
+    private cdsModalService: ModalCdsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
+    this.osdListTitle = this.isZhHans ? 'OSD 列表' : 'OSD list';
     this.permissions = this.authStorageService.getPermissions();
     this.tableActions = [
       {

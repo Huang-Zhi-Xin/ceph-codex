@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Optional } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import moment from 'moment';
 import { Observable } from 'rxjs';
@@ -23,6 +23,7 @@ export class CephfsSubvolumeSnapshotsFormComponent extends CdForm implements OnI
 
   action: string;
   resource: string;
+  isZhHans = false;
 
   subVolumes$: Observable<CephfsSubvolume[]>;
 
@@ -30,6 +31,7 @@ export class CephfsSubvolumeSnapshotsFormComponent extends CdForm implements OnI
     private actionLabels: ActionLabelsI18n,
     private taskWrapper: TaskWrapperService,
     private cephFsSubvolumeService: CephfsSubvolumeService,
+    @Inject(LOCALE_ID) private localeId: string,
 
     @Optional() @Inject('fsName') public fsName: string,
     @Optional() @Inject('subVolumeName') public subVolumeName: string,
@@ -37,8 +39,37 @@ export class CephfsSubvolumeSnapshotsFormComponent extends CdForm implements OnI
     @Optional() @Inject('isEdit') public isEdit = false
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.resource = $localize`snapshot`;
     this.action = this.actionLabels.CREATE;
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? '创建' : this.action} ${this.isZhHans ? '快照' : 'Snapshot'}`;
+  }
+
+  get snapshotNamePlaceholder(): string {
+    return this.isZhHans ? '快照名称...' : 'Snapshot name...';
+  }
+
+  get volumeNameLabel(): string {
+    return this.isZhHans ? '卷名称' : 'Volume name';
+  }
+
+  get subvolumeGroupLabel(): string {
+    return this.isZhHans ? '子卷组' : 'Subvolume group';
+  }
+
+  get subvolumeLabel(): string {
+    return this.isZhHans ? '子卷' : 'Subvolume';
+  }
+
+  get defaultGroupLabel(): string {
+    return this.isZhHans ? '默认' : 'Default';
+  }
+
+  get submitText(): string {
+    return this.formTitle;
   }
 
   ngOnInit(): void {

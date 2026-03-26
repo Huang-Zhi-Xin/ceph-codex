@@ -2,6 +2,8 @@ import {
   AfterViewChecked,
   ChangeDetectorRef,
   Component,
+  Inject,
+  LOCALE_ID,
   OnInit,
   ViewChild,
   ElementRef
@@ -84,6 +86,7 @@ export class RgwBucketFormComponent extends CdForm implements OnInit, AfterViewC
   aclPermissions: AclPermissionsType[] = [aclPermission.FullControl];
   multisiteStatus$: Observable<any>;
   isDefaultZoneGroup$: Observable<boolean>;
+  isZhHans = false;
 
   get isVersioningEnabled(): boolean {
     return this.bucketForm.getValue('versioning');
@@ -109,13 +112,133 @@ export class RgwBucketFormComponent extends CdForm implements OnInit, AfterViewC
     private readonly changeDetectorRef: ChangeDetectorRef,
     private rgwMultisiteService: RgwMultisiteService,
     private rgwDaemonService: RgwDaemonService,
-    private rgwAccountsService: RgwUserAccountsService
+    private rgwAccountsService: RgwUserAccountsService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.editing = this.router.url.startsWith(`/rgw/bucket/${URLVerbs.EDIT}`);
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
     this.resource = $localize`bucket`;
     this.createForm();
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? (this.editing ? '编辑' : '创建') : this.action} ${this.isZhHans ? '桶' : 'Bucket'}`;
+  }
+
+  get namePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get loadingText(): string {
+    return this.isZhHans ? '加载中...' : 'Loading...';
+  }
+
+  get selectUserText(): string {
+    return this.isZhHans ? '-- 选择用户 --' : '-- Select a user --';
+  }
+
+  get accountUserLabel(): string {
+    return this.isZhHans ? '账户用户' : 'Account user';
+  }
+
+  get versioningHelperText(): string {
+    return this.isZhHans ? '为桶中的对象启用版本控制。' : 'Enables versioning for the objects in the bucket.';
+  }
+
+  get mfaDeleteHelperText(): string {
+    return this.isZhHans
+      ? '启用 MFA Delete 后，修改桶版本控制状态时需要额外身份验证。'
+      : 'Enables MFA (multi-factor authentication) Delete, which requires additional authentication for changing the bucket versioning state.';
+  }
+
+  get encryptionHelperText(): string {
+    return this.isZhHans
+      ? '为桶内对象启用加密。要启用桶加密，需要先配置 SSE-S3 或 SSE-KMS。配置入口见此处。'
+      : 'Enables encryption for the objects in the bucket. To enable encryption on a bucket you need to set the configuration values for SSE-S3 or SSE-KMS. To set the configuration values Click here';
+  }
+
+  get kmsExternalServiceText(): string {
+    return this.isZhHans ? '连接到外部密钥管理服务' : 'Connect to an external key management service';
+  }
+
+  get kmsProviderLabel(): string {
+    return this.isZhHans ? 'KMS 提供方' : 'KMS Provider';
+  }
+
+  get encryptionHelperAriaLabel(): string {
+    return this.isZhHans ? '加密帮助' : 'encryption helper';
+  }
+
+  get selectProviderText(): string {
+    return this.isZhHans ? '-- 选择提供方 --' : '-- Select a provider --';
+  }
+
+  get retentionPeriodLabel(): string {
+    return this.isZhHans ? '保留期（天）' : 'Retention period (days)';
+  }
+
+  get retentionPeriodHelperText(): string {
+    return this.isZhHans
+      ? '指定默认保留期的天数，该保留期将应用于放入此桶中的新对象。'
+      : 'The number of days that you want to specify for the default retention period that will be applied to new objects placed in this bucket.';
+  }
+
+  get keyIdLabel(): string {
+    return this.isZhHans ? '密钥 ID' : 'Key Id';
+  }
+
+  get mfaSerialLabel(): string {
+    return this.isZhHans ? 'MFA 序列号' : 'MFA Serial Number';
+  }
+
+  get mfaTokenPinLabel(): string {
+    return this.isZhHans ? 'MFA 令牌 PIN' : 'MFA Token PIN';
+  }
+
+  get objectLockingEnableHelperText(): string {
+    return this.isZhHans
+      ? '为桶中的对象启用对象锁定。对象锁定只能在创建桶时启用。'
+      : 'Enables locking for the objects in the bucket. Locking can only be enabled while creating a bucket.';
+  }
+
+  get replicationHelperText(): string {
+    return this.isZhHans ? '为桶中的对象启用复制。' : 'Enables replication for the objects in the bucket.';
+  }
+
+  get taggingHelperText(): string {
+    return this.isZhHans ? '标签可用于对存储进行分类。' : 'Tagging provides a way to categorize storage';
+  }
+
+  get lifecycleDocumentHelperText(): string {
+    return this.isZhHans ? 'JSON 或 XML 格式的文档' : 'JSON or XML formatted document';
+  }
+
+  get granteeHelperText(): string {
+    return this.isZhHans
+      ? '选择要修改权限的被授权方（用户组）。'
+      : "Select a grantee (user group) to modify it's permisions";
+  }
+
+  get permissionsHelperText(): string {
+    return this.isZhHans
+      ? '为选定的被授权方选择要授予的权限。无论如何，桶所有者始终具有完全控制权限。'
+      : 'Select the permision to give to the selected grantee. Regardless, the owner of the bucket will always have FULL CONTROL access';
+  }
+
+  get placementTargetLabel(): string {
+    return this.isZhHans ? '放置目标' : 'Placement target';
+  }
+
+  get placementTargetHelperText(): string {
+    return this.isZhHans
+      ? '创建桶时，可通过 LocationConstraint 提供放置目标，以覆盖用户和 zonegroup 的默认放置目标。'
+      : 'When creating a bucket, a placement target can be provided as part of the LocationConstraint to override the default placement targets from the user and zonegroup.';
+  }
+
+  get selectPlacementTargetText(): string {
+    return this.isZhHans ? '-- 选择放置目标 --' : '-- Select a placement target --';
   }
 
   ngAfterViewChecked(): void {

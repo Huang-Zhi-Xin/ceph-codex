@@ -5,25 +5,21 @@
           #formDir="ngForm"
           [formGroup]="userForm"
           novalidate>
-      <div i18n="form title"
-           class="form-header">{{ action | titlecase }} {{ resource | upperFirst }}
+      <div class="form-header">{{ formTitle }}
       </div>
       <!-- UserName -->
       <div class="form-item">
         <cds-text-label labelInputID="username"
-                        cdRequiredField="Username"
+                        [cdRequiredField]="usernameLabel"
                         [invalid]="!userForm.controls.username.valid && userForm.controls.username.dirty"
-                        [invalidText]="usernameError"
-                        i18n>Username
+                        [invalidText]="usernameError">{{ usernameLabel }}
           <input cdsText
-                 placeholder="Username..."
-                 i18n-placeholder
+                 [placeholder]="usernamePlaceholder"
                  id="username"
                  formControlName="username"
                  [invalid]="!userForm.controls.username.valid && userForm.controls.username.dirty"
                  autofocus
-                 ngbTooltip="White spaces at the beginning and end will be trimmed"
-                 i18n-ngbTooltip
+                 [ngbTooltip]="usernameTrimTooltip"
                  cdTrim>
         </cds-text-label>
         <ng-template #usernameError>
@@ -42,17 +38,16 @@
       <!-- Password -->
       <div class="form-item">
         <cds-password-label labelInputID="password"
-                            label="Password..."
+                            [label]="passwordLabel"
                             [invalid]="!userForm.controls.password.valid && userForm.controls.password.dirty"
-                            [invalidText]="passwordError"
-                            i18n>Password
+                            [invalidText]="passwordError">
         <cd-helper *ngIf="passwordPolicyHelpText.length > 0"
                     class="text-pre-wrap"
                     html="{{ passwordPolicyHelpText }}">
         </cd-helper>
         <input cdsPassword
                type="password"
-               placeholder="Password..."
+               [placeholder]="passwordPlaceholder"
                id="password"
                autocomplete="new-password"
                formControlName="password"
@@ -76,13 +71,12 @@
       <!-- Confirm password -->
       <div class="form-item">
         <cds-password-label labelInputID="confirmpassword"
-                            label="Confirm password..."
+                            [label]="confirmPasswordLabel"
                             [invalid]="!userForm.controls.confirmpassword.valid && userForm.controls.confirmpassword.dirty"
-                            [invalidText]="confirmpasswordError"
-                            i18n> Confirm password
+                            [invalidText]="confirmpasswordError">
           <input cdsPassword
                  type="password"
-                 placeholder="Confirm password..."
+                 [placeholder]="confirmPasswordPlaceholder"
                  id="confirmpassword"
                  formControlName="confirmpassword">
         </cds-password-label>
@@ -98,7 +92,8 @@
       <!-- Password expiration date -->
       <div class="form-item"
            *ngIf="!authStorageService.isSSO()">
-        <cds-text-label  [ngClass]="{'required': pwdExpirationSettings.pwdExpirationSpan > 0}">{{'Password Expiration Date'}}
+        <cds-text-label  [ngClass]="{'required': pwdExpirationSettings.pwdExpirationSpan > 0}">
+          {{ isZhHans ? '密码到期日期' : 'Password Expiration Date' }}
           <cd-helper class="text-pre-wrap"
                      *ngIf="pwdExpirationSettings.pwdExpirationSpan == 0">
             <span>
@@ -113,7 +108,7 @@
             </span>
           </cd-helper>
         <cd-date-time-picker [control]="userForm.get('pwdExpirationDate')"
-                             placeHolder="Password expiration date"
+                             [placeHolder]="isZhHans ? '密码到期日期' : 'Password expiration date'"
                              [hasTime]="false"
                              [defaultDate]="passwordexp"
                              i18n-name
@@ -127,11 +122,10 @@
       </div>
       <!--Full Name-->
       <div class="form-item">
-        <cds-text-label for="name"
-                        i18n> Full Name
+        <cds-text-label for="name">{{ fullNameLabel }}
           <input cdsText
                  type="text"
-                 placeholder="Full Name..."
+                 [placeholder]="fullNamePlaceholder"
                  id="name"
                  formControlName="name">
         </cds-text-label>
@@ -140,12 +134,11 @@
       <div class="form-item">
         <cds-text-label for="email"
                         [invalid]="!userForm.controls.email.valid && userForm.controls.email.dirty"
-                        [invalidText]="emailError"
-                        i18n>
-          Email
+                        [invalidText]="emailError">
+          {{ emailLabel }}
           <input cdsText
                  type="email"
-                 placeholder="Email..."
+                 [placeholder]="emailPlaceholder"
                  id="email"
                  formControlName="email">
         </cds-text-label>
@@ -159,18 +152,16 @@
       <!-- Roles -->
       <div class="form-item"
            *ngIf="allRoles">
-        <cds-combo-box label="Roles"
+        <cds-combo-box [label]="rolesLabel"
                        type="multi"
                        selectionFeedback="top-after-reopen"
                        for="roles"
                        formControlName="roles"
                        id="roles"
-                       placeholder="Select Roles..."
-                       i18n-placeholder
+                       [placeholder]="rolesPlaceholder"
                        [appendInline]="true"
                        [items]="allRoles"
-                       itemValueKey="name"
-                       i18n>
+                       itemValueKey="name">
           <cds-dropdown-list></cds-dropdown-list>
         </cds-combo-box>
       </div>
@@ -179,8 +170,7 @@
            *ngIf="!isCurrentUser()">
         <cds-checkbox id="enabled"
                       formControlName="enabled"
-                      name="enabled"
-                      i18n>Enabled
+                      name="enabled">{{ enabledLabel }}
         </cds-checkbox>
       </div>
       <!-- Force change password -->
@@ -188,14 +178,13 @@
            *ngIf="!isCurrentUser() && !authStorageService.isSSO()">
         <cds-checkbox id="pwdUpdateRequired"
                       formControlName="pwdUpdateRequired"
-                      name="pwdUpdateRequired"
-                      i18n>User must change password at next login
+                      name="pwdUpdateRequired">{{ passwordUpdateRequiredLabel }}
         </cds-checkbox>
       </div>
       <!--Submit Button-->
       <cd-form-button-panel (submitActionEvent)="submit()"
                             [form]="userForm"
-                            [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                            [submitText]="submitText"
                             wrappingClass="text-right">
       </cd-form-button-panel>
     </form>

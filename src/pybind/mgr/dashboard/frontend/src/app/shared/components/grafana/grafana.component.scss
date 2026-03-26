@@ -32,6 +32,27 @@
   }
 }
 
+.grafana-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grafana-toolbar__controls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.grafana-toolbar__select {
+  min-width: 16rem;
+}
+
+.grafana-toolbar__button {
+  align-items: center;
+  display: flex;
+}
+
 .dropdown-menu {
   left: auto;
   right: 20px;

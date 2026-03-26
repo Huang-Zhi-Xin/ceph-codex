@@ -5,20 +5,17 @@
           #formDir="ngForm"
           [formGroup]="roleForm"
           novalidate>
-      <div i18n="form title"
-           class="form-header">{{ action | titlecase }} {{ resource | upperFirst }}
+      <div class="form-header">{{ formTitle }}
       </div>
         <!--Name -->
       <div class="form-item">
         <cds-text-label for="name"
-                        cdRequiredField="Name"
+                        [cdRequiredField]="nameLabel"
                         [invalid]="!roleForm.controls.name.valid && roleForm.controls.name.dirty"
-                        [invalidText]="nameError"
-                        i18n>Name
+                        [invalidText]="nameError">{{ nameLabel }}
           <span [ngClass]="{'required': mode !== roleFormMode.editing}"></span>
           <input cdsText
-                 placeholder="Name..."
-                 i18n-placeholder
+                 [placeholder]="namePlaceholder"
                  id="name"
                  name="name"
                  formControlName="name"
@@ -40,12 +37,11 @@
       </div>
     <!-- Description -->
       <div class="form-item">
-        <cds-text-label for="name"
-                        i18n>Description
+        <cds-text-label for="name">{{ descriptionLabel }}
         <input cdsText
                type="text"
                class="input-field"
-               placeholder="Description.."
+               [placeholder]="descriptionPlaceholder"
                id="description"
                name="description"
                formControlName="description">
@@ -53,7 +49,7 @@
       </div>
       <!-- Permissions -->
       <div  class="form-item">
-        <cds-text-label>Permissions</cds-text-label>
+        <cds-text-label>{{ permissionsLabel }}</cds-text-label>
         <cd-checked-table-form [data]="scopes_permissions"
                                [columns]="columns"
                                [form]="roleForm"
@@ -65,7 +61,7 @@
       <div class="form-item">
         <cd-form-button-panel (submitActionEvent)="submit()"
                               [form]="roleForm"
-                              [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                              [submitText]="formTitle"
                               wrappingClass="text-right">
         </cd-form-button-panel>
       </div>

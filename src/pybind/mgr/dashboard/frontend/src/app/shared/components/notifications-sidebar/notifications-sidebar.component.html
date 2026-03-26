@@ -66,22 +66,19 @@
           <div class="col-md-10">
             <div class="card-body p-1">
               <button class="btn btn-link float-end mt-0 pt-0"
-                      title="Remove notification"
-                      i18n-title
+                      [title]="removeNotificationTitle"
                       (click)="remove(i); $event.stopPropagation()">
                 <i [ngClass]="[icons.trash]"></i>
               </button>
               <button *ngIf="notification.application === 'Prometheus' && notification.type !== 2 && !notification.alertSilenced"
                       class="btn btn-link float-end text-muted mute m-0 p-0"
-                      title="Silence Alert"
-                      i18n-title
+                      [title]="silenceAlertTitle"
                       (click)="silence(notification)">
                 <i [ngClass]="[icons.mute]"></i>
               </button>
               <button *ngIf="notification.application === 'Prometheus' && notification.type !== 2 && notification.alertSilenced"
                       class="btn btn-link float-end text-muted mute m-0 p-0"
-                      title="Expire Silence"
-                      i18n-title
+                      [title]="expireSilenceTitle"
                       (click)="expire(notification)">
                 <i [ngClass]="[icons.bell]"></i>
               </button>

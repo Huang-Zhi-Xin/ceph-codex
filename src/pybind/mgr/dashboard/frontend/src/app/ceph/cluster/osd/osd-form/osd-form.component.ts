@@ -1,7 +1,9 @@
 import {
   Component,
   EventEmitter,
+  Inject,
   Input,
+  LOCALE_ID,
   OnDestroy,
   OnInit,
   Output,
@@ -90,6 +92,7 @@ export class OsdFormComponent extends CdForm implements OnInit, OnDestroy {
   hasOrchestrator = true;
 
   simpleDeployment = true;
+  isZhHans: boolean;
 
   deploymentOptions: DeploymentOptions;
   optionNames = Object.values(OsdDeploymentOptions);
@@ -102,9 +105,11 @@ export class OsdFormComponent extends CdForm implements OnInit, OnDestroy {
     private router: Router,
     private modalService: ModalService,
     private osdService: OsdService,
-    private taskWrapper: TaskWrapperService
+    private taskWrapper: TaskWrapperService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.resource = $localize`OSDs`;
     this.action = this.actionLabels.CREATE;
     this.features = {
@@ -115,6 +120,108 @@ export class OsdFormComponent extends CdForm implements OnInit, OnDestroy {
     };
     this.featureList = _.map(this.features, (o, key) => Object.assign(o, { key: key }));
     this.createForm();
+  }
+
+  get formTitle(): string {
+    return this.isZhHans ? `${this.action} OSD` : `${this.action} ${this.resource}`;
+  }
+
+  get noDevicesMessage(): string {
+    return this.isZhHans
+      ? '未发现 HDD、SSD 或 NVME 设备。在添加设备之前，创建 OSD 将保持禁用。'
+      : 'No devices(HDD, SSD or NVME) were found. Creation of OSDs will remain disabled until devices are added.';
+  }
+
+  get deploymentOptionsLabel(): string {
+    return this.isZhHans ? '部署选项' : 'Deployment Options';
+  }
+
+  get advancedModeLabel(): string {
+    return this.isZhHans ? '高级模式' : 'Advanced Mode';
+  }
+
+  get recommendedLabel(): string {
+    return this.isZhHans ? '（推荐）' : '(Recommended)';
+  }
+
+  get createOsdsLabel(): string {
+    return this.isZhHans ? '创建 OSD' : 'Create OSDs';
+  }
+
+  get primaryDevicesLabel(): string {
+    return this.isZhHans ? '主设备' : 'Primary';
+  }
+
+  get walDevicesLabel(): string {
+    return this.isZhHans ? 'WAL' : 'WAL';
+  }
+
+  get dbDevicesLabel(): string {
+    return this.isZhHans ? 'DB' : 'DB';
+  }
+
+  get sharedDevicesLabel(): string {
+    return this.isZhHans ? '共享设备' : 'Shared devices';
+  }
+
+  get featuresLabel(): string {
+    return this.isZhHans ? '功能特性' : 'Features';
+  }
+
+  getWalSlotsLabel(): string {
+    return this.isZhHans ? 'WAL 槽位' : 'WAL slots';
+  }
+
+  getWalSlotsHelper(): string {
+    return this.isZhHans ? '每个 WAL 设备可供多少个 OSD 使用。' : 'How many OSDs per WAL device.';
+  }
+
+  getOrchestratorDecisionHelper(): string {
+    return this.isZhHans
+      ? '填写 0 表示由编排器后端自动决定。'
+      : 'Specify 0 to let Orchestrator backend decide it.';
+  }
+
+  getDbSlotsLabel(): string {
+    return this.isZhHans ? 'DB 槽位' : 'DB slots';
+  }
+
+  getDbSlotsHelper(): string {
+    return this.isZhHans ? '每个 DB 设备可供多少个 OSD 使用。' : 'How many OSDs per DB device.';
+  }
+
+  getFeatureLabel(feature: OsdFeature): string {
+    if (!this.isZhHans) {
+      return feature.desc;
+    }
+    if (feature.key === 'encrypted') {
+      return '加密';
+    }
+    return feature.desc;
+  }
+
+  getDeploymentOptionTitle(optionName: OsdDeploymentOptions): string {
+    if (!this.isZhHans) {
+      return this.deploymentOptions?.options[optionName]?.title;
+    }
+    const labels: Partial<Record<OsdDeploymentOptions, string>> = {
+      [OsdDeploymentOptions.COST_CAPACITY]: '容量优先',
+      [OsdDeploymentOptions.THROUGHPUT]: '吞吐优化',
+      [OsdDeploymentOptions.IOPS]: 'IOPS 优化'
+    };
+    return labels[optionName] || this.deploymentOptions?.options[optionName]?.title;
+  }
+
+  getDeploymentOptionDesc(optionName: OsdDeploymentOptions): string {
+    if (!this.isZhHans) {
+      return this.deploymentOptions?.options[optionName]?.desc;
+    }
+    const labels: Partial<Record<OsdDeploymentOptions, string>> = {
+      [OsdDeploymentOptions.COST_CAPACITY]: '优先使用较少的高速设备，以获得更高的容量利用率。',
+      [OsdDeploymentOptions.THROUGHPUT]: '针对顺序吞吐场景优化设备分配。',
+      [OsdDeploymentOptions.IOPS]: '针对高 IOPS 场景优化设备分配。'
+    };
+    return labels[optionName] || this.deploymentOptions?.options[optionName]?.desc;
   }
 
   ngOnInit() {

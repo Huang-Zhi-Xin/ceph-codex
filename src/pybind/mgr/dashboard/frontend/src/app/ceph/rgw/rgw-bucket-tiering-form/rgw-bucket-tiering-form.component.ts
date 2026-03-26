@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, LOCALE_ID, OnInit, Optional } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -38,6 +38,7 @@ export class RgwBucketTieringFormComponent extends CdForm implements OnInit {
   storageClassList: StorageClass[] = null;
   configuredLifecycle: Lifecycle;
   isStorageClassFetched = false;
+  isZhHans = false;
 
   constructor(
     @Inject('bucket') public bucket: Bucket,
@@ -49,9 +50,63 @@ export class RgwBucketTieringFormComponent extends CdForm implements OnInit {
     private cd: ChangeDetectorRef,
     private rgwZonegroupService: RgwZonegroupService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
+  }
+
+  get formTitle(): string {
+    return this.isZhHans
+      ? `${this.editing ? '编辑' : '创建'} 分层配置`
+      : `${this.editing ? 'Edit' : 'Create'} Tiering configuration`;
+  }
+
+  get ruleNameLabel(): string {
+    return this.isZhHans ? '规则名称' : 'Rule Name';
+  }
+
+  get storageClassLabel(): string {
+    return this.isZhHans ? '存储类别' : 'Storage Class';
+  }
+
+  get loadingText(): string {
+    return this.isZhHans ? '加载中...' : 'Loading...';
+  }
+
+  get noStorageClassText(): string {
+    return this.isZhHans ? '-- 无可用存储类别 --' : '-- No storage class available --';
+  }
+
+  get selectStorageClassText(): string {
+    return this.isZhHans ? '-- 选择存储类别 --' : '-- Select the storage class --';
+  }
+
+  get configurationScopeLabel(): string {
+    return this.isZhHans ? '选择配置范围' : 'Choose a configuration scope';
+  }
+
+  get tagsRuleDescription(): string {
+    return this.isZhHans
+      ? '规则要生效，对象标签集中必须存在以下所有标签。'
+      : "All the tags must exist in the object's tag set for the rule to apply.";
+  }
+
+  get objectKeyNamePlaceholder(): string {
+    return this.isZhHans ? '输入对象键名称' : 'Enter name of the object key';
+  }
+
+  get tagValuePlaceholder(): string {
+    return this.isZhHans ? '输入标签值' : 'Enter value of the tag';
+  }
+
+  get numberOfDaysLabel(): string {
+    return this.isZhHans ? '天数' : 'Number of days';
+  }
+
+  get submitText(): string {
+    return this.isZhHans ? (this.editing ? '编辑' : '创建') : this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
   }
 
   ngOnInit() {

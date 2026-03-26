@@ -12,6 +12,7 @@ import { Pool } from '~/app/ceph/pool/pool';
 import { RgwDaemon } from '~/app/ceph/rgw/models/rgw-daemon';
 import { OrchestratorService } from '~/app/shared/api/orchestrator.service';
 import { RgwDaemonService } from '~/app/shared/api/rgw-daemon.service';
+import { ActionLabelsI18n } from '~/app/shared/constants/app.constants';
 import { TableActionsComponent } from '~/app/shared/datatable/table-actions/table-actions.component';
 import { Icons } from '~/app/shared/enum/icons.enum';
 import { CdFormGroup } from '~/app/shared/forms/cd-form-group';
@@ -63,7 +64,7 @@ export class PermissionHelper {
           this.permission.update = update;
           this.permission.delete = deleteP;
 
-          this.tac = new TableActionsComponent();
+          this.tac = new TableActionsComponent(new ActionLabelsI18n());
           this.tac.selection = new CdTableSelection();
           this.tac.tableActions = [...tableActions];
           this.tac.permission = this.permission;

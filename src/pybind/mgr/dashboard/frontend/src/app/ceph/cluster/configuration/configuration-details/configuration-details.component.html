@@ -13,13 +13,11 @@
         <td>{{ selection.desc }}</td>
       </tr>
       <tr>
-        <td i18n
-            class="bold">Long description</td>
+        <td class="bold">{{ longDescriptionLabel }}</td>
         <td>{{ selection.long_desc }}</td>
       </tr>
       <tr>
-        <td i18n
-            class="bold">Current values</td>
+        <td class="bold">{{ currentValuesLabel }}</td>
         <td>
           <span *ngFor="let conf of selection.value; last as isLast">
             {{ conf.section }}: {{ conf.value }}{{ !isLast ? "," : "" }}<br />
@@ -32,8 +30,7 @@
         <td>{{ selection.default }}</td>
       </tr>
       <tr>
-        <td i18n
-            class="bold">Daemon default</td>
+        <td class="bold">{{ daemonDefaultLabel }}</td>
         <td>{{ selection.daemon_default }}</td>
       </tr>
       <tr>
@@ -82,8 +79,7 @@
         <td>{{ selection.level }}</td>
       </tr>
       <tr>
-        <td i18n
-            class="bold">Can be updated at runtime (editable)</td>
+        <td class="bold">{{ runtimeEditableLabel }}</td>
         <td>{{ selection.can_update_at_runtime | booleanText }}</td>
       </tr>
       <tr>
@@ -92,13 +88,11 @@
         <td>{{ selection.tags }}</td>
       </tr>
       <tr>
-        <td i18n
-            class="bold">Enum values</td>
+        <td class="bold">{{ enumValuesLabel }}</td>
         <td>{{ selection.enum_values }}</td>
       </tr>
       <tr>
-        <td i18n
-            class="bold">See also</td>
+        <td class="bold">{{ seeAlsoLabel }}</td>
         <td>{{ selection.see_also }}</td>
       </tr>
     </tbody>

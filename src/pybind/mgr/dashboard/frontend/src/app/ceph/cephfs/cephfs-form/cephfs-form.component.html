@@ -6,15 +6,14 @@
           #formDir="ngForm"
           [formGroup]="form"
           novalidate>
-      <div i18n="form title|Example: Create Volume@@formTitle"
-           class="form-header">{{ action | titlecase }} {{ resource | upperFirst }}</div>
+      <div class="form-header">{{ formTitle }}</div>
 
       <div class="form-item">
         <ng-container *ngIf="!orchStatus.available">
           <cd-alert-panel type="info"
                           spacingClass="mb-2"
                           i18n
-                          *ngIf="!editing">Orchestrator is not configured. Deploy MDS daemons manually after creating the volume.</cd-alert-panel>
+                          *ngIf="!editing">{{ orchestratorNotConfiguredText }}</cd-alert-panel>
         </ng-container>
 
         <cd-alert-panel type="info"
@@ -35,8 +34,7 @@
                           [invalidText]="nameError"
                           i18n>Name
             <input cdsText
-                   placeholder="Name..."
-                   i18n-placeholder
+                   [placeholder]="namePlaceholder"
                    id="name"
                    name="name"
                    formControlName="name"
@@ -59,7 +57,7 @@
                         name="customPools"
                         formControlName="customPools"
                         i18n>Use existing pools
-            <cd-help-text>Allows you to use replicated pools with 'cephfs' application tag that are already created.</cd-help-text>
+            <cd-help-text>{{ useExistingPoolsHelpText }}</cd-help-text>
           </cds-checkbox>
 
           <cd-alert-panel *ngIf="pools.length < 2"
@@ -74,22 +72,21 @@
         <div class="form-item"
              *ngIf="form.get('customPools')?.value || editing">
           <cds-text-label for="dataPool"
-                          i18n
-                          *ngIf="editing">Data pool
+                          *ngIf="editing">{{ dataPoolLabel }}
             <input cdsText
                    type="text"
-                   placeholder="Pool name..."
+                   [placeholder]="poolPlaceholder"
                    id="dataPool"
                    name="dataPool"
                    formControlName="dataPool">
           </cds-text-label>
-          <cds-select label="Data pool"
+          <cds-select [label]="dataPoolLabel"
                       for="dataPool"
                       name="dataPool"
                       id="dataPool"
                       formControlName="dataPool"
                       (valueChange)="onPoolChange($event)"
-                      cdRequiredField="Data pool"
+                      [cdRequiredField]="dataPoolLabel"
                       [invalid]="!form.controls.dataPool.valid && form.controls.dataPool.dirty"
                       [invalidText]="dataPoolError"
                       *ngIf="!editing">
@@ -116,21 +113,20 @@
         <div class="form-item"
              *ngIf="form.get('customPools')?.value || editing">
           <cds-text-label for="metadataPool"
-                          i18n
-                          *ngIf="editing">Metadata pool
+                          *ngIf="editing">{{ metadataPoolLabel }}
             <input cdsText
                    type="text"
-                   placeholder="Pool name..."
+                   [placeholder]="poolPlaceholder"
                    id="metadataPool"
                    name="metadataPool"
                    formControlName="metadataPool">
           </cds-text-label>
-          <cds-select label="Metadata pool"
+          <cds-select [label]="metadataPoolLabel"
                       for="metadataPool"
                       name="metadataPool"
                       id="metadataPool"
                       formControlName="metadataPool"
-                      cdRequiredField="Metadata pool"
+                      [cdRequiredField]="metadataPoolLabel"
                       [invalid]="!form.controls.metadataPool.valid && form.controls.metadataPool.dirty"
                       [invalidText]="metadataPoolError"
                       (valueChange)="onPoolChange($event, true)"
@@ -180,10 +176,9 @@
                            name="label"
                            formControlName="label"
                            id="label"
-                           placeholder="Select labels..."
+                           [placeholder]="labelPlaceholder"
                            [appendInline]="true"
                            [items]="data.labels"
-                           i18n-placeholder
                            (selected)="multiSelector($event, 'label')"
                            [invalid]="form.controls.label.invalid && (form.controls.label.dirty)"
                            [invalidText]="labelError"
@@ -210,8 +205,7 @@
                            name="hosts"
                            formControlName="hosts"
                            id="hosts"
-                           placeholder="Select hosts..."
-                           i18n-placeholder
+                           [placeholder]="hostsPlaceholder"
                            [appendInline]="true"
                            [items]="data.hosts"
                            (selected)="multiSelector($event, 'hosts')"
@@ -223,7 +217,7 @@
       </ng-container>
       <cd-form-button-panel (submitActionEvent)="submit()"
                             [form]="formDir"
-                            [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                            [submitText]="submitText"
                             [disabled]="editing ? disableRename: false"
                             wrappingClass="text-right"></cd-form-button-panel>
     </form>

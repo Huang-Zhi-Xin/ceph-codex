@@ -11,7 +11,7 @@
          i18n>Performance Details</a>
       <ng-template ngbNavContent>
         <cd-grafana i18n-title
-                    title="Cluster details"
+                    [title]="clusterDetailsTitle"
                     [grafanaPath]="'ceph-cluster?var-cluster=' + selectedClusterFsid"
                     [type]="'metrics'"
                     uid="edtb0oxdq"

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 
 import _ from 'lodash';
 
@@ -14,10 +14,32 @@ export class MonitorComponent {
   mon_status: any;
   inQuorum: any;
   notInQuorum: any;
+  quorumConLabel: string;
+  quorumMonLabel: string;
+  requiredConLabel: string;
+  requiredMonLabel: string;
+  clusterIdLabel: string;
+  monmapModifiedLabel: string;
+  monmapEpochLabel: string;
+  inQuorumLabel: string;
+  notInQuorumLabel: string;
 
   interval: any;
 
-  constructor(private monitorService: MonitorService) {
+  constructor(
+    private monitorService: MonitorService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    const isZhHans = localeId.startsWith('zh');
+    this.quorumConLabel = isZhHans ? '法定人数 con' : $localize`quorum con`;
+    this.quorumMonLabel = isZhHans ? '法定人数 mon' : $localize`quorum mon`;
+    this.requiredConLabel = isZhHans ? '所需 con' : $localize`required con`;
+    this.requiredMonLabel = isZhHans ? '所需 mon' : $localize`required mon`;
+    this.clusterIdLabel = isZhHans ? '集群 ID' : 'Cluster ID';
+    this.monmapModifiedLabel = isZhHans ? 'monmap 修改时间' : 'monmap modified';
+    this.monmapEpochLabel = isZhHans ? 'monmap 纪元' : 'monmap epoch';
+    this.inQuorumLabel = isZhHans ? '法定人数内' : 'In Quorum';
+    this.notInQuorumLabel = isZhHans ? '不在法定人数内' : 'Not In Quorum';
     this.inQuorum = {
       columns: [
         { prop: 'name', name: $localize`Name`, cellTransformation: CellTemplate.routerLink },

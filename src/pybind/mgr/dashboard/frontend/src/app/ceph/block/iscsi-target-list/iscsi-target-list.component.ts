@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import _ from 'lodash';
@@ -47,6 +47,11 @@ export class IscsiTargetListComponent extends ListWithDetails implements OnInit,
   tableActions: CdTableAction[];
   targets: any[] = [];
   icons = Icons;
+  isZhHans: boolean;
+
+  get unavailableTitle(): string {
+    return this.isZhHans ? 'iSCSI 目标不可用' : 'iSCSI Targets not available';
+  }
 
   builders = {
     'iscsi/target/create': (metadata: object) => {
@@ -65,10 +70,12 @@ export class IscsiTargetListComponent extends ListWithDetails implements OnInit,
     private modalService: ModalCdsService,
     private taskWrapper: TaskWrapperService,
     public actionLabels: ActionLabelsI18n,
-    protected ngZone: NgZone
+    protected ngZone: NgZone,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super(ngZone);
     this.permission = this.authStorageService.getPermissions().iscsi;
+    this.isZhHans = localeId.startsWith('zh');
 
     this.tableActions = [
       {

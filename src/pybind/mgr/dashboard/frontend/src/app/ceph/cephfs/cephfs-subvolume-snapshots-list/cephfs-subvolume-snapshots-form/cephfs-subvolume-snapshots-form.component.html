@@ -2,8 +2,7 @@
            [open]="open"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>{{ action | titlecase }} {{ resource | upperFirst }}</h3>
+    <h3 cdsModalHeaderHeading>{{ formTitle }}</h3>
   </cds-modal-header>
 
   <ng-container *cdFormLoading="loading">
@@ -21,7 +20,7 @@
                           i18n>
             <input cdsText
                    type="text"
-                   placeholder="Snapshot name..."
+                   [placeholder]="snapshotNamePlaceholder"
                    id="snapshotName"
                    name="snapshotName"
                    formControlName="snapshotName"
@@ -41,9 +40,9 @@
 
         <!-- Volume name -->
         <div class="form-item">
-          <cds-text-label label="Volume name"
+          <cds-text-label [label]="volumeNameLabel"
                           for="volumeName"
-                          i18n>Volume name
+                          >{{ volumeNameLabel }}
             <input cdsText
                    type="text"
                    id="volumeName"
@@ -54,7 +53,7 @@
 
         <!--Subvolume Group name -->
         <div class="form-item">
-          <cds-select label="Subvolume group"
+          <cds-select [label]="subvolumeGroupLabel"
                       for="subvolumeGroupName"
                       formControlName="subvolumeGroupName"
                       name="subvolumeGroupName"
@@ -62,7 +61,7 @@
                       *ngIf="subVolumeGroups">
             <ng-container *ngFor="let subvolumegroup of subVolumeGroups">
               <option *ngIf="subvolumegroup == ''"
-                      value="">Default</option>
+                      value="">{{ defaultGroupLabel }}</option>
               <option [value]="subvolumegroup"
                       *ngIf="subvolumegroup !== ''">{{ subvolumegroup }}</option>
             </ng-container>
@@ -72,7 +71,7 @@
         <!--Subvolume name -->
         <div class="form-item"
              *ngIf="subVolumes$ | async as subVolumes">
-          <cds-select label="Subvolume"
+          <cds-select [label]="subvolumeLabel"
                       id="subVolumeName"
                       name="subVolumeName"
                       formControlName="subVolumeName"
@@ -85,7 +84,7 @@
 
       <cd-form-button-panel (submitActionEvent)="submit()"
                             [form]="snapshotForm"
-                            [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                            [submitText]="submitText"
                             [modalForm]="true"></cd-form-button-panel>
 
     </form>

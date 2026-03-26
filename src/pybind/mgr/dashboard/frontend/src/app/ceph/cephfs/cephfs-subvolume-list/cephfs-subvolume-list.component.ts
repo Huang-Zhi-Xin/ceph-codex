@@ -1,6 +1,8 @@
 import {
   Component,
+  Inject,
   Input,
+  LOCALE_ID,
   OnChanges,
   OnInit,
   SimpleChanges,
@@ -84,6 +86,7 @@ export class CephfsSubvolumeListComponent extends CdForm implements OnInit, OnCh
   subVolumesList: CephfsSubvolume[] = [];
 
   activeGroupName: string = '';
+  groupNavigationTitle: string;
 
   constructor(
     private cephfsSubVolumeService: CephfsSubvolumeService,
@@ -92,10 +95,12 @@ export class CephfsSubvolumeListComponent extends CdForm implements OnInit, OnCh
     private authStorageService: AuthStorageService,
     private taskWrapper: TaskWrapperService,
     private cephfsSubvolumeGroupService: CephfsSubvolumeGroupService,
-    private healthService: HealthService
+    private healthService: HealthService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.permissions = this.authStorageService.getPermissions();
+    this.groupNavigationTitle = localeId.startsWith('zh') ? '分组' : 'Groups';
   }
 
   ngOnInit(): void {
@@ -248,9 +253,9 @@ export class CephfsSubvolumeListComponent extends CdForm implements OnInit, OnCh
     this.selectedName = this.selection.first().name;
     this.modalService.show(DeleteConfirmationModalComponent, {
       impact: DeletionImpact.high,
-      actionDescription: 'remove',
+      actionDescription: this.actionLabels.REMOVE,
       itemNames: [this.selectedName],
-      itemDescription: 'Subvolume',
+      itemDescription: $localize`Subvolume`,
       childFormGroup: this.removeForm,
       childFormGroupTemplate: this.removeTmpl,
       submitAction: () =>

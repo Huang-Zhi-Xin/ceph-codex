@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
 
 import _ from 'lodash';
 
@@ -21,9 +21,15 @@ export class OsdDetailsComponent implements OnChanges {
     tree?: any;
   };
   grafanaPermission: Permission;
+  osdDetailsTitle: string;
 
-  constructor(private osdService: OsdService, private authStorageService: AuthStorageService) {
+  constructor(
+    private osdService: OsdService,
+    private authStorageService: AuthStorageService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
     this.grafanaPermission = this.authStorageService.getPermissions().grafana;
+    this.osdDetailsTitle = localeId.startsWith('zh') ? 'OSD 详情' : 'OSD details';
   }
 
   ngOnChanges() {

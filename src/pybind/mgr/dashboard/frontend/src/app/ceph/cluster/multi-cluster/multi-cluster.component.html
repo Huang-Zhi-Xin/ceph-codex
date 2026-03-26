@@ -74,12 +74,12 @@
                       [dismissible]="true"
                       i18n>
       <div>
-        <p><strong>Could not retrieve metrics from the following clusters:</strong></p>
+        <p><strong>{{ prometheusConnectionErrorTitle }}</strong></p>
         <div *ngFor="let cluster of prometheusConnectionErrors">
           <p>
-            <strong>Cluster Name:</strong> {{ cluster['cluster_alias'] }}<br>
-            <strong>Cluster ID:</strong> {{ cluster['cluster_name'] }}<br>
-            <strong>Issue:</strong> {{ cluster.reconnectionError ? cluster.reconnectionError : 'Security configuration error' }}<br>
+            <strong>{{ clusterNameLabel }}</strong> {{ cluster['cluster_alias'] }}<br>
+            <strong>{{ clusterIdLabel }}</strong> {{ cluster['cluster_name'] }}<br>
+            <strong>{{ issueLabel }}</strong> {{ cluster.reconnectionError ? cluster.reconnectionError : securityConfigurationErrorText }}<br>
           </p>
         </div>
       </div>
@@ -92,7 +92,7 @@
                       (dismissed)="onDismissed()"
                       [dismissible]="true"
                       i18n>
-        <p>Please note that the data for the disconnected cluster will be visible for a duration of ~ 5 minutes. After this period, it will be automatically removed.</p>
+        <p>{{ delayedDeletionNoticeText }}</p>
       </cd-alert-panel>
       <cd-card-group>
         <div class="col-lg-4">
@@ -154,7 +154,7 @@
             <cd-card cardTitle="Connection Errors"
                      i18n-title
                      class="col-sm-6 m-0 p-0 ps-4 pe-2"
-                     aria-label="Connection Errors">
+                     [attr.aria-label]="isZhHans ? '连接错误' : 'Connection Errors'">
               <span class="text-center">
                 <h3 [ngClass]="{'text-danger': connectionErrorsCount > 0}">
                   <i [ngClass]="icons.danger"
@@ -166,7 +166,7 @@
             <cd-card cardTitle="Hosts"
                      i18n-title
                      class="col-sm-6 m-0 p-0 ps-2 pe-2"
-                     aria-label="Total number of hosts"
+                     [attr.aria-label]="isZhHans ? '主机总数' : 'Total number of hosts'"
                      *ngIf="queriesResults['TOTAL_HOSTS'] && queriesResults['TOTAL_HOSTS'][0]">
               <span class="text-center">
                 <h3>{{ queriesResults['TOTAL_HOSTS'][0][1] }}</h3>
@@ -178,7 +178,7 @@
             <cd-card cardTitle="Capacity"
                      i18n-title
                      class="col-sm-12 m-0 p-0 ps-4 pe-2"
-                     aria-label="Capacity card"
+                     [attr.aria-label]="isZhHans ? '容量卡片' : 'Capacity card'"
                      *ngIf="queriesResults['TOTAL_CLUSTERS_CAPACITY'] && queriesResults['TOTAL_CLUSTERS_CAPACITY'][0] && queriesResults['TOTAL_USED_CAPACITY'] && queriesResults['TOTAL_USED_CAPACITY'][0]">
               <ng-container class="ms-4 me-4">
                 <cd-dashboard-pie [data]="{max: queriesResults['TOTAL_CLUSTERS_CAPACITY'][0][1], current: queriesResults['TOTAL_USED_CAPACITY'][0][1]}"
@@ -191,15 +191,14 @@
         </div>
 
         <div class="col-sm-8 ps-2">
-          <cd-card [cardTitle]="'Top ' + COUNT_OF_UTILIZATION_CHARTS + ' Cluster Utilization'"
-                   i18n-title
+          <cd-card [cardTitle]="topClusterUtilizationTitle"
                    [fullHeight]="true"
-                   aria-label="Cluster Utilization card"
+                   [attr.aria-label]="clusterUtilizationAriaLabel"
                    *ngIf="clusters">
             <div class="ms-4 me-4 mt-0">
               <cd-dashboard-time-selector (selectedTime)="getPrometheusData($event, 'clusterUtilization')">
               </cd-dashboard-time-selector>
-              <cd-dashboard-area-chart  chartTitle="Capacity"
+              <cd-dashboard-area-chart  [chartTitle]="capacityChartTitle"
                                         [labelsArray]="capacityLabels"
                                         isMultiCluster="true"
                                         dataUnits="B"
@@ -207,7 +206,7 @@
                                         [truncateLabel]="true"
                                         *ngIf="capacityLabels && capacityValues">
               </cd-dashboard-area-chart>
-              <cd-dashboard-area-chart chartTitle="IOPS"
+              <cd-dashboard-area-chart [chartTitle]="iopsChartTitle"
                                        [labelsArray]="iopsLabels"
                                        isMultiCluster="true"
                                        dataUnits=""
@@ -216,7 +215,7 @@
                                        [truncateLabel]="true"
                                        *ngIf="iopsLabels && iopsValues">
               </cd-dashboard-area-chart>
-              <cd-dashboard-area-chart chartTitle="Throughput"
+              <cd-dashboard-area-chart [chartTitle]="throughputChartTitle"
                                        [labelsArray]="throughputLabels"
                                        isMultiCluster="true"
                                        dataUnits="B/s"
@@ -243,14 +242,13 @@
       <cd-card-group>
         <div class="col-lg-12 mb-4 m-0 p-0 ps-4 pe-4">
           <div class="row">
-            <cd-card [cardTitle]="'Top ' + COUNT_OF_UTILIZATION_CHARTS + ' Pools Utilization'"
-                     i18n-title
-                     aria-label="Pools Utilization card"
+            <cd-card [cardTitle]="topPoolsUtilizationTitle"
+                     [attr.aria-label]="poolsUtilizationAriaLabel"
                      *ngIf="clusters">
               <div class="ms-4 me-4 mt-0">
                 <cd-dashboard-time-selector (selectedTime)="getPrometheusData($event, 'poolUtilization')">
                 </cd-dashboard-time-selector>
-                <cd-dashboard-area-chart  chartTitle="Capacity"
+                <cd-dashboard-area-chart  [chartTitle]="capacityChartTitle"
                                           [labelsArray]="poolCapacityLabels"
                                           dataUnits="B"
                                           isMultiCluster="true"
@@ -258,7 +256,7 @@
                                           *ngIf="poolCapacityLabels && poolCapacityValues"
                                           [truncateLabel]="true">
                 </cd-dashboard-area-chart>
-                <cd-dashboard-area-chart chartTitle="IOPS"
+                <cd-dashboard-area-chart [chartTitle]="iopsChartTitle"
                                          [labelsArray]="poolIOPSLabels"
                                          dataUnits=""
                                          decimals="0"
@@ -267,7 +265,7 @@
                                          *ngIf="poolIOPSLabels && poolIOPSValues"
                                          [truncateLabel]="true">
                 </cd-dashboard-area-chart>
-                <cd-dashboard-area-chart chartTitle="Client Throughput"
+                <cd-dashboard-area-chart [chartTitle]="clientThroughputChartTitle"
                                          [labelsArray]="poolThroughputLabels"
                                          dataUnits="B/s"
                                          decimals="2"

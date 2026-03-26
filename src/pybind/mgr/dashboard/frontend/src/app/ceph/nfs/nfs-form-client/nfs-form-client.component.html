@@ -21,7 +21,7 @@
                              (click)="removeClient(index)"
                              data-testid="remove_client"
                              data-toggle="button"
-                             title="Remove Client">
+                             [title]="removeClientTitle">
               <svg cdsIcon="close"
                    size="32"
                    class="cds--btn__icon"></svg>
@@ -41,7 +41,7 @@
                        name="addresses"
                        id="addresses"
                        formControlName="addresses"
-                       placeholder="e.g. 192.168.0.10, 192.168.1.0/8"
+                       [placeholder]="addressesPlaceholder"
                        [invalid]="!item.controls['addresses'].valid && (item.controls['addresses'].dirty)">
               </cds-text-label>
               <ng-template #addressesError>
@@ -60,14 +60,13 @@
 
             <!-- Access Type-->
             <div class="form-item">
-              <cds-select label="Access Type"
+              <cds-select [label]="accessTypeLabel"
                           for="access_type"
                           formControlName="access_type"
                           name="access_type"
                           id="access_type"
-                          [helperText]="accessTypeHelper"
-                          i18n>Access Type
-                <option value="">No Access Type</option>
+                          [helperText]="accessTypeHelper">{{ accessTypeLabel }}
+                <option value="">{{ noAccessTypeText }}</option>
                 <option *ngFor="let item of nfsAccessType"
                         [value]="item.value">{{ item.value }}</option>
               </cds-select>

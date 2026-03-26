@@ -24,6 +24,8 @@ export class AboutComponent extends BaseModal implements OnInit, OnDestroy {
   hostAddr: string;
   copyright: string;
   managementNodeLabel: string;
+  productVersionLabel: string;
+  baseVersionLabel: string;
 
   constructor(
     private summaryService: SummaryService,
@@ -34,6 +36,8 @@ export class AboutComponent extends BaseModal implements OnInit, OnDestroy {
     super();
     this.userPermission = this.authStorageService.getPermissions().user;
     this.managementNodeLabel = localeId.startsWith('zh') ? '管理节点' : 'Management Node';
+    this.productVersionLabel = localeId.startsWith('zh') ? '产品版本' : 'Product Version';
+    this.baseVersionLabel = localeId.startsWith('zh') ? 'Ceph 基线版本' : 'Ceph Base Version';
   }
 
   ngOnInit() {

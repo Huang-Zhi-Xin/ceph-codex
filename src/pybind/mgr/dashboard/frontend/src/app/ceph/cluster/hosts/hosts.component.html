@@ -49,7 +49,7 @@
        i18n>Overall Performance</a>
     <ng-template ngbNavContent>
       <cd-grafana i18n-title
-                  title="Host overview"
+                  [title]="hostOverviewTitle"
                   [grafanaPath]="'host-overview?'"
                   [type]="'metrics'"
                   uid="y0KGL0iZz"
@@ -87,8 +87,7 @@
       <li i18n>{{ msg }}</li>
     </ul>
   </div>
-  <ng-container i18n
-                *ngIf="showSubmit">Are you sure you want to continue?</ng-container>
+  <ng-container *ngIf="showSubmit">{{ confirmContinueText }}</ng-container>
 </ng-template>
 
 
@@ -98,14 +97,14 @@
     <span>{{ value }}</span>
   </div>
   <div *ngIf="!validValue(value)">
-    <span ngbTooltip="Not available. Data could not be fetched from Ceph">-</span>
+    <span [ngbTooltip]="hostOverviewUnavailableTooltip">-</span>
   </div>
 </ng-template>
 
 <ng-template #hostDimlessTmpl
              let-value="data.value">
   <div *ngIf="!validValue(value)">
-    <span ngbTooltip="Not available. Data could not be fetched from Ceph">-</span>
+    <span [ngbTooltip]="hostOverviewUnavailableTooltip">-</span>
   </div>
   <div *ngIf="validValue(value)">
     <span>{{ value | dimlessBinary }}</span>

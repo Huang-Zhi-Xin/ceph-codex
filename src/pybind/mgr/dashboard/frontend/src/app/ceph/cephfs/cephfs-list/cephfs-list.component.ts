@@ -51,6 +51,7 @@ export class CephfsListComponent extends ListWithDetails implements OnInit {
   isZhHans: boolean;
   fileSystemsTabLabel: string;
   overviewTabLabel: string;
+  overviewTitle: string;
 
   constructor(
     private authStorageService: AuthStorageService,
@@ -71,6 +72,7 @@ export class CephfsListComponent extends ListWithDetails implements OnInit {
     this.isZhHans = localeId.startsWith('zh');
     this.fileSystemsTabLabel = this.isZhHans ? '文件系统' : 'File systems';
     this.overviewTabLabel = this.isZhHans ? '概览' : 'Overview';
+    this.overviewTitle = this.isZhHans ? 'CephFS 概览' : 'CephFS Overview';
   }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -35,6 +35,7 @@ export class RbdNamespaceFormModalComponent extends BaseModal implements OnInit 
   namespaceForm: CdFormGroup;
 
   editing = false;
+  isZhHans = false;
 
   public onSubmit: Subject<void> = new Subject();
 
@@ -44,11 +45,41 @@ export class RbdNamespaceFormModalComponent extends BaseModal implements OnInit 
     private notificationService: NotificationService,
     private poolService: PoolService,
     private rbdService: RbdService,
-    protected modalService: ModalService
+    protected modalService: ModalService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.poolPermission = this.authStorageService.getPermissions().pool;
     this.createForm();
+  }
+
+  get modalTitle(): string {
+    return this.isZhHans ? '创建命名空间' : 'Create Namespace';
+  }
+
+  get poolLabel(): string {
+    return this.isZhHans ? '存储池' : 'Pool';
+  }
+
+  get loadingText(): string {
+    return this.isZhHans ? '加载中...' : 'Loading...';
+  }
+
+  get noRbdPoolsText(): string {
+    return this.isZhHans ? '-- 无可用 rbd 存储池 --' : '-- No rbd pools available --';
+  }
+
+  get selectPoolText(): string {
+    return this.isZhHans ? '-- 选择存储池 --' : '-- Select a pool --';
+  }
+
+  get namespacePlaceholder(): string {
+    return this.isZhHans ? '命名空间名称...' : 'Namespace name...';
+  }
+
+  get submitText(): string {
+    return this.isZhHans ? '创建' : this.actionLabels.CREATE;
   }
 
   createForm() {

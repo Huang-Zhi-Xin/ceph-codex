@@ -65,15 +65,27 @@ export class CRUDTableComponent implements OnInit {
     */
     this.activatedRoute.data.subscribe((data: any) => {
       const resource: string = data.resource;
+      this.resource = resource;
       this.tabs = data.tabs;
       this.dataGatewayService
         .list(`ui-${resource}`)
         .subscribe((response: CrudMetadata) => this.processMeta(response));
       this.data$ = this.timerService.get(() => this.dataGatewayService.list(resource));
     });
-    this.activatedRoute.data.subscribe((data: any) => {
-      this.resource = data.resource;
-    });
+  }
+
+  private translateClusterUserText(value?: string): string | undefined {
+    const translations: Record<string, string> = {
+      entity: $localize`实体`,
+      Entity: $localize`实体`,
+      caps: $localize`权限`,
+      Caps: $localize`权限`,
+      key: $localize`密钥`,
+      Key: $localize`密钥`,
+      user: $localize`存储用户`
+    };
+
+    return value ? translations[value] || value : value;
   }
 
   processMeta(meta: CrudMetadata) {
@@ -104,6 +116,17 @@ export class CRUDTableComponent implements OnInit {
     meta.table.columns = meta.table.columns.filter((col: any) => {
       return !col['isHidden'];
     });
+
+    if (this.resource === 'cluster/user') {
+      meta.table.columns = meta.table.columns.map((column: any) => ({
+        ...column,
+        name: this.translateClusterUserText(column.name || column.prop)
+      }));
+      meta.detail_columns = meta.detail_columns.map((column: string) => {
+        return this.translateClusterUserText(column) || column;
+      });
+      meta.resource = this.translateClusterUserText(meta.resource) || meta.resource;
+    }
 
     this.meta = meta;
     for (let i = 0; i < this.meta.actions.length; i++) {
@@ -147,7 +170,15 @@ export class CRUDTableComponent implements OnInit {
   setExpandedRow(event: any) {
     for (let i = 0; i < this.meta.detail_columns.length; i++) {
       let column = this.meta.detail_columns[i];
-      let columnDetail = event?.[column];
+      const rawColumn =
+        this.resource === 'cluster/user'
+          ? Object.entries({
+              entity: $localize`实体`,
+              caps: $localize`权限`,
+              key: $localize`密钥`
+            }).find(([, translated]) => translated === column)?.[0] || column
+          : column;
+      let columnDetail = event?.[rawColumn];
       this.expandedRow[column] = this.formatColumnDetails(columnDetail);
     }
   }

@@ -3,6 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Inject,
+  LOCALE_ID,
   OnDestroy,
   OnInit,
   Output,
@@ -48,20 +50,22 @@ export class CreateClusterComponent implements OnInit, OnDestroy, AfterViewInit 
   currentStepSub: Subscription;
   permissions: Permissions;
   projectConstants: typeof AppConstants = AppConstants;
+  readonly stepKeys = ['add-hosts', 'create-osds', 'create-services', 'review'];
+  isZhHans: boolean;
   stepTitles: Step[] = [
     {
-      label: 'Add Hosts'
+      label: ''
     },
     {
-      label: 'Create OSDs',
+      label: '',
       complete: false
     },
     {
-      label: 'Create Services',
+      label: '',
       complete: false
     },
     {
-      label: 'Review',
+      label: '',
       complete: false
     }
   ];
@@ -91,8 +95,10 @@ export class CreateClusterComponent implements OnInit, OnDestroy, AfterViewInit 
     private osdService: OsdService,
     private route: ActivatedRoute,
     private location: Location,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.permissions = this.authStorageService.getPermissions();
     this.currentStepSub = this.wizardStepsService
       .getCurrentStep()
@@ -100,6 +106,12 @@ export class CreateClusterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.currentStep = step;
       });
     this.currentStep.stepIndex = 0;
+    this.stepTitles = [
+      { label: this.isZhHans ? '添加主机' : 'Add Hosts' },
+      { label: this.isZhHans ? '创建 OSD' : 'Create OSDs', complete: false },
+      { label: this.isZhHans ? '创建服务' : 'Create Services', complete: false },
+      { label: this.isZhHans ? '预览' : 'Review', complete: false }
+    ];
   }
   ngAfterViewInit(): void {
     this.changeDetectorRef.detectChanges();
@@ -122,8 +134,8 @@ export class CreateClusterComponent implements OnInit, OnDestroy, AfterViewInit 
       this.selectedOption = { option: options.recommended_option, encrypted: false };
     });
 
-    this.stepTitles.forEach((stepTitle) => {
-      this.stepsToSkip[stepTitle.label] = false;
+    this.stepKeys.forEach((stepKey) => {
+      this.stepsToSkip[stepKey] = false;
     });
   }
 
@@ -160,7 +172,7 @@ export class CreateClusterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   onSubmit() {
-    if (!this.stepsToSkip['Add Hosts']) {
+    if (!this.stepsToSkip['add-hosts']) {
       const hostContext = new CdTableFetchDataContext(() => undefined);
       this.hostService.list(hostContext.toParams(), 'false').subscribe((hosts) => {
         hosts.forEach((host) => {
@@ -188,7 +200,7 @@ export class CreateClusterComponent implements OnInit, OnDestroy, AfterViewInit 
       });
     }
 
-    if (!this.stepsToSkip['Create OSDs']) {
+    if (!this.stepsToSkip['create-osds']) {
       if (this.driveGroup) {
         const user = this.authStorageService.getUsername();
         this.driveGroup.setName(`dashboard-${user}-${_.now()}`);
@@ -266,8 +278,8 @@ export class CreateClusterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   onSkip() {
-    const stepTitle = this.stepTitles[this.currentStep.stepIndex];
-    this.stepsToSkip[stepTitle.label] = true;
+    const stepKey = this.stepKeys[this.currentStep.stepIndex];
+    this.stepsToSkip[stepKey] = true;
     this.onNextStep();
   }
 

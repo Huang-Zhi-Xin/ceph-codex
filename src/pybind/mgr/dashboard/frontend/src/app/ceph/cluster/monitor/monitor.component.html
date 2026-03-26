@@ -7,38 +7,31 @@
              *ngIf="mon_status">
         <tbody>
           <tr>
-            <td i18n
-                class="bold">Cluster ID</td>
+            <td class="bold">{{ clusterIdLabel }}</td>
             <td>{{ mon_status.monmap.fsid }}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">monmap modified</td>
+            <td class="bold">{{ monmapModifiedLabel }}</td>
             <td>{{ mon_status.monmap.modified | relativeDate }}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">monmap epoch</td>
+            <td class="bold">{{ monmapEpochLabel }}</td>
             <td>{{ mon_status.monmap.epoch }}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">quorum con</td>
+            <td class="bold">{{ quorumConLabel }}</td>
             <td>{{ mon_status.features.quorum_con }}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">quorum mon</td>
+            <td class="bold">{{ quorumMonLabel }}</td>
             <td>{{ mon_status.features.quorum_mon }}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">required con</td>
+            <td class="bold">{{ requiredConLabel }}</td>
             <td>{{ mon_status.features.required_con }}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">required mon</td>
+            <td class="bold">{{ requiredMonLabel }}</td>
             <td>{{ mon_status.features.required_mon }}</td>
           </tr>
         </tbody>
@@ -47,15 +40,13 @@
   </div>
 
   <div class="col-lg-8">
-    <legend i18n
-            class="in-quorum cd-header">In Quorum</legend>
+    <legend class="in-quorum cd-header">{{ inQuorumLabel }}</legend>
     <div>
     <cd-table [data]="inQuorum.data"
               [columns]="inQuorum.columns">
     </cd-table></div>
 
-    <legend i18n
-            class="in-quorum cd-header">Not In Quorum</legend>
+    <legend class="in-quorum cd-header">{{ notInQuorumLabel }}</legend>
     <div>
     <cd-table [data]="notInQuorum.data"
               (fetchData)="refresh()"

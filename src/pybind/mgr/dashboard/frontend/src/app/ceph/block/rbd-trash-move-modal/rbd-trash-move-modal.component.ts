@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 
 import { BaseModal } from 'carbon-components-angular';
 import moment from 'moment';
@@ -26,6 +26,7 @@ export class RbdTrashMoveModalComponent extends BaseModal implements OnInit {
   moveForm: CdFormGroup;
   pattern: string;
   setExpirationDate = false;
+  isZhHans: boolean;
 
   constructor(
     private rbdService: RbdService,
@@ -35,10 +36,18 @@ export class RbdTrashMoveModalComponent extends BaseModal implements OnInit {
     @Inject('poolName') public poolName: string,
     @Inject('namespace') public namespace: string,
     @Inject('imageName') public imageName: string,
-    @Inject('hasSnapshots') public hasSnapshots: boolean
+    @Inject('hasSnapshots') public hasSnapshots: boolean,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.createForm();
+  }
+
+  get moveToTrashDescription(): string {
+    return this.isZhHans
+      ? `要将 ${this.imageSpecStr} 移入回收站，点击 Move。你也可以选择一个过期时间。`
+      : `To move ${this.imageSpecStr} to trash, click Move. Optionally, you can pick an expiration date.`;
   }
 
   createForm() {

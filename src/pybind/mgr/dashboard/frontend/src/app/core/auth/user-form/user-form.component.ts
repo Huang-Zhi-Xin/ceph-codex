@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -57,6 +57,7 @@ export class UserFormComponent extends CdForm implements OnInit {
   pwdExpirationFormat = 'YYYY-MM-DD';
   selectedRole: string[];
   passwordexp: boolean = false;
+  isZhHans: boolean;
   constructor(
     private authService: AuthService,
     private authStorageService: AuthStorageService,
@@ -69,12 +70,88 @@ export class UserFormComponent extends CdForm implements OnInit {
     public actionLabels: ActionLabelsI18n,
     private passwordPolicyService: PasswordPolicyService,
     private formBuilder: CdFormBuilder,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.resource = $localize`user`;
     this.createForm();
     this.messages = new SelectMessages({ empty: $localize`There are no roles.` });
+  }
+
+  get formTitle(): string {
+    if (this.isZhHans) {
+      return this.mode === this.userFormMode.editing ? '编辑用户' : '创建用户';
+    }
+    const resourceLabel = this.resource;
+    return `${this.action || ''} ${resourceLabel}`.trim();
+  }
+
+  get usernameLabel(): string {
+    return this.isZhHans ? '用户名' : 'Username';
+  }
+
+  get usernamePlaceholder(): string {
+    return this.isZhHans ? '用户名...' : 'Username...';
+  }
+
+  get usernameTrimTooltip(): string {
+    return this.isZhHans
+      ? '开头和结尾的空白字符会被自动去除'
+      : 'White spaces at the beginning and end will be trimmed';
+  }
+
+  get passwordLabel(): string {
+    return this.isZhHans ? '密码' : 'Password';
+  }
+
+  get passwordPlaceholder(): string {
+    return this.isZhHans ? '密码...' : 'Password...';
+  }
+
+  get confirmPasswordLabel(): string {
+    return this.isZhHans ? '确认密码' : 'Confirm password';
+  }
+
+  get confirmPasswordPlaceholder(): string {
+    return this.isZhHans ? '确认密码...' : 'Confirm password...';
+  }
+
+  get fullNameLabel(): string {
+    return this.isZhHans ? '姓名' : 'Full Name';
+  }
+
+  get fullNamePlaceholder(): string {
+    return this.isZhHans ? '姓名...' : 'Full Name...';
+  }
+
+  get emailLabel(): string {
+    return this.isZhHans ? '邮箱' : 'Email';
+  }
+
+  get emailPlaceholder(): string {
+    return this.isZhHans ? '邮箱...' : 'Email...';
+  }
+
+  get rolesLabel(): string {
+    return this.isZhHans ? '角色' : 'Roles';
+  }
+
+  get rolesPlaceholder(): string {
+    return this.isZhHans ? '选择角色...' : 'Select Roles...';
+  }
+
+  get enabledLabel(): string {
+    return this.isZhHans ? '启用' : 'Enabled';
+  }
+
+  get passwordUpdateRequiredLabel(): string {
+    return this.isZhHans ? '用户下次登录时必须修改密码' : 'User must change password at next login';
+  }
+
+  get submitText(): string {
+    return this.formTitle;
   }
 
   createForm() {

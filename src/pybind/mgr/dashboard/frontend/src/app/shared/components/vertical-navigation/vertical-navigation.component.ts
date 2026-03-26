@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'cd-vertical-navigation',
@@ -15,6 +15,15 @@ export class VerticalNavigationComponent implements OnInit {
 
   activeItem = '';
   filteredItems: string[];
+  isZhHans: boolean;
+
+  get filterPlaceholder(): string {
+    return this.isZhHans ? '按名称筛选...' : 'Filter by name...';
+  }
+
+  constructor(@Inject(LOCALE_ID) localeId: string) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
 
   ngOnInit(): void {
     this.filteredItems = this.items;

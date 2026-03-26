@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
 
 import { CdFormBuilder } from '~/app/shared/forms/cd-form-builder';
@@ -27,6 +27,7 @@ export class NvmeofInitiatorsFormComponent implements OnInit {
   subsystemNQN: string;
   removeHosts: { name: string; value: boolean; id: number }[] = [];
   group: string;
+  isZhHans: boolean;
 
   constructor(
     private authStorageService: AuthStorageService,
@@ -35,16 +36,28 @@ export class NvmeofInitiatorsFormComponent implements OnInit {
     private taskWrapperService: TaskWrapperService,
     private router: Router,
     private route: ActivatedRoute,
-    private formBuilder: CdFormBuilder
+    private formBuilder: CdFormBuilder,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.permission = this.authStorageService.getPermissions().nvmeof;
     this.resource = $localize`Initiator`;
     this.pageURL = 'block/nvmeof/subsystems';
+    this.isZhHans = localeId.startsWith('zh');
   }
 
   NQN_REGEX = /^nqn\.(19|20)\d\d-(0[1-9]|1[0-2])\.\D{2,3}(\.[A-Za-z0-9-]+)+(:[A-Za-z0-9-\.]+(:[A-Za-z0-9-\.]+)*)$/;
   NQN_REGEX_UUID = /^nqn\.2014-08\.org\.nvmexpress:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
   ALLOW_ALL_HOST = '*';
+
+  get addHostPlaceholder(): string {
+    return this.isZhHans ? '添加主机 NQN' : 'Add host nqn';
+  }
+
+  get allowAnyHostWarningText(): string {
+    return this.isZhHans
+      ? '允许任意主机连接到 NVMe/TCP 网关可能带来安全风险。'
+      : 'Allowing any host to connect to the NVMe/TCP gateway may pose security risks.';
+  }
 
   customNQNValidator = CdValidators.custom(
     'pattern',

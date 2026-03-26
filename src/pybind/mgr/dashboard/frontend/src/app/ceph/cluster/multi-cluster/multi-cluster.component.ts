@@ -103,6 +103,70 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
   prometheusConnectionErrors: any[] = [];
   reconnectionError: string;
 
+  get prometheusConnectionErrorTitle(): string {
+    return this.isZhHans
+      ? '无法从以下集群获取指标：'
+      : 'Could not retrieve metrics from the following clusters:';
+  }
+
+  get clusterNameLabel(): string {
+    return this.isZhHans ? '集群名称：' : 'Cluster Name:';
+  }
+
+  get clusterIdLabel(): string {
+    return this.isZhHans ? '集群 ID：' : 'Cluster ID:';
+  }
+
+  get issueLabel(): string {
+    return this.isZhHans ? '问题：' : 'Issue:';
+  }
+
+  get securityConfigurationErrorText(): string {
+    return this.isZhHans ? '安全配置错误' : 'Security configuration error';
+  }
+
+  get delayedDeletionNoticeText(): string {
+    return this.isZhHans
+      ? '请注意，已断开集群的数据会继续显示约 5 分钟，之后会自动移除。'
+      : 'Please note that the data for the disconnected cluster will be visible for a duration of ~ 5 minutes. After this period, it will be automatically removed.';
+  }
+
+  get topClusterUtilizationTitle(): string {
+    return this.isZhHans
+      ? `前 ${this.COUNT_OF_UTILIZATION_CHARTS} 个集群利用率`
+      : `Top ${this.COUNT_OF_UTILIZATION_CHARTS} Cluster Utilization`;
+  }
+
+  get topPoolsUtilizationTitle(): string {
+    return this.isZhHans
+      ? `前 ${this.COUNT_OF_UTILIZATION_CHARTS} 个存储池利用率`
+      : `Top ${this.COUNT_OF_UTILIZATION_CHARTS} Pools Utilization`;
+  }
+
+  get clusterUtilizationAriaLabel(): string {
+    return this.isZhHans ? '集群利用率卡片' : 'Cluster Utilization card';
+  }
+
+  get poolsUtilizationAriaLabel(): string {
+    return this.isZhHans ? '存储池利用率卡片' : 'Pools Utilization card';
+  }
+
+  get capacityChartTitle(): string {
+    return this.isZhHans ? '容量' : 'Capacity';
+  }
+
+  get iopsChartTitle(): string {
+    return this.isZhHans ? 'IOPS' : 'IOPS';
+  }
+
+  get throughputChartTitle(): string {
+    return this.isZhHans ? '吞吐量' : 'Throughput';
+  }
+
+  get clientThroughputChartTitle(): string {
+    return this.isZhHans ? '客户端吞吐量' : 'Client Throughput';
+  }
+
   constructor(
     private multiClusterService: MultiClusterService,
     private settingsService: SettingsService,

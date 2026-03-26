@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
 
 import _ from 'lodash';
 
@@ -35,6 +35,28 @@ export class UsageBarComponent implements OnChanges {
 
   usedPercentage: number;
   freePercentage: number;
+
+  isZhHans: boolean;
+
+  get usedLabel(): string {
+    return this.isZhHans ? '已用:' : 'Used:';
+  }
+
+  get freeLabel(): string {
+    return this.isZhHans ? '可用:' : 'Free:';
+  }
+
+  get totalShardsLabel(): string {
+    return this.isZhHans ? '分片总数:' : 'Total Shards:';
+  }
+
+  get transferredShardsLabel(): string {
+    return this.isZhHans ? '已传输分片:' : 'Transferred Shards:';
+  }
+
+  constructor(@Inject(LOCALE_ID) localeId: string) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
 
   ngOnChanges() {
     if (this.calculatePerc) {

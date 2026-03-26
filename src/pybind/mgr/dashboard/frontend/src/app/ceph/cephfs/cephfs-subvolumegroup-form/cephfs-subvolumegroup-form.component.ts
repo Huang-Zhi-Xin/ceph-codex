@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Optional } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { CephfsSubvolumeGroupService } from '~/app/shared/api/cephfs-subvolume-group.service';
 import { ActionLabelsI18n, URLVerbs } from '~/app/shared/constants/app.constants';
@@ -35,6 +35,7 @@ export class CephfsSubvolumegroupFormComponent extends CdForm implements OnInit 
     others: ['read', 'execute']
   };
   scopes: string[] = ['owner', 'group', 'others'];
+  isZhHans = false;
 
   constructor(
     private actionLabels: ActionLabelsI18n,
@@ -43,6 +44,7 @@ export class CephfsSubvolumegroupFormComponent extends CdForm implements OnInit 
     private formatter: FormatterService,
     private dimlessBinary: DimlessBinaryPipe,
     private octalToHumanReadable: OctalToHumanReadablePipe,
+    @Inject(LOCALE_ID) private localeId: string,
 
     @Optional() @Inject('fsName') public fsName: string,
     @Optional() @Inject('subvolumegroupName') public subvolumegroupName: string,
@@ -50,7 +52,52 @@ export class CephfsSubvolumegroupFormComponent extends CdForm implements OnInit 
     @Optional() @Inject('isEdit') public isEdit = false
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.resource = $localize`subvolume group`;
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? (this.isEdit ? '编辑' : '创建') : this.action} ${this.isZhHans ? '子卷组' : 'Subvolume group'}`;
+  }
+
+  get subvolumeGroupNamePlaceholder(): string {
+    return this.isZhHans ? '子卷组名称...' : 'Subvolume group name...';
+  }
+
+  get volumeNameLabel(): string {
+    return this.isZhHans ? '卷名称' : 'Volume name';
+  }
+
+  get sizePlaceholder(): string {
+    return this.isZhHans ? '例如：10GiB' : 'e.g., 10GiB';
+  }
+
+  get cephfsPoolsLabel(): string {
+    return this.isZhHans ? 'CephFS 存储池' : 'CephFS Pools';
+  }
+
+  get poolsHelperText(): string {
+    return this.isZhHans
+      ? '默认选择父目录的 data_pool_layout。'
+      : 'By default, the data_pool_layout of the parent directory is selected.';
+  }
+
+  get uidPlaceholder(): string {
+    return this.isZhHans ? '子卷 UID...' : 'Subvolume UID...';
+  }
+
+  get gidPlaceholder(): string {
+    return this.isZhHans ? '子卷组 GID...' : 'Subvolume group GID...';
+  }
+
+  get modeHelpText(): string {
+    return this.isZhHans
+      ? '目录权限。默认模式为 755，对应 rwxr-xr-x。'
+      : 'Permissions for the directory. Default mode is 755 which is rwxr-xr-x';
+  }
+
+  get submitText(): string {
+    return this.formTitle;
   }
 
   ngOnInit(): void {

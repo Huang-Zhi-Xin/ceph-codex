@@ -6,23 +6,21 @@
           #formDir="ngForm"
           [formGroup]="smbForm"
           novalidate>
-      <div i18n="form title"
-           class="form-header">
-        {{ action | titlecase }} {{ resource | upperFirst }}
+      <div class="form-header">
+        {{ formTitle }}
       </div>
 
       <!-- Cluster Id -->
       <div class="form-item">
         <cds-text-label
           labelInputID="cluster_id"
-          i18n
           helperText="Unique identifier"
           i18n-helperText
-          cdRequiredField="Cluster Name"
+          [cdRequiredField]="clusterNameLabel"
           [disabled]="isEdit"
           [invalid]="smbForm.controls.cluster_id.invalid && smbForm.controls.cluster_id.dirty"
           [invalidText]="clusterError"
-          >Cluster Name
+          >{{ clusterNameLabel }}
           <input
             cdsText
             type="text"
@@ -45,8 +43,8 @@
       <div class="form-item">
         <cds-select
           formControlName="auth_mode"
-          label="Authentication Mode"
-          cdRequiredField="Authentication Mode"
+          [label]="authModeLabel"
+          [cdRequiredField]="authModeLabel"
           id="auth_mode"
           [invalid]="smbForm.controls.auth_mode.invalid && smbForm.controls.auth_mode.dirty"
           [invalidText]="authModeError"
@@ -449,7 +447,7 @@
       <cd-form-button-panel
         (submitActionEvent)="submitAction()"
         [form]="smbForm"
-        [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+        [submitText]="formTitle"
         wrappingClass="text-right"
       ></cd-form-button-panel>
     </form>

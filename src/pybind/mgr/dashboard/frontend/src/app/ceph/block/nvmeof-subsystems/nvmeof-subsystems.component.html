@@ -5,8 +5,7 @@
      [columnNumbers]="{md: 4}">
   <cds-combo-box
       type="single"
-      label="Selected Gateway Group"
-      i18n-label
+      [label]="selectedGatewayGroupLabel"
       [placeholder]="gwGroupPlaceholder"
       [items]="gwGroups"
       (selected)="onGroupSelection($event)"

@@ -2,8 +2,7 @@
            [open]="open"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>{{ action | titlecase }} {{ resource | upperFirst }}</h3>
+    <h3 cdsModalHeaderHeading>{{ formTitle }}</h3>
   </cds-modal-header>
   <ng-container *cdFormLoading="loading">
     <section class="cds--modal-content">
@@ -14,14 +13,11 @@
       <!-- FsName -->
       <div class="form-item">
         <cds-text-label for="fsName"
-                        i18n
-                        cdRequiredField="FS name"
+                        [cdRequiredField]="fsNameLabel"
                         [invalid]="!form.controls['fsName'].valid && (form.controls['fsName'].dirty)"
-                        [invalidText]="fsNameError"
-                        i18n-invalidText>FS name
+                        [invalidText]="fsNameError">{{ fsNameLabel }}
           <input cdsText
-                 placeholder="Name..."
-                 i18n-placeholder
+                 [placeholder]="namePlaceholder"
                  id="fsName"
                  name="fsName"
                  formControlName="fsName"
@@ -39,19 +35,16 @@
       <!-- UserId -->
       <div class="form-item">
         <cds-text-label for="userId"
-                        i18n
-                        cdRequiredField="User ID"
+                        [cdRequiredField]="userIdLabel"
                         [helperText]="userIdHelperText"
                         [invalid]="!form.controls['userId'].valid && (form.controls['userId'].dirty)"
-                        [invalidText]="userIdError"
-                        i18n-invalidText>User ID
+                        [invalidText]="userIdError">{{ userIdLabel }}
           <input cdsText
                  value="client."
                  readonly>
 
           <input cdsText
-                 placeholder="Name..."
-                 i18n-placeholder
+                 [placeholder]="namePlaceholder"
                  id="userId"
                  name="userId"
                  formControlName="userId"
@@ -73,18 +66,15 @@
       <!-- Directory -->
       <div class="form-item">
         <cds-text-label for="directory"
-                        i18n
-                        cdRequiredField="Directory"
+                        [cdRequiredField]="directoryLabel"
                         [invalid]="!form.controls['directory'].valid && (form.controls['directory'].dirty)"
                         [invalidText]="directoryError"
-                        helperText="Path to restrict access to"
+                        [helperText]="directoryHelperText"
                         [skeleton]="directoryStore.isLoading"
-                        i18n-invalidText
-                        i18n-helperText>Directory
+                        >{{ directoryLabel }}
           <input cdsText
                  type="text"
-                 [placeholder]="directoryStore.isLoading ? '' : 'Directory path'"
-                 i18n-placeholder
+                 [placeholder]="directoryStore.isLoading ? '' : directoryPlaceholder"
                  id="directory"
                  name="directory"
                  formControlName="directory"
@@ -102,8 +92,7 @@
       <!-- Permissions -->
       <div class="form-item">
         <fieldset>
-          <label class="cds--label"
-                 i18n>Permissions</label>
+          <label class="cds--label">{{ permissionsLabel }}</label>
             <ng-container *ngFor="let permission of clientPermissions">
               <cds-checkbox i18n-label
                             [id]="permission.name"
@@ -121,7 +110,7 @@
     </section>
     <cd-form-button-panel (submitActionEvent)="onSubmit()"
                           [form]="form"
-                          [submitText]="(action | titlecase)"
+                          [submitText]="submitText"
                           [modalForm]="true"></cd-form-button-panel>
   </ng-container>
 </cds-modal>

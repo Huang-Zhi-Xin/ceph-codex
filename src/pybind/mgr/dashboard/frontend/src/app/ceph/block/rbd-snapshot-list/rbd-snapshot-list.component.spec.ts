@@ -234,7 +234,12 @@ describe('RbdSnapshotListComponent', () => {
           null,
           TestBed.inject(ActionLabelsI18n),
           null,
-          component.poolName
+          component.poolName,
+          '',
+          component.rbdName,
+          '',
+          '',
+          'zh-Hans'
         );
         ref.componentInstance.onSubmit = new Subject();
         return ref;

@@ -1,6 +1,8 @@
 import {
   Component,
+  Inject,
   Input,
+  LOCALE_ID,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -63,6 +65,7 @@ export class CephfsSnapshotscheduleListComponent
   selectedName: string = '';
   icons = Icons;
   tableActions!: CdTableAction[];
+  enableActionLabel: string;
 
   MODULE_NAME = 'snap_schedule';
   ENABLE_MODULE_TIMER = 2 * 1000;
@@ -73,10 +76,12 @@ export class CephfsSnapshotscheduleListComponent
     private modalService: ModalCdsService,
     private mgrModuleService: MgrModuleService,
     private actionLabels: ActionLabelsI18n,
-    private taskWrapper: TaskWrapperService
+    private taskWrapper: TaskWrapperService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.permissions = this.authStorageService.getPermissions();
+    this.enableActionLabel = localeId.startsWith('zh') ? '启用' : 'Enable';
   }
 
   ngOnChanges(changes: SimpleChanges): void {

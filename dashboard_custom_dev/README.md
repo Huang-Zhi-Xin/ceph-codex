@@ -7,8 +7,12 @@
 - `dashboard_test_deployment_manual.md`：测试部署手册
 - `dashboard_installation_manual.md`：正式安装与更新手册
 - `dashboard_user_manual.md`：正式用户使用手册
+- `dashboard_functional_test_plan.md`：Dashboard 汉化后功能验收测试方案
+- `dashboard_test_cases.md`：逐页面执行测试用例清单
+- `dashboard_test_record_template.md`：测试记录模板
 - `KX_Storage_Install_Manual.md`：Docker 版离线安装手册
 - `KX_Storage_Offline_Preparation.md`：离线镜像与安装包准备说明
+- `storage_feature_test_plan.md`：当前测试环境能力与前提说明
 - `build_kx_dashboard_release.sh`：本地正式构建脚本
 - `translation_tools/`：批量汉化工具与术语表
 - `image/build_image.sh`：KX Dashboard 正式镜像构建脚本

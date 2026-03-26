@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-2"
        *ngIf="subVolumeGroups$ | async as subVolumeGroups">
-    <cd-vertical-navigation title="Groups"
+    <cd-vertical-navigation [title]="groupNavigationTitle"
                             [items]="subvolumeGroupList"
                             inputIdentifier="group-filter"
                             (emitActiveItem)="selectSubVolumeGroup($event)"></cd-vertical-navigation>

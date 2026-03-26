@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 import _ from 'lodash';
@@ -42,6 +42,7 @@ export class OsdDevicesSelectionGroupsComponent implements OnInit, OnChanges {
   appliedFilters = new Array();
   expansionCanSelect = false;
   isOsdPage: boolean;
+  isZhHans: boolean;
 
   addButtonTooltip: String;
   tooltips = {
@@ -53,9 +54,27 @@ export class OsdDevicesSelectionGroupsComponent implements OnInit, OnChanges {
   constructor(
     private modalService: ModalService,
     public osdService: OsdService,
-    private router: Router
+    private router: Router,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.isOsdPage = this.router.url.includes('/osd');
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get deviceDescription(): string {
+    if (this.type === 'data') {
+      return this.isZhHans
+        ? '主存储设备。这些设备承载全部 OSD 数据。'
+        : 'The primary storage devices. These devices contain all OSD data.';
+    }
+    if (this.type === 'wal') {
+      return this.isZhHans
+        ? 'WAL 设备用于 BlueStore 的内部日志。仅当该设备比主设备更快时才有意义，例如 NVME 或 SSD。如果可用的高速存储很少，例如不足 1 GB，建议优先将其用于 WAL。'
+        : 'Write-Ahead-Log devices. These devices are used for BlueStore’s internal journal. It is only useful to use a WAL device if the device is faster than the primary device (e.g. NVME devices or SSDs). If there is only a small amount of fast storage available (e.g., less than a gigabyte), we recommend using it as a WAL device.';
+    }
+    return this.isZhHans
+      ? 'DB 设备可用于存储 BlueStore 的内部元数据。仅当该设备比主设备更快时才值得单独配置，例如 NVME 或 SSD。'
+      : 'DB devices can be used for storing BlueStore’s internal metadata. It is only helpful to provision a DB device if it is faster than the primary device (e.g. NVME devices or SSD).';
   }
 
   ngOnInit() {

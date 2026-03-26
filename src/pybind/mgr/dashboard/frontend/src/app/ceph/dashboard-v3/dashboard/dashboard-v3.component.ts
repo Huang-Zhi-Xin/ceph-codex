@@ -76,6 +76,11 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
   recoveryThroughputTitle: string;
   clusterLabel: string;
   capacityEmptyLabel: string;
+  detailsCardAriaLabel: string;
+  inventoryCardAriaLabel: string;
+  statusCardAriaLabel: string;
+  capacityCardAriaLabel: string;
+  clusterUtilizationCardAriaLabel: string;
   usedCapacityLabels: string[];
   iopsLabels: string[];
   throughputLabels: string[];
@@ -181,6 +186,11 @@ export class DashboardV3Component extends PrometheusListHelper implements OnInit
     this.recoveryThroughputTitle = this.isZhHans ? '恢复吞吐量' : 'Recovery Throughput';
     this.clusterLabel = this.isZhHans ? '集群' : 'Cluster';
     this.capacityEmptyLabel = this.isZhHans ? '未配置 OSD，暂无容量数据' : 'No OSD configured. Capacity data is unavailable.';
+    this.detailsCardAriaLabel = this.isZhHans ? '详情卡片' : 'Details card';
+    this.inventoryCardAriaLabel = this.isZhHans ? '清单卡片' : 'Inventory card';
+    this.statusCardAriaLabel = this.isZhHans ? '状态卡片' : 'Status card';
+    this.capacityCardAriaLabel = this.isZhHans ? '容量卡片' : 'Capacity card';
+    this.clusterUtilizationCardAriaLabel = this.isZhHans ? '集群利用率卡片' : 'Cluster utilization card';
     this.usedCapacityLabels = [this.isZhHans ? '已用容量' : 'Used Capacity'];
     this.iopsLabels = [this.isZhHans ? '读取' : 'Reads', this.isZhHans ? '写入' : 'Writes'];
     this.throughputLabels = [this.isZhHans ? '读取' : 'Reads', this.isZhHans ? '写入' : 'Writes'];

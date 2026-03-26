@@ -70,7 +70,7 @@ export class NfsClusterComponent extends ListWithDetails implements OnInit {
         cellTemplate: this.hostnameTpl
       },
       {
-        name: $localize`IP Address`,
+        name: this.isZhHans ? 'IP 地址' : $localize`IP Address`,
         prop: 'backend',
         flexGrow: 2,
         cellTemplate: this.ipAddrTpl

@@ -43,8 +43,8 @@
       <a ngbNavLink
          i18n>Performance Details</a>
       <ng-template ngbNavContent>
-        <cd-grafana i18n-title
-                    title="Subsystem details"
+        <cd-grafana
+                    [title]="performanceTitle"
                     grafanaPath="ceph-nvme-of-gateways-performance?var-group={{group}}&var-subsystem={{subsystemNQN}}"
                     [type]="'metrics'"
                     uid="feeuv1dno43r4deed"

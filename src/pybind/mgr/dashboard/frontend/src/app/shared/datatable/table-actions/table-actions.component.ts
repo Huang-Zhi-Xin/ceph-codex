@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 
 import _ from 'lodash';
 
+import { ActionLabelsI18n } from '~/app/shared/constants/app.constants';
 import { Icons } from '~/app/shared/enum/icons.enum';
 import { CdTableAction } from '~/app/shared/models/cd-table-action';
 import { CdTableSelection } from '~/app/shared/models/cd-table-selection';
@@ -35,6 +36,50 @@ export class TableActionsComponent implements OnChanges, OnInit {
   dropDownActions: CdTableAction[] = [];
 
   icons = Icons;
+
+  constructor(private actionLabels: ActionLabelsI18n) {}
+
+  displayActionName(name?: string): string {
+    const normalized = (name || '').replace(/[\s-]+/g, '');
+    const translations: Record<string, string> = {
+      Add: this.actionLabels.ADD,
+      Authorize: this.actionLabels.AUTHORIZE,
+      Cancel: this.actionLabels.CANCEL,
+      Clone: this.actionLabels.CLONE,
+      Connect: this.actionLabels.CONNECT,
+      Copy: this.actionLabels.COPY,
+      Create: this.actionLabels.CREATE,
+      Deactivate: this.actionLabels.DEACTIVATE,
+      Delete: this.actionLabels.DELETE,
+      Demote: this.actionLabels.DEMOTE,
+      Disconnect: this.actionLabels.DISCONNECT,
+      Edit: this.actionLabels.EDIT,
+      Evict: this.actionLabels.EVICT,
+      Expire: this.actionLabels.EXPIRE,
+      Export: this.actionLabels.EXPORT,
+      Import: this.actionLabels.IMPORT,
+      Migrate: this.actionLabels.MIGRATE,
+      Move: this.actionLabels.MOVE,
+      MoveToTrash: this.actionLabels.TRASH,
+      Promote: this.actionLabels.PROMOTE,
+      Reconnect: this.actionLabels.RECONNECT,
+      Recreate: this.actionLabels.RECREATE,
+      Redeploy: this.actionLabels.REDEPLOY,
+      Remove: this.actionLabels.REMOVE,
+      Resync: this.actionLabels.RESYNC,
+      Restart: this.actionLabels.RESTART,
+      Restore: this.actionLabels.RESTORE,
+      Set: this.actionLabels.SET,
+      Show: this.actionLabels.SHOW,
+      Start: this.actionLabels.START,
+      Stop: this.actionLabels.STOP,
+      Submit: this.actionLabels.SUBMIT,
+      SetupMultisiteReplication: this.actionLabels.SETUP_MULTISITE_REPLICATION,
+      Tiering: this.actionLabels.TIERING,
+      Update: this.actionLabels.UPDATE
+    };
+    return translations[normalized] || name || '';
+  }
 
   ngOnInit() {
     this.removeActionsWithNoPermissions();

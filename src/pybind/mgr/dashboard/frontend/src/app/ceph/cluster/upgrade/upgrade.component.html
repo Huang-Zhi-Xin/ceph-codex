@@ -4,8 +4,7 @@
     <cd-card class="col-sm-3 px-3 d-flex"
              cardTitle="New Version"
              i18n-cardTitle
-             aria-label="New Version"
-             i18n-aria-label
+             [attr.aria-label]="newVersionAriaLabel"
              id="newVersionAvailable"
              *ngIf="upgradeStatus$ | async as status">
       <ng-container *ngIf="status.in_progress; else upgradeStatusTpl">
@@ -44,8 +43,7 @@
     <cd-card class="col-sm-3 px-3 d-flex"
              cardTitle="Cluster Status"
              i18n-cardTitle
-             aria-label="Cluster Status"
-             i18n-aria-label
+             [attr.aria-label]="clusterStatusAriaLabel"
              id="clusterStatus">
       <div class="d-flex flex-column justify-content-center align-items-center">
         <ng-template #healthWarningAndError>
@@ -76,8 +74,7 @@
     <cd-card class="col-sm-3 px-3 d-flex"
              cardTitle="MGR Count"
              i18n-cardTitle
-             aria-label="MGR Count"
-             i18n-aria-label
+             [attr.aria-label]="mgrCountAriaLabel"
              id="mgrCount">
       <div class="d-flex flex-column justify-content-center align-items-center">
         <h5>
@@ -140,10 +137,10 @@
            *ngIf="info$ | async as info; else checkingForUpgradeStatus">
         <ng-container *ngIf="info.versions.length > 0; else noUpgradesAvailable">
           <div i18n-ngbTooltip
-               [ngbTooltip]="(healthData.mgr_map | mgrSummary)?.total <= 1 ? 'To upgrade, you need minimum 2 mgr daemons.' : ''">
+               [ngbTooltip]="(healthData.mgr_map | mgrSummary)?.total <= 1 ? minimumMgrTooltip : ''">
             <button class="btn btn-accent mt-2"
                     id="upgrade"
-                    aria-label="Upgrade now"
+                    [attr.aria-label]="upgradeNowAriaLabel"
                     (click)="upgradeNow(info.versions[info.versions.length - 1])"
                     [disabled]="(healthData.mgr_map | mgrSummary)?.total <= 1"
                     i18n>Upgrade to {{ info.versions[info.versions.length - 1] }}</button>
@@ -174,7 +171,7 @@
 <ng-template #warningIcon>
   <i class="text-warning"
      [ngClass]="[icons.warning]"
-     title="To upgrade, you need minimum 2 mgr daemons.">
+     [title]="minimumMgrTooltip">
   </i>
 </ng-template>
 
@@ -183,7 +180,7 @@
        *ngIf="!errorMessage; else upgradeStatusError">
     <button class="btn btn-accent mt-2 mb-4"
             id="upgrade"
-            aria-label="Upgrade now"
+            [attr.aria-label]="upgradeNowAriaLabel"
             [disabled]="true"
             i18n>Checking for upgrades
       <i [ngClass]="[icons.spin, icons.spinner]"></i>

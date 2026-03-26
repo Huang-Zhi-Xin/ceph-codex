@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, Optional } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import { BaseModal } from 'carbon-components-angular';
@@ -25,6 +25,7 @@ export class BootstrapImportModalComponent extends BaseModal implements OnInit, 
   subs: Subscription;
 
   importBootstrapForm: CdFormGroup;
+  isZhHans = false;
 
   directions: Array<any> = [
     { key: 'rx-tx', desc: 'Bidirectional' },
@@ -36,10 +37,42 @@ export class BootstrapImportModalComponent extends BaseModal implements OnInit, 
     private rbdMirroringService: RbdMirroringService,
     private taskWrapper: TaskWrapperService,
 
-    @Inject('siteName') @Optional() public siteName: string
+    @Inject('siteName') @Optional() public siteName: string,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
+    if (this.isZhHans) {
+      this.directions = [
+        { key: 'rx-tx', desc: '双向' },
+        { key: 'rx', desc: '单向（仅接收）' }
+      ];
+    }
     this.createForm();
+  }
+
+  get modalTitle(): string {
+    return this.isZhHans ? '导入 Bootstrap Token' : 'Import Bootstrap Token';
+  }
+
+  get siteNameLabel(): string {
+    return this.isZhHans ? '站点名称' : 'Site Name';
+  }
+
+  get namePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get directionLabel(): string {
+    return this.isZhHans ? '方向' : 'Direction';
+  }
+
+  get tokenPlaceholder(): string {
+    return this.isZhHans ? '生成的令牌...' : 'Generated token...';
+  }
+
+  get submitText(): string {
+    return this.isZhHans ? '导入' : this.actionLabels.SUBMIT;
   }
 
   createForm() {

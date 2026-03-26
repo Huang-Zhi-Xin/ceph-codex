@@ -3,8 +3,7 @@
            (overlaySelected)="closeModal()">
 
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>Import Bootstrap Token</h3>
+    <h3 cdsModalHeaderHeading>{{ modalTitle }}</h3>
   </cds-modal-header>
 
   <section cdsModalContent>
@@ -22,14 +21,11 @@
 
       <div class="form-item">
         <cds-text-label for="siteName"
-                        i18n
-                        cdRequiredField="Site Name"
+                        [cdRequiredField]="siteNameLabel"
                         [invalid]="!importBootstrapForm.controls['siteName'].valid && importBootstrapForm.controls['siteName'].dirty"
-                        [invalidText]="siteNameError"
-                        i18n-invalidText>Site Name
+                        [invalidText]="siteNameError">{{ siteNameLabel }}
           <input cdsText
-                 placeholder="Name..."
-                 i18n-placeholder
+                 [placeholder]="namePlaceholder"
                  id="siteName"
                  name="siteName"
                  formControlName="siteName"
@@ -44,7 +40,7 @@
       </div>
 
       <div class="form-item">
-        <cds-select label="Direction"
+        <cds-select [label]="directionLabel"
                     for="direction"
                     name="direction"
                     id="direction"
@@ -81,8 +77,7 @@
                             cdRequiredField="Token"
                             i18n>Token
           <textarea cdsTextArea
-                    placeholder="Generated token..."
-                    i18n-placeholder
+                    [placeholder]="tokenPlaceholder"
                     id="token"
                     formControlName="token"
                     cols="200"
@@ -104,6 +99,6 @@
 
   <cd-form-button-panel (submitActionEvent)="import()"
                         [form]="importBootstrapForm"
-                        [submitText]="actionLabels.SUBMIT"
+                        [submitText]="submitText"
                         [modalForm]="true"></cd-form-button-panel>
 </cds-modal>

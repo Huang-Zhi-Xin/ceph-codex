@@ -3,10 +3,7 @@
            [hasScrollingContent]="true"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>
-      {mode, select, edit {Edit} other {Add}} pool mirror peer
-    </h3>
+    <h3 cdsModalHeaderHeading>{{ modalTitle }}</h3>
   </cds-modal-header>
 
   <section cdsModalContent>
@@ -25,12 +22,10 @@
         <cds-text-label for="clusterName"
                         [invalid]="editPeerForm.controls['clusterName'].invalid && (editPeerForm.controls['clusterName'].dirty)"
                         [invalidText]="clusterNameError"
-                        cdRequiredField="Cluster Name"
-                        i18n>Cluster Name
+                        [cdRequiredField]="clusterNameLabel">{{ clusterNameLabel }}
           <input cdsText
                  type="text"
-                 placeholder="Name..."
-                 i18n-placeholder
+                 [placeholder]="clusterNamePlaceholder"
                  id="clusterName"
                  name="clusterName"
                  formControlName="clusterName"
@@ -51,12 +46,10 @@
         <cds-text-label for="clientID"
                         [invalid]="editPeerForm.controls['clientID'].invalid && (editPeerForm.controls['clientID'].dirty)"
                         [invalidText]="clientIDError"
-                        cdRequiredField="CephX ID"
-                        i18n>CephX ID
+                        [cdRequiredField]="clientIdLabel">{{ clientIdLabel }}
           <input cdsText
                  type="text"
-                 placeholder="CephX ID..."
-                 i18n-placeholder
+                 [placeholder]="clientIdPlaceholder"
                  id="clientID"
                  name="clientID"
                  formControlName="clientID"
@@ -79,8 +72,7 @@
                         i18n>Monitor Addresses
           <input cdsText
                  type="text"
-                 placeholder="Comma-delimited addresses..."
-                 i18n-placeholder
+                 [placeholder]="monitorAddressesPlaceholder"
                  id="monAddr"
                  name="monAddr"
                  formControlName="monAddr"
@@ -100,8 +92,7 @@
                         i18n>CephX Key
           <input cdsText
                  type="text"
-                 placeholder="Base64-encoded key..."
-                 i18n-placeholder
+                 [placeholder]="cephxKeyPlaceholder"
                  id="key"
                  name="key"
                  formControlName="key"
@@ -118,6 +109,6 @@
 
   <cd-form-button-panel (submitActionEvent)="update()"
                         [form]="editPeerForm"
-                        [submitText]="actionLabels.SUBMIT"
+                        [submitText]="submitText"
                         [modalForm]="true"></cd-form-button-panel>
 </cds-modal>

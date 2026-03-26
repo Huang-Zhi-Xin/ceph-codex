@@ -1,6 +1,6 @@
 <main aria-label="Dashboard">
   <a href="#main"
-     class="sr-only">skip to content</a>
+     class="sr-only">{{ skipToContentLabel }}</a>
 
   <ng-container *ngIf="(enabledFeature$ | async)?.dashboard === false; else dashboardV3"
                 class="main-padding">

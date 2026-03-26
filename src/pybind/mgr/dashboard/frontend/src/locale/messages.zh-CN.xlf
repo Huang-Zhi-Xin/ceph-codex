@@ -8233,7 +8233,7 @@
       </trans-unit>
       <trans-unit id="bd4ee06ffdc46d9dfbd0c0c4f81399021c680056" datatype="html">
         <source>quorum con</source>
-        <target>仲裁 con</target>
+        <target>法定人数 con</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/cluster/monitor/monitor.component.html</context>
           <context context-type="linenumber">26</context>
@@ -8241,7 +8241,7 @@
       </trans-unit>
       <trans-unit id="1176c7db8a8276ccb44cc3d42e2c28d9fa6c6596" datatype="html">
         <source>quorum mon</source>
-        <target>仲裁 mon</target>
+        <target>法定人数 mon</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/cluster/monitor/monitor.component.html</context>
           <context context-type="linenumber">31</context>
@@ -8523,6 +8523,7 @@
       </trans-unit>
       <trans-unit id="1965206604774400" datatype="html">
         <source>Alias</source>
+        <target>别名</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/cluster/multi-cluster/multi-cluster-list/multi-cluster-list.component.ts</context>
           <context context-type="linenumber">128</context>
@@ -8530,6 +8531,7 @@
       </trans-unit>
       <trans-unit id="2303041439224647987" datatype="html">
         <source>Connection</source>
+        <target>连接状态</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/cluster/multi-cluster/multi-cluster-list/multi-cluster-list.component.ts</context>
           <context context-type="linenumber">133</context>
@@ -8572,6 +8574,7 @@
       </trans-unit>
       <trans-unit id="2346566611229833392" datatype="html">
         <source>Token expires</source>
+        <target>令牌过期时间</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/cluster/multi-cluster/multi-cluster-list/multi-cluster-list.component.ts</context>
           <context context-type="linenumber">162</context>
@@ -9878,6 +9881,7 @@
       </trans-unit>
       <trans-unit id="4739818603756173797" datatype="html">
         <source>Summary</source>
+        <target>摘要</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/cluster/prometheus/active-alert-list/active-alert-list.component.ts</context>
           <context context-type="linenumber">65</context>
@@ -9913,6 +9917,7 @@
       </trans-unit>
       <trans-unit id="ac07bb1f917a39f678f74b7683780ecb7da8a0e0" datatype="html">
         <source>Active Alerts <x id="START_SMALL_TEXT" ctype="x-small" equiv-text="&lt;small *ngIf=&quot;prometheusAlertService.activeCriticalAlerts &gt; 0&quot;         class=&quot;badge badge-danger ms-1&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ prometheusAlertService.activeCriticalAlerts }}"/><x id="CLOSE_SMALL_TEXT" ctype="x-small" equiv-text="&lt;/small&gt;"/><x id="START_SMALL_TEXT_1" equiv-text="&lt;small *ngIf=&quot;prometheusAlertService.activeWarningAlerts &gt; 0&quot;         class=&quot;badge badge-warning ms-1&quot;&gt;"/><x id="INTERPOLATION_1" equiv-text="{{ prometheusAlertService.activeWarningAlerts }}"/><x id="CLOSE_SMALL_TEXT" ctype="x-small" equiv-text="&lt;/small&gt;"/></source>
+        <target>活动告警 <x id="START_SMALL_TEXT" ctype="x-small" equiv-text="&lt;small *ngIf=&quot;prometheusAlertService.activeCriticalAlerts &gt; 0&quot;         class=&quot;badge badge-danger ms-1&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ prometheusAlertService.activeCriticalAlerts }}"/><x id="CLOSE_SMALL_TEXT" ctype="x-small" equiv-text="&lt;/small&gt;"/><x id="START_SMALL_TEXT_1" equiv-text="&lt;small *ngIf=&quot;prometheusAlertService.activeWarningAlerts &gt; 0&quot;         class=&quot;badge badge-warning ms-1&quot;&gt;"/><x id="INTERPOLATION_1" equiv-text="{{ prometheusAlertService.activeWarningAlerts }}"/><x id="CLOSE_SMALL_TEXT" ctype="x-small" equiv-text="&lt;/small&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/cluster/prometheus/prometheus-tabs/prometheus-tabs.component.html</context>
           <context context-type="linenumber">8,12</context>
@@ -12671,6 +12676,7 @@
       </trans-unit>
       <trans-unit id="1827245616056417685" datatype="html">
         <source>IP Address</source>
+        <target>IP 地址</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/nfs/nfs-cluster/nfs-cluster.component.ts</context>
           <context context-type="linenumber">70</context>
@@ -15457,6 +15463,7 @@
       </trans-unit>
       <trans-unit id="6369846192087021825" datatype="html">
         <source>Number of Shards</source>
+        <target>分片数量</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/rgw/rgw-bucket-list/rgw-bucket-list.component.ts</context>
           <context context-type="linenumber">107</context>
@@ -15665,6 +15672,7 @@
       </trans-unit>
       <trans-unit id="8c00f4b272ba65ace2963e1c84585ea4dfda7ded" datatype="html">
         <source>Key management service provider</source>
+        <target>密钥管理服务提供方</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/rgw/rgw-config-modal/rgw-config-modal.component.html</context>
           <context context-type="linenumber">47</context>
@@ -15931,6 +15939,7 @@
       </trans-unit>
       <trans-unit id="773945286199352306" datatype="html">
         <source>Key Management Service Provider</source>
+        <target>密钥管理服务提供方</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/rgw/rgw-configuration-page/rgw-configuration-page.component.ts</context>
           <context context-type="linenumber">76</context>
@@ -16018,6 +16027,7 @@
       </trans-unit>
       <trans-unit id="7f7395875545a8e08a420ad6b01b8078b74a79b3" datatype="html">
         <source> In order to access the import/export/Setup Multi-site Replication feature, the rgw module must be enabled. </source>
+        <target> 要访问导入/导出/配置多站点复制功能，必须启用 rgw 模块。 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/rgw/rgw-multisite-details/rgw-multisite-details.component.html</context>
           <context context-type="linenumber">10,12</context>
@@ -17863,6 +17873,7 @@
       </trans-unit>
       <trans-unit id="1175842356320085225" datatype="html">
         <source>Amazon resource name</source>
+        <target>Amazon 资源名称</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/rgw/rgw-topic-list/rgw-topic-list.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -18700,6 +18711,7 @@
       </trans-unit>
       <trans-unit id="8192419514129699261" datatype="html">
         <source>Account name</source>
+        <target>账户名称</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/ceph/rgw/rgw-user-list/rgw-user-list.component.ts</context>
           <context context-type="linenumber">78</context>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -34,6 +34,7 @@ export class ConfigurationFormComponent extends CdForm implements OnInit {
   patternHelpText: string;
   availSections = ['global', 'mon', 'mgr', 'osd', 'mds', 'client'];
   forceUpdate: boolean;
+  isZhHans: boolean;
 
   constructor(
     public actionLabels: ActionLabelsI18n,
@@ -41,10 +42,20 @@ export class ConfigurationFormComponent extends CdForm implements OnInit {
     private router: Router,
     private configService: ConfigurationService,
     private notificationService: NotificationService,
-    private modalService: ModalCdsService
+    private modalService: ModalCdsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.createForm();
+  }
+
+  get longDescriptionLabel(): string {
+    return this.isZhHans ? '详细描述' : 'Long description';
+  }
+
+  get daemonDefaultLabel(): string {
+    return this.isZhHans ? '守护进程默认值' : 'Daemon default';
   }
 
   createForm() {

@@ -1,7 +1,6 @@
 <legend>
   <cd-help-text>
-    An initiator (or host) is the client that connects to the NVMe-oF target to access NVMe storage.
-    The NVMe/TCP protocol allows initiators, to send NVMe-oF commands to storage devices, which are known as targets.
+    {{ initiatorHelpText }}
   </cd-help-text>
 </legend>
 <cd-table [data]="initiators"
@@ -21,8 +20,7 @@
 <ng-template #hostTpl
              let-value="data.value">
   <span *ngIf="value === '*'"
-        i18n
-        class="font-monospace">Any host allowed (*)</span>
+        class="font-monospace">{{ allowAnyHostLabel }}</span>
   <span *ngIf="value !== '*'"
         class="font-monospace">{{value}}</span>
 </ng-template>

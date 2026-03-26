@@ -37,6 +37,9 @@ export class NvmeofGatewayComponent implements OnInit {
   performanceTabLabel: string;
   gatewaysLegendLabel: string;
   gatewaysLegendDescription: string;
+  selectedGatewayGroupLabel: string;
+  overviewTitle: string;
+  performanceTitle: string;
 
   onSelected(tab: TABS) {
     this.selectedTab = tab;
@@ -69,6 +72,9 @@ export class NvmeofGatewayComponent implements OnInit {
     this.overviewTabLabel = this.isZhHans ? '概览' : 'Overview';
     this.performanceTabLabel = this.isZhHans ? '性能' : 'Performance';
     this.gatewaysLegendLabel = this.isZhHans ? '网关' : 'Gateways';
+    this.selectedGatewayGroupLabel = this.isZhHans ? '已选网关组' : 'Selected Gateway Group';
+    this.overviewTitle = this.isZhHans ? '网关概览' : 'Gateway overview';
+    this.performanceTitle = this.isZhHans ? '网关性能' : 'Gateway performance';
     this.gatewaysLegendDescription = this.isZhHans
       ? 'Ceph NVMe-oF 网关通过 NVMe/TCP 提供 Ceph 块设备存储。对 VMware 客户端，这些卷会显示为 VMFS 数据存储；对 Linux 客户端，这些卷会显示为块设备。'
       : 'Ceph NVMe-oF gateways provide Ceph Block Device storage through NVMe/TCP. For VMware clients the NVMe/TCP volumes display as VMFS Datastores. For Linux clients the NVMe/TCP volumes display as block devices.';
@@ -147,7 +153,7 @@ export class NvmeofGatewayComponent implements OnInit {
         this.gwGroupPlaceholder = DEFAULT_PLACEHOLDER;
       } else {
         this.gwGroupsEmpty = true;
-        this.gwGroupPlaceholder = $localize`No groups available`;
+        this.gwGroupPlaceholder = this.isZhHans ? '无可用组' : $localize`No groups available`;
       }
     });
   }

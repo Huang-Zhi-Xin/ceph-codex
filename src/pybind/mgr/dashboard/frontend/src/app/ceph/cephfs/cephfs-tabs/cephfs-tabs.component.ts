@@ -41,6 +41,7 @@ export class CephfsTabsComponent implements OnChanges, OnDestroy {
   private data: any;
   private reloadSubscriber: Subscription;
   overviewTabLabel: string;
+  performanceTitle: string;
 
   constructor(
     private ngZone: NgZone,
@@ -50,6 +51,7 @@ export class CephfsTabsComponent implements OnChanges, OnDestroy {
   ) {
     this.grafanaPermission = this.authStorageService.getPermissions().grafana;
     this.overviewTabLabel = localeId.startsWith('zh') ? '概览' : 'Overview';
+    this.performanceTitle = localeId.startsWith('zh') ? 'CephFS 性能' : 'CephFS performance';
   }
 
   ngOnChanges() {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, OnInit, Output } from '@angular/core';
 import { AbstractControl, Validators } from '@angular/forms';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -41,14 +41,53 @@ export class RgwConfigModalComponent implements OnInit {
   table: TableComponent;
   ENCRYPTION_TYPE = ENCRYPTION_TYPE;
   KMS_PROVIDER = KMS_PROVIDER;
+  isZhHans = false;
   constructor(
     private formBuilder: CdFormBuilder,
     public activeModal: NgbActiveModal,
     public actionLabels: ActionLabelsI18n,
     private rgwBucketService: RgwBucketService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
+    this.isZhHans = this.localeId.startsWith('zh');
     this.createForm();
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? '编辑' : this.action} ${this.isZhHans ? 'RGW 加密配置' : 'RGW Encryption Configurations'}`;
+  }
+
+  get secretPathPlaceholder(): string {
+    return '/v1/secret/data';
+  }
+
+  get namespacePlaceholder(): string {
+    return 'tenant1';
+  }
+
+  get addressPlaceholder(): string {
+    return 'http://127.0.0.1:8000';
+  }
+
+  get keyTemplatePlaceholder(): string {
+    return '$keyid';
+  }
+
+  get caCertPathPlaceholder(): string {
+    return '/path/to/ca_cert.pem';
+  }
+
+  get clientCertPathPlaceholder(): string {
+    return '/path/to/client_cert.pem';
+  }
+
+  get clientKeyPathPlaceholder(): string {
+    return '/path/to/client_key.pem';
+  }
+
+  get submitText(): string {
+    return this.isZhHans ? '提交' : this.actionLabels.SUBMIT;
   }
   ngOnInit(): void {
     this.kmsProviders = rgwBucketEncryptionModel.kmsProviders;

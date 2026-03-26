@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, LOCALE_ID, OnInit, Optional } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { padStart, uniq } from 'lodash';
@@ -62,6 +62,7 @@ export class CephfsSnapshotscheduleFormComponent extends CdForm implements OnIni
   resource!: string;
 
   columns!: CdTableColumn[];
+  isZhHans = false;
 
   constructor(
     private actionLabels: ActionLabelsI18n,
@@ -70,6 +71,7 @@ export class CephfsSnapshotscheduleFormComponent extends CdForm implements OnIni
     private cd: ChangeDetectorRef,
     public directoryStore: DirectoryStoreService,
     private subvolumeService: CephfsSubvolumeService,
+    @Inject(LOCALE_ID) private localeId: string,
 
     @Optional() @Inject('fsName') public fsName: string,
     @Optional() @Inject('id') public id: number,
@@ -81,12 +83,53 @@ export class CephfsSnapshotscheduleFormComponent extends CdForm implements OnIni
     @Optional() @Inject('isEdit') public isEdit = false
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.resource = $localize`Snapshot schedule`;
 
     const currentDatetime = new Date();
     this.minDate = `${currentDatetime.getUTCFullYear()}-${
       currentDatetime.getUTCMonth() + 1
     }-${currentDatetime.getUTCDate()}`;
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? (this.isEdit ? '编辑' : '创建') : this.action} ${this.isZhHans ? '快照调度' : 'Snapshot schedule'}`;
+  }
+
+  get directoryLabel(): string {
+    return this.isZhHans ? '目录' : 'Directory';
+  }
+
+  get directoryPlaceholder(): string {
+    return this.isZhHans ? '目录路径' : 'Directory path';
+  }
+
+  get startDateLabel(): string {
+    return this.isZhHans ? '开始日期' : 'Start Date';
+  }
+
+  get utcHelperText(): string {
+    return this.isZhHans ? '默认按 UTC 时区处理' : 'The time zone is assumed to be UTC';
+  }
+
+  get scheduleLabel(): string {
+    return this.isZhHans ? '调度周期' : 'Schedule';
+  }
+
+  get frequencyLabel(): string {
+    return this.isZhHans ? '频率' : 'Frequency';
+  }
+
+  get retentionPolicyLabel(): string {
+    return this.isZhHans ? '保留策略' : 'Retention policy';
+  }
+
+  get addRetentionPolicyText(): string {
+    return this.isZhHans ? '添加保留策略' : 'Add retention policy';
+  }
+
+  get submitText(): string {
+    return this.formTitle;
   }
 
   ngOnInit(): void {

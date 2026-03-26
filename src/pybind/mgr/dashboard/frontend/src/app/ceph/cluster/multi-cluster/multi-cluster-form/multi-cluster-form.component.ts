@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import _ from 'lodash';
@@ -23,6 +23,7 @@ export class MultiClusterFormComponent implements OnInit, OnDestroy {
   readonly ipv4Rgx = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i;
   readonly ipv6Rgx = /^(?:[a-f0-9]{1,4}:){7}[a-f0-9]{1,4}$/i;
   clusterApiUrlCmd = 'ceph mgr services';
+  isZhHans = false;
   remoteClusterForm: CdFormGroup;
   connectionVerified: boolean;
   connectionMessage = '';
@@ -40,8 +41,10 @@ export class MultiClusterFormComponent implements OnInit, OnDestroy {
     public activeModal: NgbActiveModal,
     public actionLabels: ActionLabelsI18n,
     public notificationService: NotificationService,
-    private multiClusterService: MultiClusterService
+    private multiClusterService: MultiClusterService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
+    this.isZhHans = this.localeId.startsWith('zh');
     this.subs.add(
       this.multiClusterService.subscribe((resp: any) => {
         this.hubUrl = resp['hub_url'];
@@ -49,6 +52,39 @@ export class MultiClusterFormComponent implements OnInit, OnDestroy {
     );
     this.createForm();
   }
+
+  get formTitle(): string {
+    const actionLabelMap: Record<string, string> = {
+      connect: this.isZhHans ? '接入' : 'Connect',
+      edit: this.isZhHans ? '编辑' : 'Edit',
+      reconnect: this.isZhHans ? '重新连接' : 'Reconnect'
+    };
+    return `${actionLabelMap[this.action] || this.action} ${this.isZhHans ? '集群' : 'Cluster'}`;
+  }
+
+  get clusterApiHelperText(): string {
+    return this.isZhHans
+      ? '请输入 Dashboard API URL。可通过以下 CLI 命令获取：'
+      : 'Enter the Dashboard API URL. You can retrieve it from the CLI with:';
+  }
+
+  get aliasPlaceholder(): string {
+    return this.isZhHans ? '输入用于唯一标识集群的名称或文本' : 'Name/Text to uniquely identify cluster';
+  }
+
+  get loginExpirationOptions(): Array<{ value: number; label: string }> {
+    return [
+      { value: 1, label: this.isZhHans ? '1 天' : '1 day' },
+      { value: 7, label: this.isZhHans ? '1 周' : '1 week' },
+      { value: 15, label: this.isZhHans ? '15 天' : '15 days' },
+      { value: 30, label: this.isZhHans ? '30 天' : '30 days' }
+    ];
+  }
+
+  get submitText(): string {
+    return this.formTitle;
+  }
+
   ngOnInit(): void {
     if (this.action === 'edit') {
       this.remoteClusterForm.get('remoteClusterUrl').setValue(this.cluster.url);

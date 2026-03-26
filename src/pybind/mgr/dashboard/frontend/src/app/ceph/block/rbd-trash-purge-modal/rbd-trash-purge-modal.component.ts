@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 
 import { BaseModal } from 'carbon-components-angular';
 
@@ -22,6 +22,7 @@ export class RbdTrashPurgeModalComponent extends BaseModal implements OnInit {
   poolPermission: Permission;
   purgeForm: CdFormGroup;
   pools: any[];
+  isZhHans: boolean;
 
   constructor(
     private authStorageService: AuthStorageService,
@@ -29,10 +30,20 @@ export class RbdTrashPurgeModalComponent extends BaseModal implements OnInit {
     public actionLabels: ActionLabelsI18n,
     private fb: CdFormBuilder,
     private poolService: PoolService,
-    private taskWrapper: TaskWrapperService
+    private taskWrapper: TaskWrapperService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
     this.poolPermission = this.authStorageService.getPermissions().pool;
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get purgeDescription(): string {
+    return this.isZhHans ? '要清理回收站，请选择全部或某个存储池，然后点击 Purge。' : 'To purge, select All or one pool and click Purge.';
+  }
+
+  get poolLabel(): string {
+    return this.isZhHans ? '存储池' : 'Pool';
   }
 
   createForm() {

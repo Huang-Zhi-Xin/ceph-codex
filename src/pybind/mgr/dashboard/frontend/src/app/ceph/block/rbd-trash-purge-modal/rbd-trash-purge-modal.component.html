@@ -13,13 +13,10 @@
           #formDir="ngForm"
           [formGroup]="purgeForm"
           novalidate>
-      <p i18n>To purge, select&nbsp;
-        <kbd>All</kbd>&nbsp;
-        or one pool and click&nbsp;
-        <kbd>Purge</kbd>.&nbsp;</p>
+      <p>{{ purgeDescription }}</p>
 
       <div class="form-item">
-        <cds-select label="Pool"
+        <cds-select [label]="poolLabel"
                     for="poolName"
                     id="poolName"
                     formControlName="poolName"

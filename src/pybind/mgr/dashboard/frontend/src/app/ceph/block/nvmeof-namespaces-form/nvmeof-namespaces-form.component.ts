@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -47,6 +47,7 @@ export class NvmeofNamespacesFormComponent implements OnInit {
   MIN_NAMESPACE_CREATE: number = 1;
   requiredInvalidText: string = $localize`This field is required`;
   nsCountInvalidText: string = $localize`The namespace count should be between 1 and 5`;
+  isZhHans: boolean;
 
   constructor(
     public actionLabels: ActionLabelsI18n,
@@ -59,12 +60,18 @@ export class NvmeofNamespacesFormComponent implements OnInit {
     private route: ActivatedRoute,
     public activeModal: NgbActiveModal,
     public formatterService: FormatterService,
-    public dimlessBinaryPipe: DimlessBinaryPipe
+    public dimlessBinaryPipe: DimlessBinaryPipe,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.permission = this.authStorageService.getPermissions().nvmeof;
     this.poolPermission = this.authStorageService.getPermissions().pool;
     this.resource = $localize`Namespace`;
     this.pageURL = 'block/nvmeof/subsystems';
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get namespaceCountHelperText(): string {
+    return this.isZhHans ? '要创建的命名空间数量' : 'The number of namespaces to create';
   }
 
   init() {

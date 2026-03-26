@@ -27,8 +27,7 @@
               <td>{{ selection.pool_name }}</td>
             </tr>
             <tr cdstablerow>
-              <td i18n
-                  class="bold">Data Pool</td>
+              <td class="bold">{{ dataPoolLabel }}</td>
               <td>{{ selection.data_pool | empty }}</td>
             </tr>
             <tr cdstablerow>
@@ -47,8 +46,7 @@
               <td>{{ selection.num_objs | dimless }}</td>
             </tr>
             <tr cdstablerow>
-              <td i18n
-                  class="bold">Object size</td>
+              <td class="bold">{{ objectSizeLabel }}</td>
               <td>{{ selection.obj_size | dimlessBinary }}</td>
             </tr>
             <tr cdstablerow>
@@ -76,8 +74,7 @@
               </td>
             </tr>
             <tr cdstablerow>
-              <td i18n
-                  class="bold">Total provisioned</td>
+              <td class="bold">{{ totalProvisionedLabel }}</td>
               <td>
                 <span *ngIf="selection.features_name?.indexOf('fast-diff') === -1">
                   <span class="form-text text-muted"
@@ -91,13 +88,11 @@
               </td>
             </tr>
             <tr cdstablerow>
-              <td i18n
-                  class="bold">Striping unit</td>
+              <td class="bold">{{ stripingUnitLabel }}</td>
               <td>{{ selection.stripe_unit | dimlessBinary }}</td>
             </tr>
             <tr cdstablerow>
-              <td i18n
-                  class="bold">Striping count</td>
+              <td class="bold">{{ stripingCountLabel }}</td>
               <td>{{ selection.stripe_count }}</td>
             </tr>
             <tr cdstablerow>
@@ -110,8 +105,7 @@
               </td>
             </tr>
             <tr cdstablerow>
-              <td i18n
-                  class="bold">Block name prefix</td>
+              <td class="bold">{{ blockNamePrefixLabel }}</td>
               <td>{{ selection.block_name_prefix }}</td>
             </tr>
             <tr cdstablerow>
@@ -120,8 +114,7 @@
               <td>{{ selection.order }}</td>
             </tr>
             <tr cdstablerow>
-              <td i18n
-                  class="bold">Format Version</td>
+              <td class="bold">{{ formatVersionLabel }}</td>
               <td>{{ selection.image_format }}</td>
             </tr>
           </tbody>
@@ -153,8 +146,8 @@
       <a ngbNavLink
          i18n>Performance</a>
       <ng-template ngbNavContent>
-        <cd-grafana i18n-title
-                    title="RBD details"
+        <cd-grafana
+                    [title]="performanceTitle"
                     [grafanaPath]="rbdDashboardUrl"
                     [type]="'metrics'"
                     uid="YhCYGcuZz"

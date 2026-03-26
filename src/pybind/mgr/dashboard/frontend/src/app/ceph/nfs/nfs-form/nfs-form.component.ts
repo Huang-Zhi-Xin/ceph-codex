@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -69,6 +69,7 @@ export class NfsFormComponent extends CdForm implements OnInit {
 
   action: string;
   resource: string;
+  isZhHans = false;
 
   allsubvolgrps: any[] = [];
   allsubvols: any[] = [];
@@ -107,12 +108,106 @@ export class NfsFormComponent extends CdForm implements OnInit {
     private rgwSiteService: RgwSiteService,
     private formBuilder: CdFormBuilder,
     private taskWrapper: TaskWrapperService,
-    public actionLabels: ActionLabelsI18n
+    public actionLabels: ActionLabelsI18n,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.permission = this.authStorageService.getPermissions().pool;
     this.resource = $localize`NFS export`;
     this.storageBackend = getFsalFromRoute(this.router.url);
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? (this.isEdit ? '编辑' : '创建') : this.action} ${this.isZhHans ? 'NFS 导出' : 'NFS export'}`;
+  }
+
+  get loadingText(): string {
+    return this.isZhHans ? '加载中...' : 'Loading...';
+  }
+
+  get noClusterText(): string {
+    return this.isZhHans ? '-- 无可用集群 --' : '-- No cluster available --';
+  }
+
+  get selectClusterText(): string {
+    return this.isZhHans ? '-- 选择集群 --' : '-- Select the cluster --';
+  }
+
+  get noCephfsFilesystemText(): string {
+    return this.isZhHans ? '-- 无可用 CephFS 文件系统 --' : '-- No CephFS filesystem available --';
+  }
+
+  get selectCephfsFilesystemText(): string {
+    return this.isZhHans ? '-- 选择 CephFS 文件系统 --' : '-- Select the CephFS filesystem --';
+  }
+
+  get noRgwUserText(): string {
+    return this.isZhHans ? '-- 无可用 RGW 用户 --' : '-- No RGW User available --';
+  }
+
+  get selectRgwUserText(): string {
+    return this.isZhHans ? '-- 选择 RGW 用户 --' : '-- Select the RGW User --';
+  }
+
+  get selectSubvolumeGroupText(): string {
+    return this.isZhHans ? '-- 选择 CephFS 子卷组 --' : '-- Select the CephFS subvolume group --';
+  }
+
+  get noSubvolumeText(): string {
+    return this.isZhHans ? '-- 无可用 CephFS 子卷 --' : '-- No CephFS subvolume available --';
+  }
+
+  get selectSubvolumeText(): string {
+    return this.isZhHans ? '-- 选择 CephFS 子卷 --' : '-- Select the CephFS subvolume --';
+  }
+
+  get subvolumeGroupLabel(): string {
+    return this.isZhHans ? '子卷组' : 'Subvolume Group';
+  }
+
+  get nfsProtocolRequiredLabel(): string {
+    return this.isZhHans ? 'NFS 协议' : 'NFS Protocol';
+  }
+
+  get accessTypeLabel(): string {
+    return this.isZhHans ? '访问类型' : 'Access Type';
+  }
+
+  get transportProtocolRequiredLabel(): string {
+    return this.isZhHans ? '传输协议' : 'Transport Protocol';
+  }
+
+  get pathHelperText(): string {
+    return this.isZhHans ? 'CephFS 文件系统中的路径。' : 'A path in a CephFS file system.';
+  }
+
+  get pathPlaceholder(): string {
+    return this.isZhHans ? '路径...' : 'Path...';
+  }
+
+  get bucketPlaceholder(): string {
+    return this.isZhHans ? '桶名称...' : 'Bucket name...';
+  }
+
+  get createBucketLinkText(): string {
+    return this.isZhHans ? '创建新桶' : 'create a new bucket';
+  }
+
+  get pseudoPlaceholder(): string {
+    return this.isZhHans ? '伪路径...' : 'Pseudo...';
+  }
+
+  get noAccessTypeText(): string {
+    return this.isZhHans ? '-- 无可用访问类型 --' : '-- No access type available --';
+  }
+
+  get noSquashText(): string {
+    return this.isZhHans ? '-- 无可用 squash 选项 --' : '-- No squash available --';
+  }
+
+  get submitText(): string {
+    return this.formTitle;
   }
 
   ngOnInit() {

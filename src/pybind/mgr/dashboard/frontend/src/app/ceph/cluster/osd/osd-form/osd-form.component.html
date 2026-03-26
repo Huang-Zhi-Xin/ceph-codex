@@ -2,9 +2,8 @@
 
 <div class="card"
      *cdFormLoading="loading">
-  <div i18n="form title|Example: Create Pool@@formTitle"
-       class="card-header"
-       *ngIf="!hideTitle">{{ action | titlecase }} {{ resource | upperFirst }}</div>
+  <div class="card-header"
+       *ngIf="!hideTitle">{{ formTitle }}</div>
   <div class="card-body ms-2">
     <form name="form"
           #formDir="ngForm"
@@ -12,10 +11,8 @@
           novalidate>
       <cd-alert-panel *ngIf="!deploymentOptions?.recommended_option"
                       type="warning"
-                      class="mx-3"
-                      i18n>
-        No devices(HDD, SSD or NVME) were found. Creation of OSDs will remain
-        disabled until devices are added.
+                      class="mx-3">
+        {{ noDevicesMessage }}
       </cd-alert-panel>
       <div class="accordion">
         <div class="accordion-item">
@@ -23,10 +20,9 @@
             <button class="accordion-button"
                     type="button"
                     data-toggle="collapse"
-                    aria-label="toggle deployment options"
+                    [attr.aria-label]="isZhHans ? '切换部署选项' : 'toggle deployment options'"
                     [ngClass]="{collapsed: !simpleDeployment}"
-                    (click)="emitDeploymentMode()"
-                    i18n>Deployment Options</button>
+                    (click)="emitDeploymentMode()">{{ deploymentOptionsLabel }}</button>
           </h2>
         </div>
         <div class="accordion-collapse collapse"
@@ -46,10 +42,10 @@
                 <label class="form-check-label"
                        [id]="'label_' + optionName"
                        [for]="optionName"
-                       i18n>{{ deploymentOptions?.options[optionName].title }}
-                       {{ deploymentOptions?.recommended_option === optionName ? "(Recommended)" : "" }}
+                       >{{ getDeploymentOptionTitle(optionName) }}
+                       {{ deploymentOptions?.recommended_option === optionName ? recommendedLabel : "" }}
                   <cd-helper>
-                    <span>{{ deploymentOptions?.options[optionName].desc }}</span>
+                    <span>{{ getDeploymentOptionDesc(optionName) }}</span>
                   </cd-helper>
                 </label>
               </div>
@@ -72,10 +68,9 @@
           <h2 class="accordion-header">
             <button class="accordion-button"
                     type="button"
-                    aria-label="toggle advanced mode"
+                    [attr.aria-label]="isZhHans ? '切换高级模式' : 'toggle advanced mode'"
                     [ngClass]="{collapsed: simpleDeployment}"
-                    (click)="emitDeploymentMode()"
-                    i18n>Advanced Mode</button>
+                    (click)="emitDeploymentMode()">{{ advancedModeLabel }}</button>
           </h2>
         </div>
         <div class="accordion-collapse collapse"
@@ -84,7 +79,7 @@
             <div class="card-body">
               <fieldset>
                 <cd-osd-devices-selection-groups #dataDeviceSelectionGroups
-                                                 name="Primary"
+                                                 [name]="primaryDevicesLabel"
                                                  type="data"
                                                  [availDevices]="availDevices"
                                                  [canSelect]="availDevices.length !== 0"
@@ -95,11 +90,11 @@
 
               <!-- Shared devices -->
               <fieldset>
-                <legend i18n>Shared devices</legend>
+                <legend>{{ sharedDevicesLabel }}</legend>
 
                 <!-- WAL devices button and table -->
                 <cd-osd-devices-selection-groups #walDeviceSelectionGroups
-                                                 name="WAL"
+                                                 [name]="walDevicesLabel"
                                                  type="wal"
                                                  [availDevices]="availDevices"
                                                  [canSelect]="dataDeviceSelectionGroups.devices.length !== 0"
@@ -113,11 +108,11 @@
                      *ngIf="walDeviceSelectionGroups.devices.length !== 0">
                   <label class="cd-col-form-label"
                          for="walSlots">
-                    <ng-container i18n>WAL slots</ng-container>
+                    <ng-container>{{ getWalSlotsLabel() }}</ng-container>
                     <cd-helper>
-                      <span i18n>How many OSDs per WAL device.</span>
+                      <span>{{ getWalSlotsHelper() }}</span>
                       <br>
-                      <span i18n>Specify 0 to let Orchestrator backend decide it.</span>
+                      <span>{{ getOrchestratorDecisionHelper() }}</span>
                     </cd-helper>
                   </label>
                   <div class="cd-col-form-input">
@@ -135,7 +130,7 @@
 
                 <!-- DB devices button and table -->
                 <cd-osd-devices-selection-groups #dbDeviceSelectionGroups
-                                                 name="DB"
+                                                 [name]="dbDevicesLabel"
                                                  type="db"
                                                  [availDevices]="availDevices"
                                                  [canSelect]="dataDeviceSelectionGroups.devices.length !== 0"
@@ -149,11 +144,11 @@
                      *ngIf="dbDeviceSelectionGroups.devices.length !== 0">
                   <label class="cd-col-form-label"
                          for="dbSlots">
-                    <ng-container i18n>DB slots</ng-container>
+                    <ng-container>{{ getDbSlotsLabel() }}</ng-container>
                     <cd-helper>
-                      <span i18n>How many OSDs per DB device.</span>
+                      <span>{{ getDbSlotsHelper() }}</span>
                       <br>
-                      <span i18n>Specify 0 to let Orchestrator backend decide it.</span>
+                      <span>{{ getOrchestratorDecisionHelper() }}</span>
                     </cd-helper>
                   </label>
                   <div class="cd-col-form-input">
@@ -181,7 +176,7 @@
                     data-toggle="collapse"
                     aria-label="features"
                     aria-expanded="true"
-                    i18n>Features</button>
+                    >{{ featuresLabel }}</button>
           </h2>
         </div>
         <div class="accordion-collapse collapse show">
@@ -197,7 +192,7 @@
                        formControlName="{{ feature.key }}"
                        (change)="emitDeploymentSelection()">
                 <label class="custom-control-label"
-                       for="{{ feature.key }}">{{ feature.desc }}</label>
+                       for="{{ feature.key }}">{{ getFeatureLabel(feature) }}</label>
               </div>
             </div>
           </div>
@@ -212,7 +207,7 @@
                           (submitActionEvent)="submit()"
                           [form]="form"
                           [disabled]="dataDeviceSelectionGroups.devices.length === 0 && !simpleDeployment"
-                          [submitText]="simpleDeployment ? 'Create OSDs' : actionLabels.PREVIEW"
+                          [submitText]="simpleDeployment ? createOsdsLabel : actionLabels.PREVIEW"
                           wrappingClass="text-right"></cd-form-button-panel>
   </div>
 </div>

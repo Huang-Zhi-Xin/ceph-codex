@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">{{ action | titlecase }} Cluster
+  <ng-container class="modal-title">{{ formTitle }}
   </ng-container>
   <ng-container class="modal-content">
     <form name="remoteClusterForm"
@@ -23,7 +22,7 @@
                  i18n>Cluster API URL
             <cd-helper>
               <span>
-                <p>Enter the Dashboard API URL. You can retrieve it from the CLI with: <b>{{ clusterApiUrlCmd }} </b>
+                <p>{{ clusterApiHelperText }} <b>{{ clusterApiUrlCmd }} </b>
                   <cd-copy-2-clipboard-button [source]="clusterApiUrlCmd"
                                               [byId]="false"></cd-copy-2-clipboard-button>
                 </p>
@@ -61,7 +60,7 @@
                    name="clusterAlias"
                    class="form-control"
                    type="text"
-                   placeholder="Name/Text to uniquely identify cluster"
+                   [placeholder]="aliasPlaceholder"
                    formControlName="clusterAlias">
             <span class="invalid-feedback"
                   *ngIf="remoteClusterForm.showError('clusterAlias', frm, 'required')"
@@ -133,11 +132,9 @@
                     id="ttl"
                     formControlName="ttl"
                     name="ttl">
-              <option value="1">1 day</option>
-              <option value="7">1 week</option>
-              <option value="15"
-                      [selected]="true">15 days</option>
-              <option value="30">30 days</option>
+              <option *ngFor="let option of loginExpirationOptions"
+                      [value]="option.value"
+                      [selected]="option.value === 15">{{ option.label }}</option>
             </select>
           </div>
         </div>
@@ -217,7 +214,7 @@
       </div>
       <div class="modal-footer">
         <cd-form-button-panel (submitActionEvent)="onSubmit()"
-                              [submitText]="(action | titlecase) + ' ' + 'Cluster'"
+                              [submitText]="submitText"
                               [form]="remoteClusterForm">
         </cd-form-button-panel>
       </div>

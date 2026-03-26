@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, Output } from '@angular/core';
 
 @Component({
   selector: 'cd-table-pagination',
@@ -10,6 +10,31 @@ export class TablePaginationComponent {
   private _count = 0;
   private _page = 1;
   pages: any;
+  isZhHans: boolean;
+
+  get firstPageAriaLabel(): string {
+    return this.isZhHans ? '转到第一页' : 'Go to first page';
+  }
+
+  get previousPageAriaLabel(): string {
+    return this.isZhHans ? '转到上一页' : 'Go to previous page';
+  }
+
+  get currentPageAriaLabel(): string {
+    return this.isZhHans ? '当前页' : 'Current page';
+  }
+
+  get nextPageAriaLabel(): string {
+    return this.isZhHans ? '转到下一页' : 'Go to next page';
+  }
+
+  get lastPageAriaLabel(): string {
+    return this.isZhHans ? '转到最后一页' : 'Go to last page';
+  }
+
+  constructor(@Inject(LOCALE_ID) localeId: string) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
 
   @Input()
   set size(value: number) {

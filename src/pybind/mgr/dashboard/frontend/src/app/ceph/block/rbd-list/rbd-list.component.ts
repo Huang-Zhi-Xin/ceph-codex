@@ -84,6 +84,9 @@ export class RbdListComponent extends ListWithDetails implements OnInit {
   private tableContext: CdTableFetchDataContext = null;
   errorMessage: string;
   isZhHans: boolean;
+  removingStatusTitle: string;
+  imageUsageTooltipText: string;
+  flattenTitleText: string;
   builders = {
     'rbd/create': (metadata: object) =>
       this.createRbdFromTask(metadata['pool_name'], metadata['namespace'], metadata['image_name']),
@@ -134,6 +137,11 @@ export class RbdListComponent extends ListWithDetails implements OnInit {
     super();
     this.permission = this.authStorageService.getPermissions().rbdImage;
     this.isZhHans = localeId.startsWith('zh');
+    this.removingStatusTitle = this.isZhHans ? "处于“正在移除”状态的 RBD" : "RBD in status 'Removing'";
+    this.imageUsageTooltipText = this.isZhHans
+      ? '仅适用于启用了 <strong>fast-diff</strong> 且未启用快照镜像的 RBD 映像'
+      : 'Only available for RBD images with <strong>fast-diff</strong> enabled and without snapshot mirroring';
+    this.flattenTitleText = this.isZhHans ? 'RBD 展平' : 'RBD flatten';
     const getImageUri = () =>
       this.selection.first() &&
       new ImageSpec(
@@ -513,7 +521,7 @@ export class RbdListComponent extends ListWithDetails implements OnInit {
     const childImageSpec = new ImageSpec(poolName, namespace, imageName);
 
     const initialState = {
-      titleText: 'RBD flatten',
+      titleText: this.flattenTitleText,
       buttonText: 'Flatten',
       bodyTpl: this.flattenTpl,
       bodyData: {

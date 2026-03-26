@@ -33,7 +33,7 @@ import { BlockUIModule, BlockUIService } from 'ng-block-ui';
         { name: 'object', component: FormlyObjectTypeComponent },
         { name: 'input', component: FormlyInputTypeComponent }
       ],
-      validationMessages: [{ name: 'required', message: 'This field is required' }]
+      validationMessages: [{ name: 'required', message: $localize`这是必填字段！` }]
     }),
     FormlyBootstrapModule,
     BlockUIModule.forRoot()

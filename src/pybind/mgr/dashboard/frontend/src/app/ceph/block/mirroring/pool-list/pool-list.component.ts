@@ -46,6 +46,22 @@ export class PoolListComponent implements OnInit, OnDestroy {
 
   tableStatus = new TableStatusViewCache();
 
+  get localImageCountTooltip(): string {
+    return this.isZhHans ? '本地图像数量' : 'Local image count';
+  }
+
+  get remoteImageCountTooltip(): string {
+    return this.isZhHans ? '远端图像数量' : 'Remote image count';
+  }
+
+  get localCountLabel(): string {
+    return this.isZhHans ? '本地数' : '# Local';
+  }
+
+  get remoteCountLabel(): string {
+    return this.isZhHans ? '远端数' : '# Remote';
+  }
+
   constructor(
     private authStorageService: AuthStorageService,
     private rbdMirroringService: RbdMirroringService,

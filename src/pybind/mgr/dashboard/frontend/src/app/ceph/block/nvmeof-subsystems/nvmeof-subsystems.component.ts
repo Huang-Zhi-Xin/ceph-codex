@@ -36,6 +36,7 @@ export class NvmeofSubsystemsComponent extends ListWithDetails implements OnInit
   gwGroupsEmpty: boolean = false;
   gwGroupPlaceholder: string = DEFAULT_PLACEHOLDER;
   isZhHans: boolean;
+  selectedGatewayGroupLabel: string;
   titleLabel: string;
   descriptionLabel: string;
 
@@ -52,6 +53,7 @@ export class NvmeofSubsystemsComponent extends ListWithDetails implements OnInit
     super();
     this.permissions = this.authStorageService.getPermissions();
     this.isZhHans = localeId.startsWith('zh');
+    this.selectedGatewayGroupLabel = this.isZhHans ? '已选网关组' : 'Selected Gateway Group';
     this.titleLabel = this.isZhHans ? '子系统' : 'Subsystems';
     this.descriptionLabel = this.isZhHans
       ? '子系统用于控制哪些主机可以访问该子系统中的命名空间。'

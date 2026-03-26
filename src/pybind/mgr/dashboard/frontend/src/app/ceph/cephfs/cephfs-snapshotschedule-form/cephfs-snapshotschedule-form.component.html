@@ -3,10 +3,7 @@
            [hasScrollingContent]="true"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>
-    {{ action | titlecase }} {{ resource | upperFirst }}
-    </h3>
+    <h3 cdsModalHeaderHeading>{{ formTitle }}</h3>
   </cds-modal-header>
 
   <ng-container *cdFormLoading="loading">
@@ -18,20 +15,19 @@
         <!-- Directory -->
         <div class="form-item">
           <cds-text-label for="directory"
-                          i18n
-                          cdRequiredField="Directory"
+                          [cdRequiredField]="directoryLabel"
                           [invalid]="snapScheduleForm.controls.directory.invalid && (snapScheduleForm.controls.directory.dirty)"
                           [invalidText]="directoryError"
                           [skeleton]="directoryStore.isLoading"
                           modal-primary-focus>
-            <ng-container *ngIf="!directoryStore.isLoading">Directory (required)</ng-container>
+            <ng-container *ngIf="!directoryStore.isLoading">{{ directoryLabel }}{{ isZhHans ? '（必填）' : ' (required)' }}</ng-container>
             <input cdsText
                    type="text"
                    formControlName="directory"
                    name="directory"
                    [ngbTypeahead]="search"
                    [invalid]="snapScheduleForm.controls.directory.invalid && (snapScheduleForm.controls.directory.dirty)"
-                   [placeholder]="directoryStore.isLoading ? '' : 'Directory path'"
+                   [placeholder]="directoryStore.isLoading ? '' : directoryPlaceholder"
                    [skeleton]="directoryStore.isLoading"/>
           </cds-text-label>
           <ng-template #directoryError>
@@ -46,8 +42,8 @@
 
         <!--Start date -->
         <cd-date-time-picker
-          name="Start Date"
-          helperText="The time zone is assumed to be UTC"
+          [name]="startDateLabel"
+          [helperText]="utcHelperText"
           [control]="snapScheduleForm.get('startDate')"
           [disabled]="isEdit"></cd-date-time-picker>
           <span class="invalid-feedback"
@@ -61,17 +57,17 @@
             <cds-number [id]="'repeatInterval'"
                         [name]="'repeatInterval'"
                         [formControlName]="'repeatInterval'"
-                        [label]="'Schedule'"
+                        [label]="scheduleLabel"
                         [min]="1"
                         [invalid]="!snapScheduleForm.controls.repeatInterval.valid && (snapScheduleForm.controls.repeatInterval.dirty)"
                         [invalidText]="repeatIntervalError"
-                        cdRequiredField="Schedule"></cds-number>
+                        [cdRequiredField]="scheduleLabel"></cds-number>
           </div>
           <div cdsCol>
             <cds-select id="repeatFrequency"
                         name="repeatFrequency"
                         formControlName="repeatFrequency"
-                        label="Frequency"
+                        [label]="frequencyLabel"
                         [invalid]="!snapScheduleForm.controls.repeatFrequency.valid && (snapScheduleForm.controls.repeatFrequency.dirty)"
                         [invalidText]="repeatFrequencyError"
                         *ngIf="repeatFrequencies">
@@ -106,7 +102,7 @@
                 <cds-number [id]="'retentionInterval' + i"
                             [name]="'retentionInterval' + i"
                             [formControlName]="'retentionInterval'"
-                            [label]="'Retention policy'"
+                            [label]="retentionPolicyLabel"
                             [min]="1"
                             [invalid]="snapScheduleForm.controls['retentionPolicies'].controls[i].invalid && snapScheduleForm.controls['retentionPolicies'].dirty"
                             [invalidText]="retentionPolicyError"></cds-number>
@@ -116,7 +112,7 @@
                 <cds-select id="retentionFrequency"
                             name="retentionFrequency"
                             formControlName="retentionFrequency"
-                            label="Frequency"
+                            [label]="frequencyLabel"
                             *ngIf="retentionFrequencies">
                   <option *ngFor="let freq of retentionFrequencies"
                           [value]="freq[1]">{{ freq[0] }}</option>
@@ -147,8 +143,8 @@
           <button cdsButton="tertiary"
                   type="button"
                   (click)="addRetentionPolicy()"
-                  i18n>
-            Add retention policy
+                  >
+            {{ addRetentionPolicyText }}
             <svg cdsIcon="add"
                  size="32"
                  class="cds--btn__icon"
@@ -159,7 +155,7 @@
     </div>
     <cd-form-button-panel (submitActionEvent)="submit()"
                           [form]="snapScheduleForm"
-                          [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                          [submitText]="submitText"
                           [modalForm]="true"></cd-form-button-panel>
   </ng-container>
 </cds-modal>

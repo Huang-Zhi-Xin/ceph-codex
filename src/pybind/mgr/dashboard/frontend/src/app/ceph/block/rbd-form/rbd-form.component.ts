@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -115,6 +115,9 @@ export class RbdFormComponent extends CdForm implements OnInit {
 
   action: string;
   resource: string;
+  formActionLabel: string;
+  setModeLabel: string;
+  isZhHans: boolean;
   private rbdImage = new ReplaySubject(1);
   private routerUrl: string;
 
@@ -132,12 +135,16 @@ export class RbdFormComponent extends CdForm implements OnInit {
     private dimlessBinaryPipe: DimlessBinaryPipe,
     public actionLabels: ActionLabelsI18n,
     private router: Router,
-    private rbdMirroringService: RbdMirroringService
+    private rbdMirroringService: RbdMirroringService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.routerUrl = this.router.url;
     this.poolPermission = this.authStorageService.getPermissions().pool;
     this.resource = $localize`Image`;
+    this.formActionLabel = '';
+    this.setModeLabel = this.isZhHans ? '设置模式' : 'Set mode';
     this.features = {
       'deep-flatten': {
         desc: $localize`Deep flatten`,
@@ -182,6 +189,127 @@ export class RbdFormComponent extends CdForm implements OnInit {
     };
     this.featuresList = this.objToArray(this.features);
     this.createForm();
+  }
+
+  get formTitle(): string {
+    const resourceLabel = this.isZhHans ? '映像' : this.resource;
+    return `${this.formActionLabel || this.action || ''} ${resourceLabel}`.trim();
+  }
+
+  get snapshotMirroringInfoText(): string {
+    return this.isZhHans
+      ? '要启用快照镜像，需要将所选存储池中的模式设置为 Image。'
+      : 'You need to set mode as Image in the selected pool to enable snapshot mirroring.';
+  }
+
+  get mirroringHelpText(): string {
+    return this.isZhHans
+      ? '允许在两个 Ceph 集群之间异步镜像数据。'
+      : 'Allow data to be asynchronously mirrored between two Ceph clusters';
+  }
+
+  get disableMirroringInfoText(): string {
+    return this.isZhHans
+      ? '在存储池镜像模式下无法禁用镜像。若要启用此选项，请先修改镜像模式。'
+      : 'Mirroring can not be disabled on Pool mirror mode. You need to change the mirror mode to enable this option.';
+  }
+
+  get enableMirroringInfoText(): string {
+    return this.isZhHans
+      ? '要启用镜像，必须在所选存储池中设置镜像模式。'
+      : 'You need to set mirror mode in the selected pool to enable mirroring.';
+  }
+
+  get scheduleIntervalLabel(): string {
+    return this.isZhHans ? '调度间隔' : 'Schedule Interval';
+  }
+
+  get scheduleHelperText(): string {
+    return this.isZhHans
+      ? '按周期自动创建镜像快照。可使用 d、h、m 后缀分别按天、小时或分钟指定间隔。要创建镜像快照，必须已导入或创建可用的镜像对等端。'
+      : 'Create Mirror-Snapshots automatically on a periodic basis. The interval can be specified in days, hours, or minutes using d, h, m suffix respectively. To create mirror snapshots, you must import or create and have available peers to mirror';
+  }
+
+  get schedulePlaceholder(): string {
+    return this.isZhHans ? '例如：12h、1d 或 10m' : 'e.g., 12h or 1d or 10m';
+  }
+
+  get dataPoolLabel(): string {
+    return this.isZhHans ? '数据存储池' : 'Data pool';
+  }
+
+  get dataPoolHelperText(): string {
+    return this.isZhHans
+      ? '用于存储 RBD 对象数据的专用存储池。'
+      : 'Dedicated pool that stores the object-data of the RBD';
+  }
+
+  get useDedicatedDataPoolLabel(): string {
+    return this.isZhHans ? '使用专用数据池' : 'Use a dedicated data pool';
+  }
+
+  get useDedicatedDataPoolHelperText(): string {
+    return this.isZhHans
+      ? '使用专用存储池保存映像数据。若不选择，映像数据将与映像元数据保存在同一个存储池中。'
+      : 'Use a dedicated pool to store the image data. If not selected, the image data will be stored in the same pool as the image metadata.';
+  }
+
+  get dedicatedDataPoolRequirementText(): string {
+    return this.isZhHans
+      ? '需要至少两个带有 rbd 应用标签的存储池，才能使用专用数据池。'
+      : 'You need more than one pool with the rbd application label use to use a dedicated data pool.';
+  }
+
+  get namespaceLabel(): string {
+    return this.isZhHans ? '命名空间' : 'Namespace';
+  }
+
+  get namespaceHelperText(): string {
+    return this.isZhHans
+      ? '命名空间可用于在 Ceph 集群中对 RBD 映像进行逻辑分组，便于更高效地定位和管理相关映像。'
+      : 'Namespace allows you to logically group RBD images within your Ceph Cluster.Choosing a namespace makes it easier to locate and manage related RBD images efficiently';
+  }
+
+  get objectSizeLabel(): string {
+    return this.isZhHans ? '对象大小' : 'Object size';
+  }
+
+  get objectSizeHelperText(): string {
+    return this.isZhHans
+      ? 'Ceph 存储集群中的对象具有可配置的最大大小（例如 2MB、4MB 等）。对象大小应足够大，以容纳多个条带单元，并且应为条带单元大小的整数倍。'
+      : 'Objects in the Ceph Storage Cluster have a maximum configurable size (e.g., 2MB, 4MB, etc.). The object size should be large enough to accommodate many stripe units, and should be a multiple of the stripe unit.';
+  }
+
+  get stripeUnitLabel(): string {
+    return this.isZhHans ? '条带单元' : 'Stripe unit';
+  }
+
+  get stripeUnitHelperText(): string {
+    return this.isZhHans
+      ? '条带具有可配置的单元大小（例如 64KB）。Ceph 客户端会将写入对象的数据拆分为大小相等的条带单元，最后一个条带单元除外。条带宽度应为对象大小的一部分，以便一个对象可包含多个条带单元。'
+      : 'Stripes have a configurable unit size (e.g., 64kb). The Ceph Client divides the data it will write to objects into equally sized stripe units, except for the last stripe unit. A stripe width, should be a fraction of the Object Size so that an object may contain many stripe units';
+  }
+
+  get stripingUnitRequiredLabel(): string {
+    return this.isZhHans ? '条带单元' : 'Striping Unit';
+  }
+
+  get selectStripeUnitText(): string {
+    return this.isZhHans ? '-- 选择条带单元 --' : '-- Select stripe unit --';
+  }
+
+  get stripeCountLabel(): string {
+    return this.isZhHans ? '条带数量' : 'Stripe count';
+  }
+
+  get stripeCountHelperText(): string {
+    return this.isZhHans
+      ? 'Ceph 客户端会按照条带数量，将一系列条带单元写入多个对象，这组对象称为对象集。写到对象集中的最后一个对象后，会重新从第一个对象开始写入。'
+      : 'The Ceph Client writes a sequence of stripe units over a series of objects determined by the stripe count. The series of objects is called an object set. After the Ceph Client writes to the last object in the object set, it returns to the first object in the object set.';
+  }
+
+  get stripingCountRequiredLabel(): string {
+    return this.isZhHans ? '条带数量' : 'Striping Count';
   }
 
   objToArray(obj: { [key: string]: any }) {
@@ -344,17 +472,21 @@ export class RbdFormComponent extends CdForm implements OnInit {
     if (url.startsWith('/block/rbd/edit')) {
       this.mode = this.rbdFormMode.editing;
       this.action = this.actionLabels.EDIT;
+      this.formActionLabel = this.isZhHans ? '编辑' : this.action;
       this.disableForEdit();
     } else if (url.startsWith('/block/rbd/clone')) {
       this.mode = this.rbdFormMode.cloning;
       this.disableForClone();
       this.action = this.actionLabels.CLONE;
+      this.formActionLabel = this.isZhHans ? '克隆' : this.action;
     } else if (url.startsWith('/block/rbd/copy')) {
       this.mode = this.rbdFormMode.copying;
       this.action = this.actionLabels.COPY;
+      this.formActionLabel = this.isZhHans ? '复制' : this.action;
       this.disableForCopy();
     } else {
       this.action = this.actionLabels.CREATE;
+      this.formActionLabel = this.isZhHans ? '创建' : this.action;
     }
     _.each(this.features, (feature) => {
       this.rbdForm

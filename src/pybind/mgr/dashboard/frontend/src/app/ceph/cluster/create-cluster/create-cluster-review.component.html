@@ -44,8 +44,7 @@
 </div>
 <div cdsRow>
   <div cdsCol>
-    <legend i18n
-            class="cd-header">Host Details</legend>
+    <legend class="cd-header">{{ isZhHans ? '主机详情' : 'Host Details' }}</legend>
     <cd-hosts [hiddenColumns]="['service_instances', 'status']"
               [hideToolHeader]="true"
               [hasTableDetails]="false"

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Observable, ReplaySubject, Subscription, of } from 'rxjs';
 import { catchError, shareReplay, switchMap } from 'rxjs/operators';
 import { DaemonService } from '~/app/shared/api/daemon.service';
@@ -42,6 +42,12 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   icons = Icons;
   releaseImage = AppConstants.releaseImage;
   imageRegistry = AppConstants.imageRegistry;
+  isZhHans: boolean;
+  newVersionAriaLabel: string;
+  clusterStatusAriaLabel: string;
+  mgrCountAriaLabel: string;
+  upgradeNowAriaLabel: string;
+  minimumMgrTooltip: string;
 
   upgradeStatus$: Observable<any>;
   subject = new ReplaySubject<any>();
@@ -54,8 +60,18 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     private daemonService: DaemonService,
     private notificationService: NotificationService,
     private router: Router,
-    private refreshIntervalService: RefreshIntervalService
-  ) {}
+    private refreshIntervalService: RefreshIntervalService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+    this.newVersionAriaLabel = this.isZhHans ? '新版本' : 'New Version';
+    this.clusterStatusAriaLabel = this.isZhHans ? '集群状态' : 'Cluster Status';
+    this.mgrCountAriaLabel = this.isZhHans ? 'MGR 数量' : 'MGR Count';
+    this.upgradeNowAriaLabel = this.isZhHans ? '立即升级' : 'Upgrade now';
+    this.minimumMgrTooltip = this.isZhHans
+      ? '升级至少需要 2 个 mgr 守护进程。'
+      : 'To upgrade, you need minimum 2 mgr daemons.';
+  }
 
   ngOnInit(): void {
     this.upgradeStatus$ = this.subject.pipe(

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import _ from 'lodash';
@@ -57,6 +57,7 @@ export class CephfsVolumeFormComponent extends CdForm implements OnInit {
   pools: Pool[] = [];
   dataPools: Pool[] = [];
   metadatPools: Pool[] = [];
+  isZhHans = false;
 
   fsFailCmd: string;
   fsSetCmd: string;
@@ -73,13 +74,59 @@ export class CephfsVolumeFormComponent extends CdForm implements OnInit {
     private hostService: HostService,
     private cephfsService: CephfsService,
     private route: ActivatedRoute,
-    private poolService: PoolService
+    private poolService: PoolService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     super();
+    this.isZhHans = this.localeId.startsWith('zh');
     this.editing = this.router.url.startsWith(`/cephfs/fs/${URLVerbs.EDIT}`);
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
     this.resource = $localize`File System`;
     this.createForm();
+  }
+
+  get formTitle(): string {
+    return `${this.isZhHans ? (this.editing ? '编辑' : '创建') : this.action} ${this.isZhHans ? '文件系统' : 'File System'}`;
+  }
+
+  get orchestratorNotConfiguredText(): string {
+    return this.isZhHans
+      ? '当前未配置编排器。创建卷后请手动部署 MDS 守护进程。'
+      : 'Orchestrator is not configured. Deploy MDS daemons manually after creating the volume.';
+  }
+
+  get useExistingPoolsHelpText(): string {
+    return this.isZhHans
+      ? "允许使用已创建且带有 'cephfs' 应用标签的副本池。"
+      : "Allows you to use replicated pools with 'cephfs' application tag that are already created.";
+  }
+
+  get namePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get poolPlaceholder(): string {
+    return this.isZhHans ? '存储池名称...' : 'Pool name...';
+  }
+
+  get dataPoolLabel(): string {
+    return this.isZhHans ? '数据池' : 'Data pool';
+  }
+
+  get metadataPoolLabel(): string {
+    return this.isZhHans ? '元数据池' : 'Metadata pool';
+  }
+
+  get labelPlaceholder(): string {
+    return this.isZhHans ? '选择标签...' : 'Select labels...';
+  }
+
+  get hostsPlaceholder(): string {
+    return this.isZhHans ? '选择主机...' : 'Select hosts...';
+  }
+
+  get submitText(): string {
+    return this.formTitle;
   }
 
   private createForm() {

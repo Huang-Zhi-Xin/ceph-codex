@@ -1,4 +1,13 @@
-import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Inject,
+  Input,
+  LOCALE_ID,
+  OnChanges,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActionLabelsI18n } from '~/app/shared/constants/app.constants';
 import { Icons } from '~/app/shared/enum/icons.enum';
@@ -61,55 +70,57 @@ export class RgwMultisiteSyncPolicyDetailsComponent implements OnChanges {
     private modalService: ModalService,
     private rgwMultisiteService: RgwMultisiteService,
     private taskWrapper: TaskWrapperService,
-    private cdsModalService: ModalCdsService
+    private cdsModalService: ModalCdsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    const isZhHans = localeId.startsWith('zh');
     this.symmetricalFlowCols = [
       {
-        name: 'Name',
+        name: isZhHans ? '名称' : 'Name',
         prop: 'id',
         flexGrow: 1
       },
       {
-        name: 'Zones',
+        name: isZhHans ? 'Zone' : 'Zones',
         prop: 'zones',
         flexGrow: 1
       }
     ];
     this.directionalFlowCols = [
       {
-        name: 'Source Zone',
+        name: isZhHans ? '源 Zone' : 'Source Zone',
         prop: 'source_zone',
         flexGrow: 1
       },
       {
-        name: 'Destination Zone',
+        name: isZhHans ? '目标 Zone' : 'Destination Zone',
         prop: 'dest_zone',
         flexGrow: 1
       }
     ];
     this.pipeCols = [
       {
-        name: 'Name',
+        name: isZhHans ? '名称' : 'Name',
         prop: 'id',
         flexGrow: 1
       },
       {
-        name: 'Source Zone',
+        name: isZhHans ? '源 Zone' : 'Source Zone',
         prop: 'source.zones',
         flexGrow: 1
       },
       {
-        name: 'Destination Zone',
+        name: isZhHans ? '目标 Zone' : 'Destination Zone',
         prop: 'dest.zones',
         flexGrow: 1
       },
       {
-        name: 'Source Bucket',
+        name: isZhHans ? '源 Bucket' : 'Source Bucket',
         prop: 'source.bucket',
         flexGrow: 1
       },
       {
-        name: 'Destination Bucket',
+        name: isZhHans ? '目标 Bucket' : 'Destination Bucket',
         prop: 'dest.bucket',
         flexGrow: 1
       }

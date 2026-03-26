@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">{{ action | titlecase }} Pipe</ng-container>
+  <ng-container class="modal-title">{{ modalTitle }}</ng-container>
 
   <ng-container class="modal-content">
     <form name="pipeForm"
@@ -15,7 +14,7 @@
           <div class="cd-col-form-input">
             <input class="form-control"
                    type="text"
-                   placeholder="Pipe Name..."
+                   [placeholder]="pipeNamePlaceholder"
                    id="pipe_id"
                    name="pipe_id"
                    formControlName="pipe_id"
@@ -47,8 +46,7 @@
                    name="bucket"
                    class="form-control"
                    type="text"
-                   i18n-placeholder
-                   placeholder="Bucket Name..."
+                   [placeholder]="bucketNamePlaceholder"
                    formControlName="bucket_name"/>
           </div>
         </div>
@@ -61,8 +59,7 @@
                    name="source_bucket"
                    class="form-control"
                    type="text"
-                   i18n-placeholder
-                   placeholder="Source Bucket Name..."
+                   [placeholder]="sourceBucketPlaceholder"
                    formControlName="source_bucket"/>
             <cd-help-text>
               <span i18n>{{ allBucketSelectedHelpText }}</span>
@@ -78,8 +75,7 @@
                    name="dest_bucket"
                    class="form-control"
                    type="text"
-                   i18n-placeholder
-                   placeholder="Destination Bucket Name..."
+                   [placeholder]="destinationBucketPlaceholder"
                    formControlName="destination_bucket"/>
             <cd-help-text>
               <span i18n>{{ allBucketSelectedHelpText }}</span>
@@ -90,7 +86,7 @@
       <div class="modal-footer">
         <cd-form-button-panel (submitActionEvent)="submit()"
                               [form]="pipeForm"
-                              [submitText]="(action | titlecase) + ' ' + 'Pipe'">
+                              [submitText]="modalTitle">
         </cd-form-button-panel>
       </div>
     </form>
@@ -111,11 +107,11 @@
   </cd-select-badges>
   <i *ngIf="zone.data.selected.length <= 0"
      i18n-title
-     title="Pipe should be associated with {{ name?.split('_').join(' ') }}"
+     [title]="getSelectionTitle(name)"
      class="{{ icons.warning }} icon-warning-color">
   </i>
   <span class="invalid-feedback"
         *ngIf="pipeForm.showError(name, frm, 'required')"
-        i18n>{{ name?.split('_').join(' ') }} selection is required!
+        >{{ getSelectionRequiredText(name) }}
   </span>
 </ng-template>

@@ -5,8 +5,7 @@
           #formDir="ngForm"
           [formGroup]="nfsForm"
           novalidate>
-      <div i18n="form title"
-           class="form-header">{{ action | titlecase }} {{ resource | upperFirst }}</div>
+      <div class="form-header">{{ formTitle }}</div>
 
       <!-- cluster_id -->
       <div class="form-item">
@@ -22,11 +21,11 @@
                     [helperText]="clusterHelperText"
                     i18n>
           <option *ngIf="allClusters === null"
-                  value="">Loading...</option>
+                  value="">{{ loadingText }}</option>
           <option *ngIf="allClusters !== null && allClusters.length === 0"
-                  value="">-- No cluster available --</option>
+                  value="">{{ noClusterText }}</option>
           <option *ngIf="allClusters !== null && allClusters.length > 0"
-                  value="">-- Select the cluster --</option>
+                  value="">{{ selectClusterText }}</option>
           <option *ngFor="let cluster of allClusters"
                   [value]="cluster.cluster_id">{{ cluster.cluster_id }}</option>
         </cds-select>
@@ -79,11 +78,11 @@
                       [skeleton]="allFsNames === null"
                       i18n>
             <option *ngIf="allFsNames === null"
-                    value="">Loading...</option>
+                    value="">{{ loadingText }}</option>
             <option *ngIf="allFsNames !== null && allFsNames.length === 0"
-                    value="">-- No CephFS filesystem available --</option>
+                    value="">{{ noCephfsFilesystemText }}</option>
             <option *ngIf="allFsNames !== null && allFsNames.length > 0"
-                    value="">-- Select the CephFS filesystem --</option>
+                    value="">{{ selectCephfsFilesystemText }}</option>
             <option *ngFor="let filesystem of allFsNames"
                     [value]="filesystem.name">{{ filesystem.name }}</option>
           </cds-select>
@@ -108,11 +107,11 @@
                       [skeleton]="allRGWUsers === null"
                       i18n>
             <option *ngIf="allRGWUsers === null"
-                    value="">Loading...</option>
+                    value="">{{ loadingText }}</option>
             <option *ngIf="allRGWUsers !== null && allRGWUsers.length === 0"
-                    value="">-- No RGW User available --</option>
+                    value="">{{ noRgwUserText }}</option>
             <option *ngIf="allRGWUsers !== null && allRGWUsers.length > 0"
-                    value="">-- Select the RGW User --</option>
+                    value="">{{ selectRgwUserText }}</option>
             <option *ngFor="let user of allRGWUsers"
                     [value]="user.user_id">{{ user.user_id }}</option>
           </cds-select>
@@ -157,15 +156,15 @@
         <cds-select formControlName="subvolume_group"
                     name="subvolume_group"
                     for="subvolume_group"
-                    label="Subvolume Group"
+                    [label]="subvolumeGroupLabel"
                     id="subvolume_group"
                     (change)="getSubVol()"
                     [skeleton]="allsubvolgrps === null"
                     i18n>
           <option *ngIf="allsubvolgrps === null"
-                  value="">Loading...</option>
+                  value="">{{ loadingText }}</option>
           <option *ngIf="allsubvolgrps !== null && allsubvolgrps.length >= 0"
-                  value="">-- Select the CephFS subvolume group --</option>
+                  value="">{{ selectSubvolumeGroupText }}</option>
           <option *ngFor="let subvol_grp of allsubvolgrps"
                   [value]="subvol_grp.name"
                   [selected]="subvol_grp.name === nfsForm.get('subvolume_group').value">{{ subvol_grp.name }}</option>
@@ -186,11 +185,11 @@
                   [invalidText]="subvolumeError"
                   i18n>
         <option *ngIf="allsubvols === null"
-                value="">Loading...</option>
+                value="">{{ loadingText }}</option>
         <option *ngIf="allsubvols !== null && allsubvols.length === 0"
-                value="">-- No CephFS subvolume available --</option>
+                value="">{{ noSubvolumeText }}</option>
         <option *ngIf="allsubvols !== null && allsubvols.length > 0"
-                value="">-- Select the CephFS subvolume --</option>
+                value="">{{ selectSubvolumeText }}</option>
         <option *ngFor="let subvolume of allsubvols"
                 [value]="subvolume.name"
                 [selected]="subvolume.name === nfsForm.get('subvolume').value">{{ subvolume.name }}</option>
@@ -210,14 +209,13 @@
            *ngIf="storageBackend === 'CEPH'">
         <cds-text-label for="path"
                         i18n
-                        helperText="A path in a CephFS file system."
+                        [helperText]="pathHelperText"
                         cdRequiredField="Path"
                         [invalid]="nfsForm.controls.path.invalid && (nfsForm.controls.path.dirty)"
                         [invalidText]="pathError">Path
           <input cdsText
                  type="text"
-                 placeholder="Path..."
-                 i18n-placeholder
+                 [placeholder]="pathPlaceholder"
                  id="path"
                  name="path"
                  formControlName="path"
@@ -250,8 +248,7 @@
                         [invalidText]="bucketPathError">
           <input cdsText
                  type="text"
-                 placeholder="Bucket name..."
-                 i18n-placeholder
+                 [placeholder]="bucketPlaceholder"
                  id="path"
                  name="path"
                  formControlName="path"
@@ -266,14 +263,14 @@
                 *ngIf="nfsForm.showError('path', formDir, 'bucketNameNotAllowed')"
                 i18n>The bucket does not exist or is not in the default realm (if multiple realms are configured).
                     To continue, <a routerLink="/rgw/bucket/create"
-                                    class="btn-link">create a new bucket</a>.</span>
+                                    class="btn-link">{{ createBucketLinkText }}</a>.</span>
         </ng-template>
       </div>
 
       <!-- NFS Protocol -->
       <div class="form-item">
         <legend class="cds--label"
-                cdRequiredField="NFS Protocol"
+                [cdRequiredField]="nfsProtocolRequiredLabel"
                 i18n>NFS Protocol (required)</legend>
         <cds-checkbox formControlName="protocolNfsv3"
                       name="protocolNfsv3"
@@ -306,8 +303,7 @@
                         [invalidText]="pseudoError">
           <input cdsText
                  type="text"
-                 placeholder="Pseudo..."
-                 i18n-placeholder
+                 [placeholder]="pseudoPlaceholder"
                  id="pseudo"
                  name="pseudo"
                  formControlName="pseudo"
@@ -339,8 +335,8 @@
         <cds-select formControlName="access_type"
                     name="access_type"
                     for="access_type"
-                    label="Access Type"
-                    cdRequiredField="Access Type"
+                    [label]="accessTypeLabel"
+                    [cdRequiredField]="accessTypeLabel"
                     id="access_type"
                     [invalid]="nfsForm.controls.access_type.invalid && (nfsForm.controls.access_type.dirty)"
                     [invalidText]="accessTypeError"
@@ -350,9 +346,9 @@
                     [skeleton]="nfsAccessType === null"
                     i18n>
           <option *ngIf="nfsAccessType === null"
-                  value="">Loading...</option>
+                  value="">{{ loadingText }}</option>
           <option *ngIf="nfsAccessType !== null && nfsAccessType.length === 0"
-                  value="">-- No access type available --</option>
+                  value="">{{ noAccessTypeText }}</option>
           <option *ngFor="let accessType of nfsAccessType"
                   [value]="accessType.value">{{ accessType.value }}</option>
         </cds-select>
@@ -389,9 +385,9 @@
                     [helperText]="squashHelper"
                     i18n>
           <option *ngIf="nfsSquash === null"
-                  value="">Loading...</option>
+                  value="">{{ loadingText }}</option>
           <option *ngIf="nfsSquash !== null && nfsSquash.length === 0"
-                  value="">-- No squash available --</option>
+                  value="">{{ noSquashText }}</option>
           <option *ngFor="let squash of nfsSquash"
                   [value]="squash">{{ squash }}</option>
         </cds-select>
@@ -418,7 +414,7 @@
       <!-- Transport Protocol -->
       <div class="form-item">
         <legend class="cds--label"
-                cdRequiredField="Transport Protocol"
+                [cdRequiredField]="transportProtocolRequiredLabel"
                 i18n>Transport Protocol (required)</legend>
         <cds-checkbox formControlName="transportUDP"
                       name="transportUDP"
@@ -454,7 +450,7 @@
       <cd-form-button-panel (submitActionEvent)="submitAction()"
                             [form]="nfsForm"
                             [disabled]="!!storageBackendError"
-                            [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                            [submitText]="submitText"
                             wrappingClass="text-right"></cd-form-button-panel>
     </form>
   </ng-container>

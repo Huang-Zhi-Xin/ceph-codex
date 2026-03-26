@@ -6,8 +6,7 @@
           [formGroup]="rbdForm"
           novalidate>
 
-      <div i18n="form title"
-           class="form-header">{{ action | titlecase }} {{ resource | upperFirst }}
+      <div class="form-header">{{ formTitle }}
         <cd-help-text>
           <div *ngIf="action === 'Copy'">{{copyMessage}}
           </div>
@@ -34,10 +33,10 @@
                         [invalidText]="nameError"
                         for="name"
                         i18n
-                        cdRequiredField="Name">Name
+                        [cdRequiredField]="isZhHans ? '名称' : 'Name'">Name
           <input cdsText
                  type="text"
-                 placeholder="Name..."
+                 [placeholder]="isZhHans ? '名称...' : 'Name...'"
                  id="name"
                  name="name"
                  formControlName="name"
@@ -62,17 +61,17 @@
                         *ngIf="mode === 'editing' || !poolPermission.read">Pool
           <input cdsText
                  type="text"
-                 placeholder="Pool name..."
+                 [placeholder]="isZhHans ? '存储池名称...' : 'Pool name...'"
                  id="pool"
                  name="pool"
                  formControlName="pool">
         </cds-text-label>
-        <cds-select label="Pool"
+        <cds-select [label]="isZhHans ? '存储池' : 'Pool'"
                     for="pool"
                     name="pool"
                     id="pool"
                     formControlName="pool"
-                    cdRequiredField="Pool"
+                    [cdRequiredField]="isZhHans ? '存储池' : 'Pool'"
                     [invalid]="!rbdForm.controls['pool'].valid && (rbdForm.controls['pool'].dirty)"
                     [invalidText]="poolError"
                     *ngIf="mode !== 'editing' && poolPermission.read">
@@ -102,22 +101,22 @@
                       formControlName="mirroring"
                       (checkedChange)="setMirrorMode()"
                       i18n>Mirroring
-          <cd-help-text>Allow data to be asynchronously mirrored between two Ceph clusters</cd-help-text>
+          <cd-help-text>{{ mirroringHelpText }}</cd-help-text>
 
         </cds-checkbox>
         <cd-alert-panel *ngIf="showMirrorDisableMessage"
                         spacingClass="mt-2"
                         [showTitle]="false"
-                        type="info">Mirroring can not be disabled on <b>&nbsp;Pool&nbsp;</b> mirror mode.
-                                    You need to change the mirror mode to enable this option.
+                        type="info">
+          {{ disableMirroringInfoText }}
         </cd-alert-panel>
         <cd-alert-panel *ngIf="currentPoolMirrorMode === 'disabled'"
                         type="info"
                         [showTitle]="false"
                         spacingClass="mt-2"
-                        actionName="Set mode"
+                        [actionName]="setModeLabel"
                         (action)="onAlertAction($event)">
-            You need to set&nbsp;<b>mirror mode</b>&nbsp;in the selected pool to enable mirroring.
+          {{ enableMirroringInfoText }}
         </cd-alert-panel>
       </div>
 
@@ -139,10 +138,9 @@
                         type="info"
                         [showTitle]="false"
                         spacingClass="mt-2"
-                        actionName="Set mode"
-                        (action)="onAlertAction($event)"
-                        i18n>
-          You need to set mode as&nbsp;<b>Image</b>&nbsp;in the selected pool to enable snapshot mirroring.
+                        [actionName]="setModeLabel"
+                        (action)="onAlertAction($event)">
+          {{ snapshotMirroringInfoText }}
         </cd-alert-panel>
       </div>
 
@@ -150,14 +148,13 @@
       <div class="form-item"
            *ngIf="rbdForm.getValue('mirroringMode') === 'snapshot' && mirroring">
         <cds-text-label for="schedule"
-                        helperText="Create Mirror-Snapshots automatically on a periodic basis. The interval can be specified in days, hours, or minutes using d, h, m suffix respectively. To create mirror snapshots, you must import or create and have available peers to mirror"
-                        cdRequiredField="Schedule Interval"
+                        [helperText]="scheduleHelperText"
+                        [cdRequiredField]="scheduleIntervalLabel"
                         [invalid]="!rbdForm.controls['schedule'].valid && (rbdForm.controls['schedule'].dirty)"
-                        [invalidText]="scheduleError"
-                        i18n>Schedule Interval
+                        [invalidText]="scheduleError">{{ scheduleIntervalLabel }}
           <input cdsText
                  type="text"
-                 placeholder="e.g., 12h or 1d or 10m"
+                 [placeholder]="schedulePlaceholder"
                  id="schedule"
                  name="schedule"
                  formControlName="schedule"
@@ -178,15 +175,12 @@
                       name="useDataPool"
                       formControlName="useDataPool"
                       (change)="onUseDataPoolChange()"
-                      i18n>
-                      Use a dedicated data pool
+                      >{{ useDedicatedDataPoolLabel }}
 
-          <cd-help-text>Use a dedicated pool to store the image data. If not selected,
-            the image data will be stored in the same pool as the image metadata.
-          </cd-help-text>
+          <cd-help-text>{{ useDedicatedDataPoolHelperText }}</cd-help-text>
 
           <cd-helper *ngIf="allDataPools.length <= 1 && mode !== 'editing'">
-            <span>You need more than one pool with the rbd application label use to use a dedicated data pool.</span>
+            <span>{{ dedicatedDataPoolRequirementText }}</span>
           </cd-helper>
         </cds-checkbox>
       </div>
@@ -194,15 +188,15 @@
       <!-- Data pools -->
       <div class="form-item"
            *ngIf="rbdForm.getValue('useDataPool')">
-        <cds-select label="Data pool"
-                    helperText="Dedicated pool that stores the object-data of the RBD"
+        <cds-select [label]="dataPoolLabel"
+                    [helperText]="dataPoolHelperText"
                     for="dataPool"
                     name="dataPool"
                     id="dataPool"
                     [invalid]="!rbdForm.controls['dataPool'].valid && (rbdForm.controls['dataPool'].dirty)"
                     [invalidText]="dataPoolError"
                     formControlName="dataPool"
-                    cdRequiredField="Data pool"
+                    [cdRequiredField]="dataPoolLabel"
                     *ngIf="mode !== 'editing' && poolPermission.read">
           <option *ngIf="dataPools === null"
                   [ngValue]="null"
@@ -227,7 +221,7 @@
       <!-- Skeleton-->
       <div class="form-item"
            *ngIf="mode !== 'editing' && rbdForm.getValue('pool') && namespaces === null">
-        <cds-select label="Namespace"
+        <cds-select [label]="namespaceLabel"
                     for="namespace"
                     name="namespace"
                     id="namespace"
@@ -239,8 +233,8 @@
       </div>
 
       <div class="form-item">
-        <cds-select label="Namespace"
-                    helperText="Namespace allows you to logically group RBD images within your Ceph Cluster.Choosing a namespace makes it easier to locate and manage related RBD images efficiently"
+        <cds-select [label]="namespaceLabel"
+                    [helperText]="namespaceHelperText"
                     for="namespace"
                     name="namespace"
                     id="namespace"
@@ -266,10 +260,10 @@
                         i18n
                         [invalid]="!rbdForm.controls['size'].valid && (rbdForm.controls['size'].dirty)"
                         [invalidText]="sizeError"
-                        cdRequiredField="Size">Size
+                        [cdRequiredField]="isZhHans ? '大小' : 'Size'">Size
           <input cdsText
                  type="text"
-                 placeholder="e.g., 10GiB"
+                 [placeholder]="isZhHans ? '例如：10GiB' : 'e.g., 10GiB'"
                  id="size"
                  name="size"
                  formControlName="size"
@@ -323,10 +317,9 @@
                 i18n>Striping</legend>
         <!-- Object Size -->
         <div class="form-item">
-          <cds-select i18n
-                      for="obj_size"
-                      label="Object size"
-                      helperText="Objects in the Ceph Storage Cluster have a maximum configurable size (e.g., 2MB, 4MB, etc.). The object size should be large enough to accommodate many stripe units, and should be a multiple of the stripe unit."
+          <cds-select for="obj_size"
+                      [label]="objectSizeLabel"
+                      [helperText]="objectSizeHelperText"
                       id="obj_size"
                       name="obj_size"
                       formControlName="obj_size">
@@ -337,17 +330,16 @@
 
         <!-- stripingUnit -->
         <div class="form-item">
-          <cds-select i18n
-                      for="stripingUnit"
-                      label="Stripe unit"
-                      helperText="Stripes have a configurable unit size (e.g., 64kb). The Ceph Client divides the data it will write to objects into equally sized stripe units, except for the last stripe unit. A stripe width, should be a fraction of the Object Size so that an object may contain many stripe units"
+          <cds-select for="stripingUnit"
+                      [label]="stripeUnitLabel"
+                      [helperText]="stripeUnitHelperText"
                       id="stripingUnit"
                       name="stripingUnit"
                       formControlName="stripingUnit"
-                      cdRequiredField="Striping Unit"
+                      [cdRequiredField]="stripingUnitRequiredLabel"
                       [invalid]="!rbdForm.controls['stripingUnit'].valid && (rbdForm.controls['stripingUnit'].dirty)"
                       [invalidText]="stripingUnitError">
-            <option [ngValue]="null">-- Select stripe unit --</option>
+            <option [ngValue]="null">{{ selectStripeUnitText }}</option>
             <option *ngFor="let objectSize of objectSizes"
                     [value]="objectSize">{{ objectSize }}</option>
           </cds-select>
@@ -363,14 +355,14 @@
 
         <!-- Stripe Count -->
         <div class="form-item">
-          <cds-number i18n
+          <cds-number
                       for="stripingCount"
-                      label="Stripe count"
-                      helperText="The Ceph Client writes a sequence of stripe units over a series of objects determined by the stripe count. The series of objects is called an object set. After the Ceph Client writes to the last object in the object set, it returns to the first object in the object set."
+                      [label]="stripeCountLabel"
+                      [helperText]="stripeCountHelperText"
                       id="stripingCount"
                       name="stripingCount"
                       formControlName="stripingCount"
-                      cdRequiredField="Striping Count"
+                      [cdRequiredField]="stripingCountRequiredLabel"
                       [min]="1"
                       [invalid]="!rbdForm.controls['stripingCount'].valid && (rbdForm.controls['stripingCount'].dirty)"
                       [invalidText]="stripingCountError"
@@ -392,7 +384,7 @@
 
       <cd-form-button-panel (submitActionEvent)="submit()"
                             [form]="formDir"
-                            [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                            [submitText]="formTitle"
                             wrappingClass="text-right"></cd-form-button-panel>
 
     </form>

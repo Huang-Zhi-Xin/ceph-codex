@@ -27,23 +27,19 @@
               <td>{{ replicationStatus }}</td>
             </tr>
             <tr>
-              <td i18n
-                  class="bold">MFA Delete</td>
+              <td class="bold">{{ mfaDeleteLabel }}</td>
               <td>{{ selection.mfa_delete }}</td>
             </tr>
             <tr>
-              <td i18n
-                  class="bold">Index type</td>
+              <td class="bold">{{ indexTypeLabel }}</td>
               <td>{{ selection.index_type }}</td>
             </tr>
             <tr>
-              <td i18n
-                  class="bold">Placement rule</td>
+              <td class="bold">{{ placementRuleLabel }}</td>
               <td>{{ selection.placement_rule }}</td>
             </tr>
             <tr>
-              <td i18n
-                  class="bold">Last modification time</td>
+              <td class="bold">{{ lastModifiedLabel }}</td>
               <td>{{ selection.mtime | cdDate }}</td>
             </tr>
           </tbody>
@@ -62,8 +58,7 @@
               </tr>
               <ng-container *ngIf="selection.bucket_quota.enabled">
                 <tr>
-                  <td i18n
-                      class="bold">Maximum size</td>
+                  <td class="bold">{{ maximumSizeLabel }}</td>
                   <td *ngIf="selection.bucket_quota.max_size <= -1"
                       i18n>Unlimited</td>
                   <td *ngIf="selection.bucket_quota.max_size > -1">
@@ -71,8 +66,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td i18n
-                      class="bold">Maximum objects</td>
+                  <td class="bold">{{ maximumObjectsLabel }}</td>
                   <td *ngIf="selection.bucket_quota.max_objects <= -1"
                       i18n>Unlimited</td>
                   <td *ngIf="selection.bucket_quota.max_objects > -1">
@@ -140,8 +134,7 @@
           <table class="cds--data-table--sort cds--data-table--no-border cds--data-table cds--data-table--md">
             <tbody>
               <tr>
-                <td i18n
-                    class="bold w-25">Bucket policy</td>
+                <td class="bold w-25">{{ bucketPolicyLabel }}</td>
                 <td><pre>{{ selection.bucket_policy | json}}</pre></td>
               </tr>
               <tr>
@@ -175,10 +168,7 @@
                 </td>
               </tr>
               <tr *ngIf="selection.lifecycle_progress?.length > 0">
-                <td i18n
-                    class="bold w-25">
-                  Lifecycle progress
-                </td>
+                <td class="bold w-25">{{ lifecycleProgressLabel }}</td>
                 <td>
                   <cds-tooltip [description]="lifecycleProgressMap.get(lifecycleProgress.status)?.description"
                                [align]="'top'">
@@ -192,8 +182,7 @@
                 </td>
               </tr>
               <tr>
-                <td i18n
-                    class="bold w-25">Replication policy</td>
+                <td class="bold w-25">{{ replicationPolicyLabel }}</td>
                 <td><pre>{{ selection.replication | json}}</pre></td>
               </tr>
               <tr>
@@ -208,16 +197,16 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr i18n>
-                        <td>Bucket Owner</td>
+                      <tr>
+                        <td>{{ bucketOwnerLabel }}</td>
                         <td>{{ aclPermissions.Owner || '-'}}</td>
                       </tr>
                       <tr i18n>
                         <td>Everyone</td>
                         <td>{{ aclPermissions.AllUsers || '-'}}</td>
                       </tr>
-                      <tr i18n>
-                        <td>Authenticated users group</td>
+                      <tr>
+                        <td>{{ authenticatedUsersGroupLabel }}</td>
                         <td>{{ aclPermissions.AuthenticatedUsers || '-'}}</td>
                       </tr>
                     </tbody>

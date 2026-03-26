@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RgwDaemonService } from '~/app/shared/api/rgw-daemon.service';
@@ -35,6 +35,7 @@ export class RgwMultisiteSyncFlowModalComponent implements OnInit {
   flowType = FlowType;
   icons = Icons;
   zones = new ZoneData(false, 'Filter Zones');
+  isZhHans = false;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -44,7 +45,52 @@ export class RgwMultisiteSyncFlowModalComponent implements OnInit {
     private rgwZonegroupService: RgwZonegroupService,
     private rgwMultisiteService: RgwMultisiteService,
     private succeededLabels: SucceededActionLabelsI18n
-  ) {}
+    ,
+    @Inject(LOCALE_ID) private localeId: string
+  ) {
+    this.isZhHans = this.localeId.startsWith('zh');
+  }
+
+  get modalTitle(): string {
+    const action = this.isZhHans ? (this.editing ? '编辑' : '创建') : this.actionLabels[this.action?.toUpperCase?.()] || this.action;
+    const groupType = this.isZhHans
+      ? this.groupType === FlowType.symmetrical
+        ? '对称'
+        : '定向'
+      : _.upperFirst(this.groupType);
+    return `${action} ${groupType} ${this.isZhHans ? '流' : 'Flow'}`;
+  }
+
+  get flowNamePlaceholder(): string {
+    return this.isZhHans ? '流名称...' : 'Flow Name...';
+  }
+
+  get bucketNamePlaceholder(): string {
+    return this.isZhHans ? '桶名称...' : 'Bucket Name...';
+  }
+
+  get zonesHelperText(): string {
+    return this.isZhHans ? '流至少需要关联一个 zone' : 'Flow need to be associated with atleast one zone';
+  }
+
+  get submitText(): string {
+    return this.modalTitle;
+  }
+
+  getSelectionTitle(name: string): string {
+    const label = name?.split('_').join(' ');
+    return this.isZhHans ? `流应关联${label}` : `Flow should be associated with ${label}`;
+  }
+
+  getSelectionRequiredText(name: string): string {
+    const label = name?.split('_').join(' ');
+    return this.isZhHans ? `${label} 选择为必填项` : `${label} selection is required!`;
+  }
+
+  getSelectZoneText(name: string): string {
+    const label = name.split('_').join(' ');
+    return this.isZhHans ? `-- 选择${label} --` : `-- Select ${label} --`;
+  }
 
   ngOnInit(): void {
     if (this.action === 'edit') {

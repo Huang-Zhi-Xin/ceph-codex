@@ -3,8 +3,7 @@
            [hasScrollingContent]="true"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>{{ action | titlecase }} {{ resource | upperFirst }}</h3>
+    <h3 cdsModalHeaderHeading>{{ formTitle }}</h3>
   </cds-modal-header>
 
   <ng-container *cdFormLoading="loading">
@@ -22,8 +21,7 @@
                           i18n>Name
             <input cdsText
                    type="text"
-                   placeholder="Subvolume group name..."
-                   i18n-placeholder
+                   [placeholder]="subvolumeGroupNamePlaceholder"
                    id="subvolumegroupName"
                    name="subvolumegroupName"
                    [invalid]="subvolumegroupForm.controls.subvolumegroupName.invalid && (subvolumegroupForm.controls.subvolumegroupName.dirty)"
@@ -45,9 +43,9 @@
 
         <!-- Volume name -->
         <div class="form-item">
-          <cds-text-label label="Volume name"
+          <cds-text-label [label]="volumeNameLabel"
                           for="volumeName"
-                          i18n>Volume name
+                          >{{ volumeNameLabel }}
             <input cdsText
                    type="text"
                    id="volumeName"
@@ -71,8 +69,7 @@
                    id="size"
                    name="size"
                    formControlName="size"
-                   i18n-placeholder
-                   placeholder="e.g., 10GiB"
+                   [placeholder]="sizePlaceholder"
                    defaultUnit="GiB"
                    [invalid]="subvolumegroupForm.controls.size.invalid && (subvolumegroupForm.controls.size.dirty)"
                    cdDimlessBinary>
@@ -86,13 +83,12 @@
 
         <!-- CephFS Pools -->
         <div class="form-item">
-          <cds-select label="CephFS Pools"
+          <cds-select [label]="cephfsPoolsLabel"
                       for="pool"
                       formControlName="pool"
                       name="pool"
                       id="pool"
-                      helperText="By default, the data_pool_layout of the parent directory is selected."
-                      i18n-helperText>
+                      [helperText]="poolsHelperText">
             <option *ngFor="let pool of dataPools"
                     [value]="pool.pool">{{ pool.pool }}</option>
           </cds-select>
@@ -105,7 +101,7 @@
                           i18n>UID
             <input cdsText
                    type="number"
-                   placeholder="Subvolume UID..."
+                   [placeholder]="uidPlaceholder"
                    id="uid"
                    name="uid"
                    formControlName="uid">
@@ -119,7 +115,7 @@
                           i18n>GID
             <input cdsText
                    type="number"
-                   placeholder="Subvolume group GID..."
+                   [placeholder]="gidPlaceholder"
                    id="gid"
                    name="gid"
                    formControlName="gid">
@@ -132,7 +128,7 @@
                  for="mode"
                  i18n>Mode
           </label>
-          <cd-help-text>Permissions for the directory. Default mode is 755 which is rwxr-xr-x</cd-help-text>
+          <cd-help-text>{{ modeHelpText }}</cd-help-text>
 
           <cd-checked-table-form [data]="scopePermissions"
                                  [columns]="columns"
@@ -148,7 +144,7 @@
 
     <cd-form-button-panel (submitActionEvent)="submit()"
                           [form]="subvolumegroupForm"
-                          [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+                          [submitText]="submitText"
                           [modalForm]="true"></cd-form-button-panel>
 
   </ng-container>

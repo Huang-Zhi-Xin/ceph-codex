@@ -66,24 +66,20 @@ import { TableDetailDirective } from './directives/table-detail.directive';
         { name: 'file', component: FormlyFileTypeComponent, wrappers: ['input-wrapper'] }
       ],
       validationMessages: [
-        { name: 'required', message: 'This field is required' },
-        { name: 'json', message: 'This field is not a valid json document' },
+        { name: 'required', message: $localize`这是必填字段！` },
+        { name: 'json', message: $localize`该字段不是有效的 JSON 文档` },
         {
           name: 'rgwRoleName',
-          message:
-            'Role name must contain letters, numbers or the ' +
-            'following valid special characters "_+=,.@-]+" (pattern: [0-9a-zA-Z_+=,.@-]+)'
+          message: $localize`角色名称只能包含字母、数字或特殊字符 "_+=,.@-"（模式：[0-9a-zA-Z_+=,.@-]+）`
         },
         {
           name: 'rgwRolePath',
-          message:
-            'Role path must start and finish with a slash "/".' +
-            ' (pattern: (\u002F)|(\u002F[\u0021-\u007E]+\u002F))'
+          message: $localize`角色路径必须以斜杠 "/" 开始并以斜杠 "/" 结束`
         },
-        { name: 'file_size', message: 'File size must not exceed 4KiB' },
+        { name: 'file_size', message: $localize`文件大小不能超过 4KiB` },
         {
           name: 'rgwRoleSessionDuration',
-          message: 'This field must be a number and should be a value from 1 hour to 12 hour'
+          message: $localize`该字段必须为数字，且取值范围应在 1 小时到 12 小时之间`
         }
       ],
       wrappers: [{ name: 'input-wrapper', component: FormlyInputWrapperComponent }]

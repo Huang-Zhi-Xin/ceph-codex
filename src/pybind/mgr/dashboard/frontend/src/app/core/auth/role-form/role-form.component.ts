@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -36,6 +36,7 @@ export class RoleFormComponent extends CdForm implements OnInit {
 
   action: string;
   resource: string;
+  isZhHans: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,12 +44,39 @@ export class RoleFormComponent extends CdForm implements OnInit {
     private roleService: RoleService,
     private scopeService: ScopeService,
     private notificationService: NotificationService,
-    public actionLabels: ActionLabelsI18n
+    public actionLabels: ActionLabelsI18n,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.resource = $localize`role`;
     this.createForm();
     // this.listenToChanges();
+  }
+
+  get formTitle(): string {
+    const resourceLabel = this.isZhHans ? '角色' : this.resource;
+    return `${this.action || ''} ${resourceLabel}`.trim();
+  }
+
+  get nameLabel(): string {
+    return this.isZhHans ? '名称' : 'Name';
+  }
+
+  get namePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get descriptionLabel(): string {
+    return this.isZhHans ? '描述' : 'Description';
+  }
+
+  get descriptionPlaceholder(): string {
+    return this.isZhHans ? '描述...' : 'Description..';
+  }
+
+  get permissionsLabel(): string {
+    return this.isZhHans ? '权限' : 'Permissions';
   }
 
   createForm() {

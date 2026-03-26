@@ -17,13 +17,11 @@
           <button cdsButton="primary"
                   name="expand-cluster"
                   (click)="createCluster()"
-                  aria-label="Expand Cluster"
-                  i18n>Expand Cluster</button>
+                  [attr.aria-label]="isZhHans ? '扩展集群' : 'Expand Cluster'">{{ isZhHans ? '扩展集群' : 'Expand Cluster' }}</button>
           <button cdsButton="secondary"
                   name="skip-cluster-creation"
-                  aria-label="Skip"
-                  (click)="skipClusterCreation()"
-                  i18n>Skip</button>
+                  [attr.aria-label]="isZhHans ? '跳过' : 'Skip'"
+                  (click)="skipClusterCreation()">{{ isZhHans ? '跳过' : 'Skip' }}</button>
         </div>
       </div>
     </div>
@@ -37,8 +35,7 @@
        [columnNumbers]="{'lg': 2, 'md': 2, 'sm': 2}"
        class="indicator-wrapper">
 
-    <div class="form-header"
-         i18n>Expand Cluster</div>
+    <div class="form-header">{{ isZhHans ? '扩展集群' : 'Expand Cluster' }}</div>
     <cd-wizard [stepsTitle]="stepTitles"></cd-wizard>
   </div>
 
@@ -48,7 +45,7 @@
       <div *ngSwitchCase="0"
            class="ms-5">
         <h4 class="title"
-            i18n>Add Hosts</h4>
+            >{{ isZhHans ? '添加主机' : 'Add Hosts' }}</h4>
 
         <cd-hosts [hiddenColumns]="['service_instances']"
                   [hideMaintenance]="true"
@@ -59,7 +56,7 @@
       <div *ngSwitchCase="1"
            class="ms-5">
         <h4 class="title"
-            i18n>Create OSDs</h4>
+            >{{ isZhHans ? '创建 OSD' : 'Create OSDs' }}</h4>
         <div class="alignForm">
           <cd-osd-form [hideTitle]="true"
                        [hideSubmitBtn]="true"
@@ -71,7 +68,7 @@
       <div *ngSwitchCase="2"
            class="ms-5">
         <h4 class="title"
-            i18n>Create Services</h4>
+            >{{ isZhHans ? '创建服务' : 'Create Services' }}</h4>
         <cd-services [hasDetails]="false"
                      [hiddenServices]="['mon', 'mgr', 'crash', 'agent']"
                      [hiddenColumns]="['status.running', 'status.size', 'status.last_refresh']"
@@ -88,24 +85,24 @@
               class="me-3"
               id="skipStepBtn"
               (click)="onSkip()"
-              aria-label="Skip this step"
-              *ngIf="stepTitles[currentStep?.stepIndex]?.label === 'Create OSDs'"
-              i18n>Skip</button>
+              [attr.aria-label]="isZhHans ? '跳过此步骤' : 'Skip this step'"
+              *ngIf="currentStep?.stepIndex === 1">{{ isZhHans ? '跳过' : 'Skip' }}</button>
       <cd-back-button buttonType="secondary"
                       aria-label="Close"
                       (backAction)="onPreviousStep()"
                       [name]="showCancelButtonLabel()"></cd-back-button>
       <button cdsButton="primary"
               (click)="onNextStep()"
-              aria-label="Next"
-              i18n>{{ showSubmitButtonLabel() }}</button>
+              [attr.aria-label]="isZhHans ? '下一步' : 'Next'">{{ showSubmitButtonLabel() }}</button>
     </div>
   </div>
 </div>
 
 <ng-template #skipConfirmTpl>
-  <span i18n>You are about to skip the cluster expansion process.
-             You’ll need to <strong>navigate through the menu to add hosts and services.</strong></span>
+  <span>
+    {{ isZhHans ? '您即将跳过集群扩展流程。' : 'You are about to skip the cluster expansion process.' }}
+    <strong>{{ isZhHans ? '后续需要通过菜单添加主机和服务。' : 'You’ll need to navigate through the menu to add hosts and services.' }}</strong>
+  </span>
 
   <div class="mt-4"
        i18n>Are you sure you want to continue?</div>

@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">{{ action | titlecase }} RGW Encryption Configurations</ng-container>
+  <ng-container class="modal-title">{{ formTitle }}</ng-container>
 
   <ng-container class="modal-content">
     <form name="configForm"
@@ -128,7 +127,7 @@
                       type="text"
                       id="secret_path"
                       formControlName="secret_path"
-                      placeholder="/v1/secret/data">
+                      [placeholder]="secretPathPlaceholder">
                 <cd-help-text>
                   <span i18n>Vault secret URL prefix, which can be used to restrict access to a particular subset of the Vault secret space.
                   </span>
@@ -150,7 +149,7 @@
               <input  class="form-control"
                       id="namespace"
                       type="text"
-                      placeholder="tenant1"
+                      [placeholder]="namespacePlaceholder"
                       formControlName="namespace">
               <cd-help-text>
                 <span i18n>Vault Namespace to be used to select your tenant.
@@ -175,7 +174,7 @@
               <input  class="form-control"
                       id="addr"
                       formControlName="addr"
-                      placeholder="http://127.0.0.1:8000"
+                      [placeholder]="addressPlaceholder"
                       i18n>
                 <cd-help-text >
                   <span *ngIf="configForm.getValue('kms_provider') === KMS_PROVIDER.VAULT"
@@ -227,7 +226,7 @@
           <div class="cd-col-form-input">
             <input  class="form-control"
                     id="kms_key_template"
-                    placeholder="$keyid"
+                    [placeholder]="keyTemplatePlaceholder"
                     formControlName="kms_key_template">
             <cd-help-text>
               <span i18n>sse-kms; kmip key names
@@ -243,7 +242,7 @@
           <div class="cd-col-form-input">
             <input  class="form-control"
                     id="s3_key_template"
-                    placeholder="$keyid"
+                    [placeholder]="keyTemplatePlaceholder"
                     formControlName="s3_key_template">
             <cd-help-text>
               <span i18n>sse-s3; kmip key template
@@ -299,7 +298,7 @@
                     id="ssl_cert"
                     class="form-control"
                     formControlName="ssl_cert"
-                    placeholder="/path/to/ca_cert.pem">
+                    [placeholder]="caCertPathPlaceholder">
             <cd-help-text>
               <span i18n>
                 Path for custom ca certificate for accessing server
@@ -321,7 +320,7 @@
                       id="client_cert"
                       class="form-control"
                       formControlName="client_cert"
-                      placeholder="/path/to/client_cert.pem">
+                      [placeholder]="clientCertPathPlaceholder">
               <cd-help-text>
                 <span i18n>
                   Path for custom client certificate for accessing server
@@ -342,7 +341,7 @@
               <input  type="text"
                       id="client_key"
                       formControlName="client_key"
-                      placeholder="/path/to/client_key.pem"
+                      [placeholder]="clientKeyPathPlaceholder"
                       class="form-control">
               <cd-help-text>
                 <span i18n>
@@ -356,7 +355,7 @@
     </div>
     <div class="modal-footer">
       <cd-form-button-panel (submitActionEvent)="onSubmit()"
-                            [submitText]="actionLabels.SUBMIT"
+                            [submitText]="submitText"
                             [form]="configForm"></cd-form-button-panel>
     </div>
     </form>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { CdFormGroup } from '~/app/shared/forms/cd-form-group';
 import { RgwZonegroup, Zone } from '../models/rgw-multisite';
@@ -36,6 +36,9 @@ export class RgwMultisiteSyncPipeModalComponent implements OnInit {
   destZones = new ZoneData(false, 'Filter Zones');
   icons = Icons;
   allBucketSelectedHelpText = ALL_BUCKET_SELECTED_HELP_TEXT;
+  createPipeLabel = $localize`Create Pipe`;
+  editPipeLabel = $localize`Edit Pipe`;
+  isZhHans = false;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -43,8 +46,46 @@ export class RgwMultisiteSyncPipeModalComponent implements OnInit {
     private rgwZonegroupService: RgwZonegroupService,
     private rgwMultisiteService: RgwMultisiteService,
     private notificationService: NotificationService,
-    private succeededLabels: SucceededActionLabelsI18n
-  ) {}
+    private succeededLabels: SucceededActionLabelsI18n,
+    @Inject(LOCALE_ID) private localeId: string
+  ) {
+    this.isZhHans = this.localeId.startsWith('zh');
+    if (this.isZhHans) {
+      this.allBucketSelectedHelpText = '如果未填写，则会选择 zone group 中的全部桶。';
+      this.createPipeLabel = '创建 Pipe';
+      this.editPipeLabel = '编辑 Pipe';
+    }
+  }
+
+  get pipeNamePlaceholder(): string {
+    return this.isZhHans ? 'Pipe 名称...' : 'Pipe Name...';
+  }
+
+  get bucketNamePlaceholder(): string {
+    return this.isZhHans ? '桶名称...' : 'Bucket Name...';
+  }
+
+  get sourceBucketPlaceholder(): string {
+    return this.isZhHans ? '源桶名称...' : 'Source Bucket Name...';
+  }
+
+  get destinationBucketPlaceholder(): string {
+    return this.isZhHans ? '目标桶名称...' : 'Destination Bucket Name...';
+  }
+
+  getSelectionTitle(name: string): string {
+    const label = name?.split('_').join(' ');
+    return this.isZhHans ? `Pipe 应关联${label}` : `Pipe should be associated with ${label}`;
+  }
+
+  getSelectionRequiredText(name: string): string {
+    const label = name?.split('_').join(' ');
+    return this.isZhHans ? `${label} 选择为必填项` : `${label} selection is required!`;
+  }
+
+  get modalTitle(): string {
+    return this.editing ? this.editPipeLabel : this.createPipeLabel;
+  }
 
   ngOnInit(): void {
     if (this.pipeSelectedRow) {

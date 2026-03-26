@@ -15,11 +15,11 @@
     <section cdsModalContent>
     <div class="modal-body" >
       <div class="product-versions">
-        <strong i18n>Version</strong>
+        <strong>{{ productVersionLabel }}</strong>
         <br>
         {{ versionNumber }}
         <br>
-        <small class="text-muted">{{ backendVersion }}</small>
+        <small class="text-muted">{{ baseVersionLabel }}: {{ backendVersion }}</small>
       </div>
 
       <br>

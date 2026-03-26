@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, Observable, forkJoin, of } from 'rxjs';
 import { catchError, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { CephfsSubvolumeGroupService } from '~/app/shared/api/cephfs-subvolume-group.service';
@@ -60,6 +60,7 @@ export class CephfsSubvolumeSnapshotsListComponent implements OnInit, OnChanges 
 
   observables: any = [];
   allGroups: any = [];
+  isZhHans = false;
 
   constructor(
     private cephfsSubvolumeGroupService: CephfsSubvolumeGroupService,
@@ -69,9 +70,25 @@ export class CephfsSubvolumeSnapshotsListComponent implements OnInit, OnChanges 
     private authStorageService: AuthStorageService,
     private cdDatePipe: CdDatePipe,
     private taskWrapper: TaskWrapperService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    @Inject(LOCALE_ID) private localeId: string
   ) {
     this.permissions = this.authStorageService.getPermissions();
+    this.isZhHans = this.localeId.startsWith('zh');
+  }
+
+  get groupsTitle(): string {
+    return this.isZhHans ? '分组' : 'Groups';
+  }
+
+  get subvolumesTitle(): string {
+    return this.isZhHans ? '子卷' : 'Subvolumes';
+  }
+
+  get noSubvolumesText(): string {
+    return this.isZhHans
+      ? '当前没有子卷。请先创建子卷后再管理快照。'
+      : 'No subvolumes are present. Please create subvolumes to manage snapshots.';
   }
 
   ngOnInit(): void {

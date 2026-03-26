@@ -70,11 +70,13 @@ export class TableKeyValueComponent implements OnInit, OnChanges {
     this.columns = [
       {
         prop: 'key',
+        name: $localize`键`,
         flexGrow: 1,
         cellTransformation: CellTemplate.bold
       },
       {
         prop: 'value',
+        name: $localize`值`,
         flexGrow: 3
       }
     ];

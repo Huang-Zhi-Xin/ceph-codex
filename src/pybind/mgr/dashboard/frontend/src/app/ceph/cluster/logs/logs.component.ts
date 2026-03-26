@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
@@ -40,6 +40,10 @@ export class LogsComponent implements OnInit, OnDestroy {
   auditLogText: string;
   lokiServiceStatus$: Observable<boolean>;
   promtailServiceStatus$: Observable<boolean>;
+  isZhHans: boolean;
+  daemonLogsTitle: string;
+  timeRangeLabel: string;
+  lokiPromtailNotRunningTitle: string;
 
   interval: number;
   priorities: Array<{ name: string; value: string }> = [
@@ -64,8 +68,16 @@ export class LogsComponent implements OnInit, OnDestroy {
     private logsService: LogsService,
     private cephService: CephServiceService,
     private datePipe: DatePipe,
-    private ngZone: NgZone
-  ) {}
+    private ngZone: NgZone,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+    this.daemonLogsTitle = this.isZhHans ? '守护进程日志' : 'Daemon logs';
+    this.timeRangeLabel = this.isZhHans ? '时间范围：' : 'Time range:';
+    this.lokiPromtailNotRunningTitle = this.isZhHans
+      ? 'Loki/Promtail 服务未运行'
+      : 'Loki/Promtail service not running';
+  }
 
   ngOnInit() {
     this.getInfo();

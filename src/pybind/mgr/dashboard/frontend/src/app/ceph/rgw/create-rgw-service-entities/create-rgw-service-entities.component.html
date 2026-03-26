@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">Create Realm/Zone Group/Zone
+  <ng-container class="modal-title">{{ formTitle }}
   </ng-container>
 
   <ng-container class="modal-content">
@@ -10,7 +9,7 @@
           novalidate>
     <div class="modal-body">
       <cd-alert-panel type="info"
-                      spacingClass="mb-3">The realm/zone group/zone created will be set as default and master.
+                      spacingClass="mb-3">{{ defaultMasterNotice }}
       </cd-alert-panel>
       <div class="form-group row">
         <label class="cd-col-form-label required"
@@ -19,7 +18,7 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Realm name..."
+                 [placeholder]="realmNamePlaceholder"
                  id="realmName"
                  name="realmName"
                  formControlName="realmName">
@@ -35,7 +34,7 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Zone group name..."
+                 [placeholder]="zoneGroupNamePlaceholder"
                  id="zonegroupName"
                  name="zonegroupName"
                  formControlName="zonegroupName">
@@ -51,7 +50,7 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Zone name..."
+                 [placeholder]="zoneNamePlaceholder"
                  id="zoneName"
                  name="zoneName"
                  formControlName="zoneName">
@@ -63,7 +62,8 @@
     </div>
     <div class="modal-footer">
       <cd-form-button-panel (submitActionEvent)="submit()"
-                            [form]="createMultisiteEntitiesForm"></cd-form-button-panel>
+                            [form]="createMultisiteEntitiesForm"
+                            [submitText]="submitText"></cd-form-button-panel>
     </div>
     </form>
   </ng-container>

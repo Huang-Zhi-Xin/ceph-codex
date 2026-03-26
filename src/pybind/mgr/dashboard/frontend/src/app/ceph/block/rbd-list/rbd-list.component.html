@@ -103,8 +103,7 @@
     ({{ row.cdExecuting }})
   </span>
   <i *ngIf="row.source && row.source === 'REMOVING'"
-     i18n-title
-     title="RBD in status 'Removing'"
+     [title]="removingStatusTitle"
      class="{{ icons.warning }} warn"></i>
 </ng-template>
 
@@ -137,5 +136,5 @@
 
 <ng-template #usageTooltip>
   <div i18n
-       [innerHtml]="'Only available for RBD images with <strong>fast-diff</strong> enabled and without snapshot mirroring'"></div>
+       [innerHtml]="imageUsageTooltipText"></div>
 </ng-template>

@@ -25,13 +25,9 @@
   <span>{{ getModeLabel(value) }}</span>
 </ng-template>
 <ng-template #localTmpl>
-  <span i18n
-        i18n-ngbTooltip
-        ngbTooltip="Local image count"># Local</span>
+  <span [ngbTooltip]="localImageCountTooltip">{{ localCountLabel }}</span>
 </ng-template>
 <ng-template #remoteTmpl>
-  <span i18n
-        i18n-ngbTooltip
-        ngbTooltip="Remote image count"># Remote</span>
+  <span [ngbTooltip]="remoteImageCountTooltip">{{ remoteCountLabel }}</span>
 </ng-template>
 <router-outlet name="modal"></router-outlet>

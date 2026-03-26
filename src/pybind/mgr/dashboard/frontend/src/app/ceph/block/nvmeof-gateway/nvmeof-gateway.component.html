@@ -5,8 +5,7 @@
      [columnNumbers]="{md: 4}">
   <cds-combo-box
       type="single"
-      label="Selected Gateway Group"
-      i18n-label
+      [label]="selectedGatewayGroupLabel"
       [placeholder]="gwGroupPlaceholder"
       [items]="gwGroups"
       (selected)="onGroupSelection($event)"
@@ -62,8 +61,8 @@
 </ng-template>
 
 <ng-template #overview_content>
-  <cd-grafana i18n-title
-              title="Gateway overview"
+  <cd-grafana
+              [title]="overviewTitle"
               grafanaPath="ceph-nvme-of-gateways-overview?var-group={{selectedGatewayGroup}}&var-gateway=All"
               [type]="'metrics'"
               uid="feeuv1dno43r4ddjhjssdd"
@@ -72,8 +71,8 @@
 </ng-template>
 
 <ng-template #performance_content>
-  <cd-grafana i18n-title
-              title="Gateway performance"
+  <cd-grafana
+              [title]="performanceTitle"
               grafanaPath="ceph-nvme-of-gateways-performance?var-group={{selectedGatewayGroup}}"
               [type]="'metrics'"
               uid="feeuv1dno43r4deed"

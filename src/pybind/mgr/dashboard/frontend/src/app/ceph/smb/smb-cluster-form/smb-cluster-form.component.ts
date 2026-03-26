@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -62,6 +62,7 @@ export class SmbClusterFormComponent extends CdForm implements OnInit {
   clusterResponse: SMBCluster;
   modalData$!: Observable<DomainSettings>;
   usersGroups$: Observable<SMBUsersGroups[]>;
+  isZhHans: boolean;
 
   constructor(
     private hostService: HostService,
@@ -73,12 +74,27 @@ export class SmbClusterFormComponent extends CdForm implements OnInit {
     private taskWrapperService: TaskWrapperService,
     private router: Router,
     private cd: ChangeDetectorRef,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
 
+    this.isZhHans = localeId.startsWith('zh');
     this.resource = $localize`Cluster`;
     this.modalData$ = this.smbService.modalData$;
+  }
+
+  get formTitle(): string {
+    const resourceLabel = this.isZhHans ? '集群' : this.resource;
+    return `${this.action || ''} ${resourceLabel}`.trim();
+  }
+
+  get clusterNameLabel(): string {
+    return this.isZhHans ? '集群名称' : 'Cluster Name';
+  }
+
+  get authModeLabel(): string {
+    return this.isZhHans ? '认证模式' : 'Authentication Mode';
   }
 
   ngOnInit() {

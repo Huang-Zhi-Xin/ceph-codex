@@ -3,10 +3,7 @@
            [hasScrollingContent]="true"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>
-      Create Namespace
-  </h3>
+    <h3 cdsModalHeaderHeading>{{ modalTitle }}</h3>
   </cds-modal-header>
 
   <section cdsModalContent>
@@ -18,7 +15,7 @@
 
     <!-- Pool -->
     <div class="form-item">
-      <cds-select label="Pool"
+      <cds-select [label]="poolLabel"
                   for="pool"
                   formControlName="pool"
                   name="pool"
@@ -26,16 +23,16 @@
                   [invalid]="namespaceForm.controls['pool'].invalid && (namespaceForm.controls['pool'].dirty)"
                   [invalidText]="poolError"
                   *ngIf="poolPermission.read"
-                  cdRequiredField="Pool"
+                  [cdRequiredField]="poolLabel"
                   modal-primary-focus
                   i18n>
 
         <option *ngIf="pools === null"
-                [ngValue]="null">Loading...</option>
+                [ngValue]="null">{{ loadingText }}</option>
         <option *ngIf="pools !== null && pools.length === 0"
-                [ngValue]="null">-- No rbd pools available --</option>
+                [ngValue]="null">{{ noRbdPoolsText }}</option>
         <option *ngIf="pools !== null && pools.length > 0"
-                [ngValue]="null">-- Select a pool --</option>
+                [ngValue]="null">{{ selectPoolText }}</option>
         <option *ngFor="let pool of pools"
                 [value]="pool.pool_name">{{ pool.pool_name }}</option>
       </cds-select>
@@ -56,7 +53,7 @@
                       i18n>Namespace
         <input cdsText
                type="text"
-               placeholder="Namespace name..."
+               [placeholder]="namespacePlaceholder"
                id="namespace"
                name="namespace"
                formControlName="namespace"
@@ -78,7 +75,7 @@
   </section>
   <cd-form-button-panel (submitActionEvent)="submit()"
                         [form]="namespaceForm"
-                        [submitText]="actionLabels.CREATE"
+                        [submitText]="submitText"
                         [modalForm]="true"></cd-form-button-panel>
 
 </cds-modal>

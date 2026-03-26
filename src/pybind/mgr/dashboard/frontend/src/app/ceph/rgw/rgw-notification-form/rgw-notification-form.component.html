@@ -2,9 +2,9 @@
            [open]="open"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()"
-                    i18n>
-    {{ editing ? 'Edit' : 'Create' }} Notification configuration
-    <cd-help-text [formAllFieldsRequired]="false">All fields are optional, except where marked required.</cd-help-text>
+                    >
+    {{ formTitle }}
+    <cd-help-text [formAllFieldsRequired]="false">{{ allFieldsOptionalText }}</cd-help-text>
   </cds-modal-header>
 
   <ng-container>
@@ -18,23 +18,20 @@
              class="form-item form-item-append">
           <div cdsCol>
             <cds-text-label labelInputID="name"
-                            i18n
-                            i18n-helperText
-                            cdRequiredField="Name"
+                            [cdRequiredField]="fieldNameLabel"
                             [invalid]="notificationForm.controls.id.invalid && notificationForm.controls.id.dirty"
                             [invalidText]="nameError"
-                            [helperText]="helpertext">Topic Name
+                            [helperText]="helpertext">{{ topicNameLabel }}
             <input cdsText
                    type="text"
-                   placeholder="Name..."
-                   i18n-placeholder
+                   [placeholder]="namePlaceholder"
                    id="name"
                    autoFocus
                    formControlName="id"
                    [invalid]="notificationForm.controls.id.invalid && notificationForm.controls.id.dirty"/>
             </cds-text-label>
             <ng-template #helpertext>
-              <span i18n>Enter a unique notification name</span>
+              <span>{{ uniqueNotificationNameText }}</span>
             </ng-template>
             <ng-template #nameError>
               <span *ngIf="notificationForm.showError('id', formDir, 'required')"
@@ -50,21 +47,16 @@
           <div cdsCol>
             <cds-select id="topic"
                         formControlName="topic"
-                        cdRequiredField="Topic"
-                        label="Topic"
-                        i18n-label
-                        placeholder="Select a topic..."
-                        i18n-placeholder
+                        [cdRequiredField]="topicLabel"
+                        [label]="topicLabel"
                         [invalid]="notificationForm.controls.topic.invalid && notificationForm.controls.topic.dirty"
                         [invalidText]="topicError"
-                        helperText="This topic will define and control the notification settings"
-                        i18n-helperText>
+                        [helperText]="topicHelperText">
             <option *ngIf="topicArn === null"
-                    value="">Loading...
+                    value="">{{ loadingText }}
             </option>
             <option [ngValue]="null"
-                    i18n>
-              -- Select a topic --
+                    >{{ selectTopicText }}
             </option>
             <option *ngFor="let data of topicArn"
                     i18n
@@ -86,18 +78,16 @@
              class="form-item form-item-append">
 
           <div cdsCol>
-            <cds-combo-box label="Event"
+            <cds-combo-box [label]="eventLabel"
                            type="multi"
                            formControlName="event"
-                           placeholder="Select event..."
+                           [placeholder]="selectEventPlaceholder"
                            [items]="eventOption"
                            itemValueKey="content"
                            id="event"
                            cdDynamicInputCombobox
                            (updatedItems)="eventOption = $event"
-                           i18n-placeholder
-                           helperText="Choose the S3 event type that will trigger the notification, such as object creation or deletion"
-                           i18n-helperText>
+                           [helperText]="eventHelperText">
               <cds-dropdown-list></cds-dropdown-list>
             </cds-combo-box>
           </div>
@@ -128,7 +118,7 @@
   <!-- Submit Button -->
   <cd-form-button-panel (submitActionEvent)="onSubmit()"
                         [form]="notificationForm"
-                        [submitText]="editing ? actionLabels.EDIT : actionLabels.CREATE"
+                        [submitText]="submitText"
                         [modalForm]="true"> </cd-form-button-panel>
   </cds-modal>
 
@@ -155,8 +145,7 @@
             <ng-container *ngIf="isDropdown; else textInputName">
               <cds-select [id]="type + '-name-' + i"
                           formControlName="Name"
-                          label="Name"
-                          i18n-label
+                          [label]="fieldNameLabel"
                           [helperText]="nameHelper"
                           i18n-helperText>
                 <option *ngFor="let filter of s3KeyFilterValue"
@@ -166,10 +155,9 @@
 
             <ng-template #textInputName>
               <cds-text-label [labelInputID]="type + '-name-' + i"
-                              i18n-label
                               [helperText]="nameHelper"
                               i18n-helperText>
-                Name
+                {{ fieldNameLabel }}
                 <input cdsText
                        type="text"
                        [placeholder]="namePlaceholder"
@@ -181,10 +169,9 @@
 
           <div cdsCol>
             <cds-text-label [labelInputID]="type + '-value-' + i"
-                            i18n-label
                             [helperText]="valueHelper"
                             i18n-helperText>
-              Value
+              {{ fieldValueLabel }}
               <input cdsText
                      type="text"
                      [placeholder]="valuePlaceholder"
@@ -220,4 +207,3 @@
     </div>
   </div>
 </ng-template>
-

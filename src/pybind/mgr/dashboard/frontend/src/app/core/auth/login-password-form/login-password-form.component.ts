@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '~/app/shared/api/auth.service';
@@ -24,7 +24,8 @@ export class LoginPasswordFormComponent extends UserPasswordFormComponent {
     public formBuilder: CdFormBuilder,
     public router: Router,
     public passwordPolicyService: PasswordPolicyService,
-    public authService: AuthService
+    public authService: AuthService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super(
       actionLabels,
@@ -33,7 +34,8 @@ export class LoginPasswordFormComponent extends UserPasswordFormComponent {
       authStorageService,
       formBuilder,
       router,
-      passwordPolicyService
+      passwordPolicyService,
+      localeId
     );
   }
 

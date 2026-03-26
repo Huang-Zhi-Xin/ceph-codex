@@ -40,8 +40,7 @@
         <!-- Long description -->
         <div class="form-group row"
              *ngIf="configForm.getValue('long_desc')">
-          <label i18n
-                 class="cd-col-form-label">Long description</label>
+          <label class="cd-col-form-label">{{ longDescriptionLabel }}</label>
           <div class="cd-col-form-input">
             <textarea class="form-control resize-vertical"
                       id="long_desc"
@@ -68,8 +67,7 @@
         <!-- Daemon default -->
         <div class="form-group row"
              *ngIf="configForm.getValue('daemon_default') !== ''">
-          <label i18n
-                 class="cd-col-form-label">Daemon default</label>
+          <label class="cd-col-form-label">{{ daemonDefaultLabel }}</label>
           <div class="cd-col-form-input">
             <input class="form-control"
                    type="text"
@@ -158,4 +156,3 @@
     </div>
   </form>
 </div>
-

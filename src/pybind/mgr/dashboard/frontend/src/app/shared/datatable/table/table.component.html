@@ -16,7 +16,7 @@
                      *ngIf="toolHeader"
                      (cancel)="onBatchActionsCancel()"
                      [model]="selectionType === 'multiClick' ? model : []"
-                     [batchText]="{ SINGLE: '1 item selected', MULTIPLE: '{{count}} items selected' }">
+                     [batchText]="batchText">
     <!-- batch actions -->
     <cds-table-toolbar-actions *ngIf="tableActions?.dropDownActions.length > 0">
       <ng-container *ngFor="let action of tableActions?.dropDownActions">
