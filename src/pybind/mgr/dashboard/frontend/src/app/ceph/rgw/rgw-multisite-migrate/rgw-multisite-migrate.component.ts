@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import _ from 'lodash';
@@ -39,6 +39,7 @@ export class RgwMultisiteMigrateComponent implements OnInit {
   newZoneName: any;
   bsModalRef: NgbModalRef;
   users: any;
+  isZhHans: boolean;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -49,9 +50,35 @@ export class RgwMultisiteMigrateComponent implements OnInit {
     public rgwZonegroupService: RgwZonegroupService,
     public rgwRealmService: RgwRealmService,
     public rgwDaemonService: RgwDaemonService,
-    public modalService: ModalService
+    public modalService: ModalService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.createForm();
+  }
+
+  get realmNamePlaceholder(): string {
+    return this.isZhHans ? 'Realm 名称...' : 'Realm name...';
+  }
+
+  get zonegroupNamePlaceholder(): string {
+    return this.isZhHans ? 'Zone Group 名称...' : 'Zone Group name...';
+  }
+
+  get zoneNamePlaceholder(): string {
+    return this.isZhHans ? 'Zone 名称...' : 'Zone name...';
+  }
+
+  get endpointPlaceholder(): string {
+    return this.isZhHans ? '例如：http://ceph-node-00.com:80' : 'e.g, http://ceph-node-00.com:80';
+  }
+
+  get requiredText(): string {
+    return this.isZhHans ? '此字段为必填项。' : 'This field is required.';
+  }
+
+  get validUrlText(): string {
+    return this.isZhHans ? '请输入有效的 URL。' : 'Please enter a valid URL.';
   }
 
   createForm() {

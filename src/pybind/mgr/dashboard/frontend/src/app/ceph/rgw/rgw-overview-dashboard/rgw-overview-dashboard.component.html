@@ -2,7 +2,7 @@
   <div class="row">
     <cd-card [cardTitle]="inventoryTitle"
              class="col-sm-3 px-3 d-flex"
-             aria-label="Inventory card">
+             [attr.aria-label]="isZhHans ? '清单卡片' : 'Inventory card'">
 
       <cd-card-row [data]="rgwDaemonCount"
                    link="/rgw/daemon"
@@ -47,7 +47,7 @@
     </cd-card>
     <cd-card [cardTitle]="performanceStatisticsTitle"
              class="col-sm-6 d-flex"
-             ria-label="Performance Statistics card">
+             [attr.aria-label]="isZhHans ? '性能统计卡片' : 'Performance Statistics card'">
       <div class="ms-4 me-4 mt-0">
         <cd-dashboard-time-selector (selectedTime)="getPrometheusData($event)">
         </cd-dashboard-time-selector>
@@ -72,7 +72,7 @@
     <div class="col-lg-3">
       <cd-card [cardTitle]="usedCapacityTitle"
                class="col-sm-2 d-flex w-100 h-50 pb-3"
-               aria-label="Used Capacity"
+               [attr.aria-label]="usedCapacityTitle"
                [alignItemsCenter]="true"
                [justifyContentCenter]="true">
         <span  class="ms-4 me-4 text-center">
@@ -81,7 +81,7 @@
       </cd-card>
       <cd-card [cardTitle]="averageObjectSizeTitle"
                class="col-sm-2 d-flex w-100 h-50 pt-3"
-               aria-label="Avg Object Size"
+               [attr.aria-label]="averageObjectSizeTitle"
                [alignItemsCenter]="true"
                [justifyContentCenter]="true">
         <span class="ms-4 me-4 text-center">
@@ -97,8 +97,7 @@
         <span class="pe-5 ps-5">
           <cd-alert-panel type="info">
             {{ multisiteNotConfiguredText }}
-            <span *ngIf="isZhHans">请参考&nbsp;<cd-doc section="multisite"></cd-doc>&nbsp;完成配置。</span>
-            <span *ngIf="!isZhHans">Please consult the&nbsp;<cd-doc section="multisite"></cd-doc>&nbsp;on how to configure and enable the multi-site functionality.</span>
+            <span>&nbsp;<cd-doc section="multisite"></cd-doc>&nbsp;{{ multisiteConfiguredHint }}</span>
           </cd-alert-panel>
         </span>
       </ng-template>
@@ -141,7 +140,7 @@
                          shadowClass="true"
                          i18n-title
                          class="col-sm-9 col-lg-6 align-replica-zones d-flex pt-4"
-                         aria-label="Source Zones Card">
+                         [attr.aria-label]="isZhHans ? '源 Zone 卡片' : 'Source Zones Card'">
                   <div class="row pb-4 ps-3 pe-3">
                     <cd-card *ngFor="let title of chartTitles"
                              [cardTitle]="title === 'Metadata Sync' ? metadataSyncTitle : dataSyncTitle"
@@ -149,7 +148,7 @@
                              removeBorder="true"
                              class="col-sm-9 col-lg-6"
                              [ngClass]="{ 'border-left': title === 'Data Sync' }"
-                             aria-label="Charts Card"
+                             [attr.aria-label]="isZhHans ? '图表卡片' : 'Charts Card'"
                              [alignItemsCenter]="true"
                              [justifyContentCenter]="true">
                       <span class="me-2 text-center"

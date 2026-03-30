@@ -61,8 +61,8 @@
 <ng-template #markOsdConfirmationTpl
              let-markActionDescription="markActionDescription"
              let-osdIds="osdIds">
-  <ng-container i18n><strong>OSD(s) {{ osdIds | join }}</strong> will be marked
-  <strong>{{ markActionDescription }}</strong> if you proceed.</ng-container>
+  <ng-container><strong>OSD(s) {{ osdIds | join }}</strong> 将被标记为
+  <strong>{{ markActionDescription }}</strong>，如果你继续操作。</ng-container>
 </ng-template>
 
 <ng-template #criticalConfirmationTpl
@@ -113,8 +113,8 @@
       </span>
     </cd-alert-panel>
   </div>
-  <ng-container i18n><strong>OSD {{ osdIds | join }}</strong> will be
-  <strong>{{ actionDescription }}</strong> if you proceed.</ng-container>
+  <ng-container><strong>OSD {{ osdIds | join }}</strong> 将被
+  <strong>{{ actionDescription }}</strong>，如果你继续操作。</ng-container>
 </ng-template>
 
 <ng-template #flagsTpl

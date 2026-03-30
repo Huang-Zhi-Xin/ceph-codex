@@ -61,6 +61,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   rgwMultisiteLabel: string;
   rgwGatewaysLabel: string;
   rgwConfigurationLabel: string;
+  multiClusterLabel: string;
 
   constructor(
     public notificationService: NotificationService,
@@ -89,6 +90,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.rgwMultisiteLabel = this.isZhHans ? '多站点' : 'Multi-site';
     this.rgwGatewaysLabel = this.isZhHans ? '网关' : 'Gateways';
     this.rgwConfigurationLabel = this.isZhHans ? '配置' : 'Configuration';
+    this.multiClusterLabel = this.isZhHans ? '多集群' : 'Multi-Cluster';
   }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnChanges, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { SettingsService } from '~/app/shared/api/settings.service';
@@ -28,6 +28,7 @@ export class GrafanaComponent implements OnInit, OnChanges {
   grafanaTimes: any;
   icons = Icons;
   readonly DEFAULT_TIME: string = 'from=now-1h&to=now';
+  isZhHans: boolean;
 
   @Input()
   type: string;
@@ -42,7 +43,12 @@ export class GrafanaComponent implements OnInit, OnChanges {
   @Input()
   scrollable: string = 'yes';
 
-  constructor(private sanitizer: DomSanitizer, private settingsService: SettingsService) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private settingsService: SettingsService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.grafanaTimes = [
       {
         name: $localize`Last 5 minutes`,
@@ -149,6 +155,34 @@ export class GrafanaComponent implements OnInit, OnChanges {
         value: 'from=now-5y&to=now'
       }
     ];
+  }
+
+  get resetSettingsTitle(): string {
+    return this.isZhHans ? '重置设置' : 'Reset Settings';
+  }
+
+  get showHiddenInfoTitle(): string {
+    return this.isZhHans ? '显示隐藏信息' : 'Show hidden information';
+  }
+
+  get grafanaReachabilityLinkText(): string {
+    return this.isZhHans ? '此链接' : 'this link';
+  }
+
+  get grafanaReachabilityHelpText(): string {
+    return this.isZhHans
+      ? '以检查 Grafana 是否可达，以及是否不存在 HTTPS 证书问题。接受浏览器证书例外后，可能需要重新加载此页面。'
+      : 'to check if Grafana is reachable and there are no HTTPS certificate issues. You may need to reload this page after accepting any Browser certificate exceptions';
+  }
+
+  get grafanaDashboardMissingHelpText(): string {
+    return this.isZhHans
+      ? 'Grafana 仪表板不存在。请参考'
+      : "Grafana Dashboard doesn't exist. Please refer to";
+  }
+
+  get grafanaDashboardMissingSuffixText(): string {
+    return this.isZhHans ? '了解如何向 Grafana 添加仪表板。' : 'on how to add dashboards to Grafana.';
   }
 
   ngOnInit() {

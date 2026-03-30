@@ -41,7 +41,7 @@
       <cds-table-toolbar-search *ngIf="searchField"
                                 [expandable]="false"
                                 [(ngModel)]="search"
-                                aria-label="search"
+                                [attr.aria-label]="searchAriaLabel"
                                 (valueChange)="updateFilter($event)"
                                 (clear)="onClearSearch()">
       </cds-table-toolbar-search>
@@ -375,8 +375,7 @@
      [class.expand-collapse-icon-right]="!isExpanded"
      [class.expand-collapse-icon-down]="isExpanded"
      class="expand-collapse-icon tc_expand-collapse"
-     title="Expand/Collapse Row"
-     i18n-title
+     [title]="expandCollapseRowTitle"
      (click)="toggleExpandRow(row, isExpanded, $event)">
   </a>
 </ng-template>

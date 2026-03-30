@@ -16,11 +16,10 @@
       <cds-text-label
         for="authId"
         i18n
-        helperText="Unique identifier"
-        i18n-helperText
+        helperText="唯一标识符"
         [invalid]="form.controls.authId.invalid && form.controls.authId.dirty"
         [invalidText]="jaError"
-      >Active directory access resource name
+      >Active Directory 访问资源名称
         <input
           cdsText
           type="text"
@@ -34,8 +33,7 @@
         <span
           class="invalid-feedback"
           *ngIf="form.showError('authId', form, 'required')"
-          i18n
-          >This field is required.</span
+          >此字段为必填项。</span
         >
       </ng-template>
     </div>
@@ -61,8 +59,7 @@
         <span
             class="invalid-feedback"
             *ngIf="form.showError('username', form, 'required')"
-            i18n
-        >This field is required.
+        >此字段为必填项。
         </span>
       </ng-template>
     </div>
@@ -88,8 +85,7 @@
         <span
             class="invalid-feedback"
             *ngIf="form.showError('password', form, 'required')"
-            i18n
-        >This field is required.
+        >此字段为必填项。
         </span>
       </ng-template>
     </div>
@@ -100,13 +96,11 @@
       class="form-item"
     >
       <cds-select
-        label="Linked to cluster"
-        i18n-label
+        label="关联到集群"
         formControlName="linkedToCluster"
         name="linkedToCluster"
-        cdOptionalField="Linked to cluster"
-        helperText="This resource may only be used with the linked cluster and will automatically be removed when the linked cluster is removed."
-        i18n-helperText
+        cdOptionalField="关联到集群"
+        helperText="该资源只能与所关联的集群一起使用，并会在关联集群被删除时自动移除。"
       >
         <option
           [value]="null"

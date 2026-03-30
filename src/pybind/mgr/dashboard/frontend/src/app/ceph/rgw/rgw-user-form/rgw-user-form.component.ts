@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -55,6 +55,7 @@ export class RgwUserFormComponent extends CdForm implements OnInit {
   usernameExists: boolean;
   showTenant = false;
   previousTenant: string = null;
+  isZhHans: boolean;
   @ViewChild(RgwRateLimitComponent, { static: false }) rateLimitComponent!: RgwRateLimitComponent;
   accounts: Account[] = [];
   initialUserPolicies: string[] = [];
@@ -79,9 +80,11 @@ export class RgwUserFormComponent extends CdForm implements OnInit {
     private modalService: ModalCdsService,
     private notificationService: NotificationService,
     public actionLabels: ActionLabelsI18n,
-    private rgwUserAccountService: RgwUserAccountsService
+    private rgwUserAccountService: RgwUserAccountsService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.resource = $localize`user`;
     this.subuserLabel = $localize`subuser`;
     this.s3keyLabel = $localize`S3 Key`;
@@ -89,6 +92,76 @@ export class RgwUserFormComponent extends CdForm implements OnInit {
     this.editing = this.router.url.startsWith(`/rgw/user/${URLVerbs.EDIT}`);
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
     this.createForm();
+  }
+
+  get linkAccountLabel(): string {
+    return this.isZhHans ? '关联账户' : 'Link Account';
+  }
+
+  get loadingText(): string {
+    return this.isZhHans ? '加载中...' : 'Loading...';
+  }
+
+  get selectAccountText(): string {
+    return this.isZhHans ? '-- 选择账户 --' : '-- Select an Account --';
+  }
+
+  get userIdLabel(): string {
+    return this.isZhHans ? '用户 ID' : 'User ID';
+  }
+
+  get fullNameLabel(): string {
+    return this.isZhHans ? '全名' : 'Full name';
+  }
+
+  get maximumBucketsLabel(): string {
+    return this.isZhHans ? '最大 Bucket 数' : 'Maximum buckets';
+  }
+
+  get suspendedHelpText(): string {
+    return this.isZhHans ? '暂停该用户将同时禁用该用户及其子用户。' : 'Suspending the user disables the user and subuser.';
+  }
+
+  get systemUserHelpText(): string {
+    return this.isZhHans
+      ? '系统用户不同于普通用户，RGW 服务使用它来执行管理任务以及管理 Bucket 和对象。'
+      : 'System users are distinct from regular users, they are used by the RGW service to perform administrative tasks, manage buckets and objects';
+  }
+
+  get managedPoliciesLabel(): string {
+    return this.isZhHans ? '托管策略' : 'Managed policies';
+  }
+
+  get selectManagedPoliciesText(): string {
+    return this.isZhHans ? '选择托管策略...' : 'Select managed policies...';
+  }
+
+  get s3KeyLabel(): string {
+    return this.isZhHans ? 'S3 密钥' : 'S3 key';
+  }
+
+  get accessKeyLabel(): string {
+    return this.isZhHans ? '访问密钥' : 'Access key';
+  }
+
+  get secretKeyLabel(): string {
+    return this.isZhHans ? '秘密密钥' : 'Secret key';
+  }
+
+  get userQuotaLabel(): string {
+    return this.isZhHans ? '用户配额' : 'User quota';
+  }
+
+  get bucketQuotaLabel(): string {
+    return this.isZhHans ? 'Bucket 配额' : 'Bucket quota';
+  }
+
+  get maximumSizeLabel(): string {
+    return this.isZhHans ? '最大大小' : 'Maximum size';
+  }
+
+  get maximumObjectsLabel(): string {
+    return this.isZhHans ? '最大对象数' : 'Maximum Objects';
   }
 
   createForm() {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import { TreeViewComponent } from 'carbon-components-angular';
 import { Node } from 'carbon-components-angular/treeview/tree-node.types';
@@ -50,8 +50,15 @@ export class CrushmapComponent implements OnDestroy, OnInit {
   metadataTitle: string;
   metadataKeyMap: { [key: number]: any } = {};
   data$: Observable<object>;
+  isZhHans: boolean;
 
-  constructor(private crushRuleService: CrushRuleService, private timerService: TimerService) {}
+  constructor(
+    private crushRuleService: CrushRuleService,
+    private timerService: TimerService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
 
   ngOnInit() {
     this.sub = this.timerService
@@ -74,7 +81,7 @@ export class CrushmapComponent implements OnDestroy, OnInit {
     if (0 === nodes.length) {
       return [
         {
-          label: 'No nodes!'
+          label: this.isZhHans ? '无节点！' : 'No nodes!'
         }
       ];
     }

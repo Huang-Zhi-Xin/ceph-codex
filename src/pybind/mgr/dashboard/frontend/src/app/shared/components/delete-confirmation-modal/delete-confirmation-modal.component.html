@@ -43,19 +43,16 @@
                           i18n>Yes, I am sure.</cds-checkbox>
           </ng-container>
           <ng-template #highImpactDeletion>
-            <cds-text-label label="Resource Name"
+            <cds-text-label [label]="resourceNameLabel"
                             labelInputID="resource_name"
-                            cdRequiredField="Resource Name"
+                            [cdRequiredField]="resourceNameLabel"
                             [invalid]="!deletionForm.controls.confirmInput.valid && deletionForm.controls.confirmInput.dirty"
-                            [invalidText]="ResourceError"
-                            i18n
-                            i18n-label>Resource Name
+                            [invalidText]="ResourceError">{{ resourceNameLabel }}
               <input cdsText
                      type="text"
-                     placeholder="Enter resource name to delete"
+                     [placeholder]="deletePlaceholder"
                      id="resource_name"
-                     formControlName="confirmInput"
-                     i18n-placeholder/>
+                     formControlName="confirmInput"/>
             </cds-text-label>
             <ng-template #ResourceError>
               <span *ngIf="deletionForm.showError('confirmInput', formDir, 'required')"

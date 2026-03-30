@@ -6,11 +6,29 @@
                 [dismissible]="alertType !== 'danger'"
                 (dismissed)="onDismissed()">
   <div *ngIf="expirationDays === 0"
-       i18n>Your password will expire in <strong>less than 1</strong> day. Click
-    <a routerLink="/user-profile/edit"
-       class="alert-link">here</a> to change it now.</div>
+       >
+    <ng-container *ngIf="isZhHans; else pwdExpireLessThanOneDayEn">
+      您的密码将在 <strong>{{ lessThanOneDayText }}</strong> 天后过期。点击
+      <a routerLink="/user-profile/edit"
+         class="alert-link">这里</a> 立即修改。
+    </ng-container>
+    <ng-template #pwdExpireLessThanOneDayEn>
+      Your password will expire in <strong>{{ lessThanOneDayText }}</strong> day. Click
+      <a routerLink="/user-profile/edit"
+         class="alert-link">here</a> to change it now.
+    </ng-template>
+  </div>
   <div *ngIf="expirationDays > 0"
-       i18n>Your password will expire in <strong>{{ expirationDays }}</strong> day(s). Click
-  <a routerLink="/user-profile/edit"
-     class="alert-link">here</a> to change it now.</div>
+       >
+    <ng-container *ngIf="isZhHans; else pwdExpireInDaysEn">
+      您的密码将在 <strong>{{ expirationDays }}</strong> 天后过期。点击
+      <a routerLink="/user-profile/edit"
+         class="alert-link">这里</a> 立即修改。
+    </ng-container>
+    <ng-template #pwdExpireInDaysEn>
+      Your password will expire in <strong>{{ expirationDays }}</strong> day(s). Click
+      <a routerLink="/user-profile/edit"
+         class="alert-link">here</a> to change it now.
+    </ng-template>
+  </div>
 </cd-alert-panel>

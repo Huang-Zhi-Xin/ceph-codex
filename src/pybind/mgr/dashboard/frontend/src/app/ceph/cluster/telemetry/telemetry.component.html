@@ -22,7 +22,7 @@
               behavior analysis. The data is sent secured to {{ sendToUrl }} and
               {{ sendToDeviceUrl }} (device report).</p>
             <div *ngIf="moduleEnabled">
-              The plugin is already <b>enabled</b>. Click <b>Deactivate</b> to disable it.&nbsp;
+              {{ moduleAlreadyEnabledText }}&nbsp;
               <button type="button"
                       class="btn btn-light"
                       (click)="disableModule('The Telemetry module has been disabled successfully.')"
@@ -116,8 +116,7 @@
                 <cd-helper>
                   <ng-container i18n>Includes user-provided identifying information about the cluster:</ng-container>
                   <ul>
-                    <li>Cluster description</li>
-                    <li>Contact email address</li>
+                    <li *ngFor="let item of identItems">{{ item }}</li>
                   </ul>
                 </cd-helper>
               </label>
@@ -169,7 +168,7 @@
                        class="form-control"
                        type="text"
                        formControlName="contact"
-                       placeholder="Example User <user@example.com>">
+                       [placeholder]="contactPlaceholder">
               </div>
             </div>
             <div class="form-group row">
@@ -181,8 +180,7 @@
                        class="form-control"
                        type="text"
                        formControlName="description"
-                       placeholder="My first storage cluster"
-                       i18n-placeholder>
+                       [placeholder]="descriptionPlaceholder">
               </div>
             </div>
             <div class="form-group row">
@@ -194,8 +192,7 @@
                        class="form-control"
                        type="text"
                        formControlName="organization"
-                       placeholder="Organization name"
-                       i18n-placeholder>
+                       [placeholder]="organizationPlaceholder">
               </div>
             </div>
           </ng-container>

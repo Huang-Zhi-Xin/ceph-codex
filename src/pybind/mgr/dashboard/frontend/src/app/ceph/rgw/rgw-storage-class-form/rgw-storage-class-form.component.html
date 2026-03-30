@@ -7,23 +7,22 @@
           novalidate>
       <div i18n="form title"
            class="form-header">
-        {{ action | titlecase }} {{ resource | upperFirst }}
+        {{ formTitle }}
 
         <cd-help-text [formAllFieldsRequired]="true"></cd-help-text>
       </div>
       <div class="form-item">
         <cds-select
-          label="Type"
-          i18n-label
+          [label]="typeLabel"
           for="storageClassType"
           formControlName="storageClassType"
-          [helperText]="helpTextLabels.storageClassText"
+          [helperText]="isZhHans && storageClassForm.getValue('storageClassType') === TIER_TYPE.LOCAL ? localStorageHelpText : helpTextLabels.storageClassText"
           id="storageClassType"
           [invalid]="storageClassForm.showError('storageClassType', formDir, 'required')"
           [invalidText]="storageError"
         >
           <option value=""
-                  i18n>-- Select Storage Class --</option>
+                  >{{ storageClassSelectText }}</option>
           <option *ngFor="let opt of storageClassOptions"
                   [value]="opt.value"
                   i18n>
@@ -34,8 +33,7 @@
           <span
             class="invalid-feedback"
             *ngIf="storageClassForm.showError('storageClassType', formDir, 'required')"
-            i18n
-            >This field is required.</span
+            >{{ requiredText }}</span
           >
         </ng-template>
       </div>
@@ -44,8 +42,7 @@
         <div cdsCol>
           <!-- Zone Group -->
           <cds-select
-            label="Zone Group Name"
-            i18n-label
+            [label]="zoneGroupNameLabel"
             formControlName="zonegroup"
             id="zonegroup"
             [invalid]="storageClassForm.showError('zonegroup', formDir, 'required')"
@@ -65,23 +62,21 @@
             <span
               class="invalid-feedback"
               *ngIf="storageClassForm.showError('zonegroup', formDir, 'required')"
-              i18n
-              >This field is required.</span
+              >{{ requiredText }}</span
             >
           </ng-template>
         </div>
         <div cdsCol>
           <!-- Placement Target -->
           <cds-select
-            label="Placement Target"
-            i18n-label
+            [label]="placementTargetLabel"
             formControlName="placement_target"
             id="placement_target"
             [invalid]="storageClassForm.showError('placement_target', formDir, 'required')"
             [invalidText]="placementError"
           >
             <option [value]="''"
-                    i18n>--Select--</option>
+                    >{{ selectOptionText }}</option>
             <option
               *ngFor="let placementTarget of placementTargets"
               [value]="placementTarget"
@@ -95,8 +90,7 @@
             <span
               class="invalid-feedback"
               *ngIf="storageClassForm.showError('placement_target', formDir, 'required')"
-              i18n
-              >This field is required.</span
+              >{{ requiredText }}</span
             >
           </ng-template>
         </div>
@@ -105,14 +99,14 @@
       <div class="form-item">
         <cds-text-label
           labelInputID="storage_class"
-          i18n
+          [cdRequiredField]="nameLabel"
           [disabled]="editing"
           [invalid]="
             storageClassForm.controls.storage_class.invalid &&
             storageClassForm.controls.storage_class.dirty
           "
           [invalidText]="storageClassError"
-          >Name
+          >{{ nameLabel }}
           <input
             cdsText
             type="text"
@@ -125,8 +119,7 @@
           <span
             class="invalid-feedback"
             *ngIf="storageClassForm.showError('storage_class', formDir, 'required')"
-            i18n
-            >This field is required.</span
+            >{{ requiredText }}</span
           >
         </ng-template>
       </div>
@@ -148,8 +141,7 @@
                 type="text"
                 id="region"
                 formControlName="region"
-                placeholder="e.g, us-east-1"
-                i18n-placeholder
+                [placeholder]="targetRegionPlaceholder"
                 [invalid]="storageClassForm.showError('region', formDir, 'required')"
               />
             </cds-text-label>
@@ -157,8 +149,7 @@
               <span
                 class="invalid-feedback"
                 *ngIf="storageClassForm.showError('region', formDir, 'required')"
-                i18n
-                >This field is required.</span
+                >{{ requiredText }}</span
               >
             </ng-template>
           </div>
@@ -169,15 +160,14 @@
               [invalid]="storageClassForm.showError('target_endpoint', formDir, 'required') || storageClassForm.showError('target_endpoint', formDir, 'invalidUrl')"
 
               [invalidText]="
-                            storageClassForm.controls['target_endpoint'].errors?.['required'] ? 'This field is required.' :
-                            storageClassForm.controls['target_endpoint'].errors?.['invalidUrl'] ? 'Please enter a valid URL.' : ''
+                            storageClassForm.controls['target_endpoint'].errors?.['required'] ? requiredText :
+                            storageClassForm.controls['target_endpoint'].errors?.['invalidUrl'] ? validUrlText : ''
                           "
-              i18n-invalidText
               >Target Endpoint
               <input
                 cdsText
                 formControlName="target_endpoint"
-                placeholder="e.g. 192.168.0.10, 192.168.1.0/8"
+                [placeholder]="targetEndpointPlaceholder"
                  [invalid]="storageClassForm.showError('target_endpoint', formDir, 'required') || storageClassForm.showError('target_endpoint', formDir, 'invalidUrl')"
               />
             </cds-text-label>
@@ -208,8 +198,7 @@
               <span
                 class="invalid-feedback"
                 *ngIf="storageClassForm.showError('access_key', formDir, 'required')"
-                i18n
-                >This field is required.</span
+                >{{ requiredText }}</span
               >
             </ng-template>
           </div>
@@ -239,8 +228,7 @@
               <span
                 class="invalid-feedback"
                 *ngIf="storageClassForm.showError('secret_key', formDir, 'required')"
-                i18n
-                >This field is required.</span
+                >{{ requiredText }}</span
               >
             </ng-template>
           </div>
@@ -266,8 +254,7 @@
             <span
               class="invalid-feedback"
               *ngIf="storageClassForm.showError('target_path', formDir, 'required')"
-              i18n
-              >This field is required.</span
+              >{{ requiredText }}</span
             >
           </ng-template>
         </div>
@@ -275,10 +262,9 @@
           <cds-checkbox
             id="allow_read_through"
             formControlName="allow_read_through"
-            cdOptionalField="Allow Read Through"
-            i18n
+            [cdOptionalField]="allowReadThroughLabel"
             (change)="onAllowReadThroughChange($event)"
-            >Allow Read Through
+            >{{ allowReadThroughLabel }}
             <cd-help-text>{{ helpTextLabels?.allowReadThroughText }}</cd-help-text>
           </cds-checkbox>
         </div>
@@ -286,9 +272,8 @@
           <cds-checkbox
             id="retain_head_object"
             formControlName="retain_head_object"
-            cdOptionalField="Head Object (Stub File)"
-            i18n
-            >Head Object (Stub File)
+            [cdOptionalField]="retainHeadObjectLabel"
+            >{{ retainHeadObjectLabel }}
             <cd-help-text>{{ helpTextLabels?.retainHeadObjectText }}</cd-help-text>
           </cds-checkbox>
         </div>
@@ -300,11 +285,9 @@
               formControlName="read_through_restore_days"
               id="read_through_restore_days"
               min="1"
-              label="ReadThrough Restore Days"
+              [label]="readThroughRestoreDaysLabel"
               [helperText]="helpTextLabels.readthroughrestoreDaysText"
               i18n-helperText
-              i18n-label
-              i18n
               [invalid]="
                 storageClassForm.controls.read_through_restore_days.invalid &&
                 storageClassForm.controls.read_through_restore_days.dirty
@@ -315,27 +298,24 @@
               <span
                 class="invalid-feedback"
                 *ngIf="storageClassForm.showError('read_through_restore_days', formDir, 'pattern')"
-                i18n
-                >The entered value must be a positive integer.</span
+                >{{ positiveIntegerText }}</span
               >
               <span
                 class="invalid-feedback"
                 *ngIf="storageClassForm.showError('read_through_restore_days', formDir, 'lockDays')"
-                i18n
-                >ReadThrough Restore Days must be positive.</span
+                >{{ readThroughPositiveText }}</span
               >
             </ng-template>
           </div>
           <div cdsCol>
             <cds-select
               formControlName="restore_storage_class"
-              label="Restore Storage Class"
+              [label]="restoreStorageClassLabel"
               id="restore_storage_class"
               [helperText]="helpTextLabels.restoreStorageClassText"
-              i18n-label
             >
               <option [value]="''"
-                      i18n>-- Select the glacier restore storage class --</option>
+                      >{{ glacierRestoreStorageClassText }}</option>
               <option [ngValue]="standard"
                       i18n>Standard</option>
             </cds-select>
@@ -344,15 +324,14 @@
       </div>
       } @if(isTierMatch(TIER_TYPE.GLACIER)){
       <div>
-        <legend class="cd-header"
-                i18n>Glacier Configuration</legend>
+        <legend class="cd-header">{{ glacierConfigLabel }}</legend>
         <div class="form-item form-item-append"
              cdsRow>
           <div cdsCol>
             <cds-select
               formControlName="glacier_restore_tier_type"
-              label="Glacier Restore Tier Type"
-              cdRequiredField="Glacier Restore Tier Type"
+              [label]="glacierRestoreTierTypeLabel"
+              [cdRequiredField]="glacierRestoreTierTypeLabel"
               id="glacier_restore_tier_type"
               [invalid]="
                 storageClassForm.controls.glacier_restore_tier_type.invalid &&
@@ -360,10 +339,9 @@
               "
               [invalidText]="glacierError"
               [helperText]="helpTextLabels.tiertypeText"
-              i18n-label
             >
               <option value="''"
-                      i18n>-- Select the glacier restore tier type --</option>
+                      >{{ glacierRestoreTierTypeSelectText }}</option>
               <option [ngValue]="standard"
                       i18n>Standard</option>
               <option [ngValue]="expedited"
@@ -373,8 +351,7 @@
               <span
                 class="invalid-feedback"
                 *ngIf="storageClassForm.showError('glacier_restore_tier_type', formDir, 'required')"
-                i18n
-                >This field is required.</span
+                >{{ requiredText }}</span
               >
             </ng-template>
           </div>
@@ -382,12 +359,10 @@
             <cds-number
               [id]="'glacier_restore_days'"
               [formControlName]="'glacier_restore_days'"
-              [label]="'Glacier Restore Days'"
+              [label]="glacierRestoreDaysLabel"
               [helperText]="helpTextLabels.restoreDaysText"
               [min]="1"
               i18n-helperText
-              i18n-label
-              i18n
               [invalid]="
                 storageClassForm.controls.glacier_restore_days.invalid &&
                 storageClassForm.controls.glacier_restore_days.dirty
@@ -399,14 +374,12 @@
               <span
                 class="invalid-feedback"
                 *ngIf="storageClassForm.showError('glacier_restore_days', formDir, 'pattern')"
-                i18n
-                >The entered value must be a positive integer.</span
+                >{{ positiveIntegerText }}</span
               >
               <span
                 class="invalid-feedback"
                 *ngIf="storageClassForm.showError('glacier_restore_days', formDir, 'lockDays')"
-                i18n
-                >Glacier Restore Days must be positive.</span
+                >{{ glacierRestoreDaysPositiveText }}</span
               >
             </ng-template>
           </div>
@@ -432,10 +405,9 @@
                   <div cdsCol>
                     <cds-text-label
                       labelInputID="multipart_sync_threshold"
-                      i18n
                       [helperText]="helpTextLabels.multipartSyncThresholdText"
-                      cdOptionalField="Multipart Sync Threshold"
-                      >Multipart Sync Threshold
+                      [cdOptionalField]="multipartSyncThresholdLabel"
+                      >{{ multipartSyncThresholdLabel }}
                       <input
                         cdsText
                         type="text"
@@ -448,10 +420,9 @@
                   <div cdsCol>
                     <cds-text-label
                       labelInputID="multipart_min_part_size"
-                      i18n
                       [helperText]="helpTextLabels.multipartMinPartText"
-                      cdOptionalField="Multipart Minimum Part Size"
-                      >Multipart Minimum Part Size
+                      [cdOptionalField]="multipartMinPartSizeLabel"
+                      >{{ multipartMinPartSizeLabel }}
                       <input
                         cdsText
                         type="text"

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -99,6 +99,7 @@ export class RgwStorageClassFormComponent extends CdForm implements OnInit {
   aclHelperText = AclHelperText;
   aclList: ACL[] = [];
   removedAclSourceIds: string[] = [];
+  isZhHans: boolean;
   urlValidator = (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
     return !value || validator.isURL(value) ? null : { invalidUrl: true };
@@ -112,12 +113,127 @@ export class RgwStorageClassFormComponent extends CdForm implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public formatter: FormatterService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.resource = $localize`Tiering Storage Class`;
     this.editing = this.router.url.startsWith(`/rgw/tiering/${URLVerbs.EDIT}`);
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
+  }
+
+  get requiredText(): string {
+    return this.isZhHans ? '此字段为必填项。' : 'This field is required.';
+  }
+
+  get validUrlText(): string {
+    return this.isZhHans ? '请输入有效的 URL。' : 'Please enter a valid URL.';
+  }
+
+  get targetRegionPlaceholder(): string {
+    return this.isZhHans ? '例如：us-east-1' : 'e.g, us-east-1';
+  }
+
+  get typeLabel(): string {
+    return this.isZhHans ? '类型' : 'Type';
+  }
+
+  get formTitle(): string {
+    if (this.isZhHans) {
+      return this.editing ? '编辑 Tiering Storage Class' : '创建 Tiering Storage Class';
+    }
+    return `${this.action} ${_.upperFirst(this.resource)}`.trim();
+  }
+
+  get localStorageHelpText(): string {
+    return this.isZhHans
+      ? '本地存储使用本地部署或直接连接的设备来存储数据。'
+      : 'Local storage uses on-premises or directly attached devices for data storage.';
+  }
+
+  get nameLabel(): string {
+    return this.isZhHans ? '名称' : 'Name';
+  }
+
+  get storageClassSelectText(): string {
+    return this.isZhHans ? '-- 选择存储类别 --' : '-- Select Storage Class --';
+  }
+
+  get zoneGroupNameLabel(): string {
+    return this.isZhHans ? 'Zone Group 名称' : 'Zone Group Name';
+  }
+
+  get placementTargetLabel(): string {
+    return this.isZhHans ? '放置目标' : 'Placement Target';
+  }
+
+  get selectOptionText(): string {
+    return this.isZhHans ? '-- 请选择 --' : '--Select--';
+  }
+
+  get targetEndpointPlaceholder(): string {
+    return this.isZhHans ? '例如：192.168.0.10, 192.168.1.0/8' : 'e.g. 192.168.0.10, 192.168.1.0/8';
+  }
+
+  get allowReadThroughLabel(): string {
+    return this.isZhHans ? '允许直读' : 'Allow Read Through';
+  }
+
+  get retainHeadObjectLabel(): string {
+    return this.isZhHans ? '头对象（Stub 文件）' : 'Head Object (Stub File)';
+  }
+
+  get readThroughRestoreDaysLabel(): string {
+    return this.isZhHans ? '直读恢复天数' : 'ReadThrough Restore Days';
+  }
+
+  get positiveIntegerText(): string {
+    return this.isZhHans ? '输入值必须为正整数。' : 'The entered value must be a positive integer.';
+  }
+
+  get readThroughPositiveText(): string {
+    return this.isZhHans ? '直读恢复天数必须为正数。' : 'ReadThrough Restore Days must be positive.';
+  }
+
+  get restoreStorageClassLabel(): string {
+    return this.isZhHans ? '恢复存储类别' : 'Restore Storage Class';
+  }
+
+  get glacierRestoreStorageClassText(): string {
+    return this.isZhHans
+      ? '-- 选择 Glacier 恢复存储类别 --'
+      : '-- Select the glacier restore storage class --';
+  }
+
+  get glacierConfigLabel(): string {
+    return this.isZhHans ? 'Glacier 配置' : 'Glacier Configuration';
+  }
+
+  get glacierRestoreTierTypeLabel(): string {
+    return this.isZhHans ? 'Glacier 恢复层级类型' : 'Glacier Restore Tier Type';
+  }
+
+  get glacierRestoreTierTypeSelectText(): string {
+    return this.isZhHans
+      ? '-- 选择 Glacier 恢复层级类型 --'
+      : '-- Select the glacier restore tier type --';
+  }
+
+  get glacierRestoreDaysLabel(): string {
+    return this.isZhHans ? 'Glacier 恢复天数' : 'Glacier Restore Days';
+  }
+
+  get glacierRestoreDaysPositiveText(): string {
+    return this.isZhHans ? 'Glacier 恢复天数必须为正数。' : 'Glacier Restore Days must be positive.';
+  }
+
+  get multipartSyncThresholdLabel(): string {
+    return this.isZhHans ? '分片同步阈值' : 'Multipart Sync Threshold';
+  }
+
+  get multipartMinPartSizeLabel(): string {
+    return this.isZhHans ? '最小分片大小' : 'Multipart Minimum Part Size';
   }
 
   ngOnInit() {

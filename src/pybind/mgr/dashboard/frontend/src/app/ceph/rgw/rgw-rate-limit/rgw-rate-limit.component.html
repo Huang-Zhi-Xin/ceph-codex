@@ -1,13 +1,8 @@
 <fieldset *ngIf="type">
-  <legend class="cd-header"
-          i18n>
-    Rate Limit
-    <cd-help-text *ngIf="type === 'user'">
-      The User Rate Limit controls the max read/write operations and data per minute for each user.
-    </cd-help-text>
-    <cd-help-text *ngIf="type === 'bucket'">
-      The Bucket Rate Limit controls the max read/write operations and data per minute for each
-      bucket.
+  <legend class="cd-header">
+    {{ legendLabel }}
+    <cd-help-text>
+      {{ typeHelpText }}
     </cd-help-text>
   </legend>
   <form name="form"
@@ -21,13 +16,12 @@
         <div>
           <cd-alert-panel type="info"
                           class="me-1"
-                          id="global-ratelimit-info"
-                          i18n>
+                          id="global-ratelimit-info">
             <div>
-              <span class="bold">Global Rate Limit</span> <br />Max. read bytes :
-              {{ globalRateLimit.max_read_bytes | dimlessBinaryPerMinute }} <br />Max. read ops :
-              {{ globalRateLimit.max_read_ops }} <br />Max. write bytes :
-              {{ globalRateLimit.max_write_bytes | dimlessBinaryPerMinute }} <br />Max. write ops :
+              <span class="bold">{{ globalRateLimitTitle }}</span> <br />{{ maxReadBytesLabel }} :
+              {{ globalRateLimit.max_read_bytes | dimlessBinaryPerMinute }} <br />{{ maxReadOpsLabel }} :
+              {{ globalRateLimit.max_read_ops }} <br />{{ maxWriteBytesLabel }} :
+              {{ globalRateLimit.max_write_bytes | dimlessBinaryPerMinute }} <br />{{ maxWriteOpsLabel }} :
               {{ globalRateLimit.max_write_ops }}
             </div>
           </cd-alert-panel>
@@ -39,8 +33,8 @@
     <div class="form-item">
       <cds-checkbox id="rate_limit_enabled"
                     formControlName="rate_limit_enabled">
-        <ng-container i18n>Enabled</ng-container>
-        <cd-help-text i18n>Toggle to enable or disable the rate limit settings.</cd-help-text>
+        <ng-container>{{ enabledLabel }}</ng-container>
+        <cd-help-text>{{ enabledHelpText }}</cd-help-text>
       </cds-checkbox>
     </div>
 
@@ -49,8 +43,8 @@
          *ngIf="form.controls.rate_limit_enabled.value">
       <cds-checkbox id="rate_limit_max_readOps_unlimited"
                     formControlName="rate_limit_max_readOps_unlimited">
-        <ng-container i18n>Unlimited read ops</ng-container>
-        <cd-help-text i18n>Select this box to allow unlimited read operations.</cd-help-text>
+        <ng-container>{{ unlimitedReadOpsLabel }}</ng-container>
+        <cd-help-text>{{ unlimitedReadOpsHelpText }}</cd-help-text>
       </cds-checkbox>
     </div>
 
@@ -63,11 +57,9 @@
     >
       <cds-number id="rate_limit_max_readOps"
                   formControlName="rate_limit_max_readOps"
-                  label="Maximum read ops"
-                  i18n-label
-                  cdRequiredField="Maximum read ops"
-                  helperText="Limits the number of read operations per minute for a user."
-                  i18n-helperText
+                  [label]="maxReadOpsLabel"
+                  [cdRequiredField]="maxReadOpsLabel"
+                  [helperText]="maxReadOpsHelpText"
                   [invalid]="form.controls.rate_limit_max_readOps.invalid && form.controls.rate_limit_max_readOps.dirty"
                   [invalidText]="rateLimitMaxReadOpsError">
       </cds-number>
@@ -76,20 +68,17 @@
         <span
           class="invalid-feedback"
           *ngIf="form.showError('rate_limit_max_readOps', frm, 'required')"
-          i18n
-          >This field is required.</span
+          >{{ requiredText }}</span
         >
         <span
           class="invalid-feedback"
           *ngIf="form.showError('rate_limit_max_readOps', frm, 'rateOpsMaxSize')"
-          i18n
-          >The value is not valid.</span
+          >{{ invalidValueText }}</span
         >
         <span
           class="invalid-feedback"
           *ngIf="form.showError('rate_limit_max_readOps', frm, 'min')"
-          i18n
-          >Enter a positive number.</span
+          >{{ positiveNumberText }}</span
         >
       </ng-template>
     </div>
@@ -99,8 +88,8 @@
          *ngIf="form.controls.rate_limit_enabled.value">
       <cds-checkbox id="rate_limit_max_writeOps_unlimited"
                     formControlName="rate_limit_max_writeOps_unlimited">
-        <ng-container i18n>Unlimited write ops</ng-container>
-        <cd-help-text i18n>Select this box to allow unlimited write operations.</cd-help-text>
+        <ng-container>{{ unlimitedWriteOpsLabel }}</ng-container>
+        <cd-help-text>{{ unlimitedWriteOpsHelpText }}</cd-help-text>
       </cds-checkbox>
     </div>
 
@@ -114,11 +103,9 @@
     >
       <cds-number id="rate_limit_max_writeOps"
                   formControlName="rate_limit_max_writeOps"
-                  label="Maximum write ops"
-                  i18n-label
-                  cdRequiredField="Maximum write ops"
-                  helperText="Limits the number of write operations per minute for a user."
-                  i18n-helperText
+                  [label]="maxWriteOpsLabel"
+                  [cdRequiredField]="maxWriteOpsLabel"
+                  [helperText]="maxWriteOpsHelpText"
                   [invalid]="form.controls.rate_limit_max_writeOps.invalid && form.controls.rate_limit_max_writeOps.dirty"
                   [invalidText]="rateLimitMaxWriteOpsError">
       </cds-number>
@@ -127,20 +114,17 @@
         <span
           class="invalid-feedback"
           *ngIf="form.showError('rate_limit_max_writeOps', frm, 'required')"
-          i18n
-          >This field is required.</span
+          >{{ requiredText }}</span
         >
         <span
           class="invalid-feedback"
           *ngIf="form.showError('rate_limit_max_writeOps', frm, 'rateOpsMaxSize')"
-          i18n
-          >The value is not valid.</span
+          >{{ invalidValueText }}</span
         >
         <span
           class="invalid-feedback"
           *ngIf="form.showError('rate_limit_max_writeOps', frm, 'min')"
-          i18n
-          >Enter a positive number.</span
+          >{{ positiveNumberText }}</span
         >
       </ng-template>
     </div>
@@ -150,8 +134,8 @@
          *ngIf="form.controls.rate_limit_enabled.value">
       <cds-checkbox id="rate_limit_max_readBytes_unlimited"
                     formControlName="rate_limit_max_readBytes_unlimited">
-        <ng-container i18n>Unlimited read bytes</ng-container>
-        <cd-help-text i18n>Select this box to allow unlimited read bytes.</cd-help-text>
+        <ng-container>{{ unlimitedReadBytesLabel }}</ng-container>
+        <cd-help-text>{{ unlimitedReadBytesHelpText }}</cd-help-text>
       </cds-checkbox>
     </div>
 
@@ -164,9 +148,8 @@
       "
     >
       <cds-text-label labelInputID="rate_limit_max_readBytes"
-                      cdRequiredField="Maximum read bytes"
-                      helperText="Limits the number of read bytes per minute for a user."
-                      i18n-helperText
+                      [cdRequiredField]="maxReadBytesLabel"
+                      [helperText]="maxReadBytesHelpText"
                       [invalid]="form.controls.rate_limit_max_readBytes.invalid && form.controls.rate_limit_max_readBytes.dirty"
                       [invalidText]="maxReadBytesError">
         <input cdsText
@@ -180,16 +163,13 @@
       <ng-template #maxReadBytesError>
         <span
           class="invalid-feedback"
-          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'required')"
-          i18n>This field is required.</span>
+          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'required')">{{ requiredText }}</span>
         <span
           class="invalid-feedback"
-          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'rateByteMaxSize')"
-          i18n>The value is not valid.</span>
+          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'rateByteMaxSize')">{{ invalidValueText }}</span>
         <span
           class="invalid-feedback"
-          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'min')"
-          i18n>Enter a positive number.</span>
+          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'min')">{{ positiveNumberText }}</span>
       </ng-template>
     </div>
 
@@ -198,8 +178,8 @@
          *ngIf="form.controls.rate_limit_enabled.value">
       <cds-checkbox id="rate_limit_max_writeBytes_unlimited"
                     formControlName="rate_limit_max_writeBytes_unlimited">
-        <ng-container i18n>Unlimited write bytes</ng-container>
-        <cd-help-text i18n>Select this box to allow unlimited write bytes.</cd-help-text>
+        <ng-container>{{ unlimitedWriteBytesLabel }}</ng-container>
+        <cd-help-text>{{ unlimitedWriteBytesHelpText }}</cd-help-text>
       </cds-checkbox>
     </div>
 
@@ -211,9 +191,8 @@
         !form.getValue('rate_limit_max_writeBytes_unlimited')
       ">
       <cds-text-label labelInputID="rate_limit_max_writeBytes"
-                      cdRequiredField="Maximum write bytes"
-                      helperText="Limits the number of write bytes per minute for a user."
-                      i18n-helperText
+                      [cdRequiredField]="maxWriteBytesLabel"
+                      [helperText]="maxWriteBytesHelpText"
                       [invalid]="form.controls.rate_limit_max_writeBytes.invalid && form.controls.rate_limit_max_writeBytes.dirty"
                       [invalidText]="maxWriteBytesError">
         <input cdsText
@@ -227,16 +206,13 @@
       <ng-template #maxWriteBytesError>
         <span
           class="invalid-feedback"
-          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'required')"
-          i18n>This field is required.</span>
+          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'required')">{{ requiredText }}</span>
         <span
           class="invalid-feedback"
-          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'rateByteMaxSize')"
-          i18n>The value is not valid.</span>
+          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'rateByteMaxSize')">{{ invalidValueText }}</span>
         <span
           class="invalid-feedback"
-          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'min')"
-          i18n>Enter a positive number.</span>
+          *ngIf="form.showError('rate_limit_max_readBytes', frm, 'min')">{{ positiveNumberText }}</span>
       </ng-template>
     </div>
   </form>

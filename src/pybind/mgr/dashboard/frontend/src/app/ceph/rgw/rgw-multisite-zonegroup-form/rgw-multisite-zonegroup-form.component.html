@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">{{ action | titlecase }} Zone Group</ng-container>
+  <ng-container class="modal-title">{{ formTitle }}</ng-container>
 
   <ng-container class="modal-content">
     <form name="multisiteZonegroupForm"
@@ -34,7 +33,7 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Zone group name..."
+                 [placeholder]="zonegroupNamePlaceholder"
                  id="zonegroupName"
                  name="zonegroupName"
                  formControlName="zonegroupName">
@@ -91,7 +90,7 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="e.g, http://ceph-node-00.com:80"
+                 [placeholder]="endpointPlaceholder"
                  id="zonegroup_endpoints"
                  name="zonegroup_endpoints"
                  formControlName="zonegroup_endpoints">
@@ -120,7 +119,7 @@
         </div>
       </div>
       <div *ngIf="action === 'edit'">
-        <legend>Placement targets</legend>
+        <legend>{{ isZhHans ? '放置目标' : 'Placement targets' }}</legend>
         <ng-container formArrayName="placementTargets">
           <div *ngFor="let item of placementTargets.controls; let index = index; trackBy: trackByFn">
             <div class="card"
@@ -130,22 +129,22 @@
                 <span class="float-end clickable"
                       name="remove_placement_target"
                       (click)="removePlacementTarget(index)"
-                      ngbTooltip="Remove">&times;</span>
+                      [ngbTooltip]="isZhHans ? '移除' : 'Remove'">&times;</span>
               </div>
 
               <div class="card-body">
                 <!-- Placement Id -->
                 <div class="form-group row">
-                  <label i18n
+                  <label
                          class="cd-col-form-label required"
-                         for="placement_id">Placement Id</label>
+                         for="placement_id">{{ isZhHans ? '放置 ID' : 'Placement Id' }}</label>
                   <div class="cd-col-form-input">
                     <input type="text"
                            class="form-control"
                            name="placement_id"
                            id="placement_id"
                            formControlName="placement_id"
-                           placeholder="eg. default-placement">
+                           [placeholder]="placementIdPlaceholder">
                     <span class="invalid-feedback">
                       <span *ngIf="showError(index, 'placement_id', formDir, 'required')"
                             i18n>This field is required.</span>
@@ -155,31 +154,31 @@
 
                 <!-- Tags-->
                 <div class="form-group row">
-                  <label i18n
+                  <label
                          class="cd-col-form-label"
-                         for="tags">Tags</label>
+                         for="tags">{{ isZhHans ? '标签' : 'Tags' }}</label>
                   <div class="cd-col-form-input">
                     <input type="text"
                            class="form-control"
                            name="tags"
                            id="tags"
                            formControlName="tags"
-                           placeholder="comma separated tags, eg. default-placement, ssd">
+                           [placeholder]="tagsPlaceholder">
                   </div>
                 </div>
 
                 <!-- Storage Class -->
                 <div class="form-group row">
-                  <label i18n
+                  <label
                          class="cd-col-form-label"
-                         for="storage_class">Storage Class</label>
+                         for="storage_class">{{ isZhHans ? '存储类别' : 'Storage Class' }}</label>
                   <div class="cd-col-form-input">
                     <input type="text"
                            class="form-control"
                            name="storage_class"
                            id="storage_class"
                            formControlName="storage_class"
-                           placeholder="eg. Standard-tier">
+                           [placeholder]="storageClassPlaceholder">
                   </div>
                 </div>
               </div>
@@ -198,7 +197,7 @@
     <div class="modal-footer">
       <cd-form-button-panel (submitActionEvent)="submit()"
                             [form]="multisiteZonegroupForm"
-                            [submitText]="(action | titlecase) + ' ' + 'Zone Group'"></cd-form-button-panel>
+                            [submitText]="formTitle"></cd-form-button-panel>
     </div>
     </form>
   </ng-container>

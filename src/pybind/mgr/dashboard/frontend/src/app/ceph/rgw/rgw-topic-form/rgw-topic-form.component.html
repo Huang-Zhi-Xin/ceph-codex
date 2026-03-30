@@ -6,11 +6,9 @@
         [formGroup]="topicForm"
         novalidate>
     <div class="form-header">
-      {{ action | titlecase }} {{ resource | upperFirst }}
+      {{ formTitle }}
       <cd-help-text>
-        <span i18n>
-            Configure the push endpoint parameters to send notifications. On successful creation, you'll receive the topic's unique Amazon Resource Name
-        </span>
+        <span>{{ topicConfigHelpText }}</span>
       </cd-help-text>
     </div>
 
@@ -19,28 +17,26 @@
       <!-- Topic Type-->
       <div cdsCol>
         <cds-select formControlName="endpointType"
-                    label="Type"
-                    i18n-label
-                    cdRequiredField="Type"
+                    [label]="topicTypeLabel"
+                    [cdRequiredField]="topicTypeLabel"
                     id="endpointType"
                     (change)="onEndpointTypeChange();"
                     [invalid]="topicForm.controls.endpointType.invalid && topicForm.controls.endpointType.dirty"
                     [invalidText]="topicTypeError"
-                    helperText="This user will manage and configure the topic’s settings."
-                    i18n-helperText>
+                    [helperText]="endpointTypeHelperText">
           <option i18n
                   *ngIf="endpointType === null"
-                  value="null">Loading... </option>
+                  value="null">{{ loadingText }} </option>
           <option i18n
                   *ngIf="endpointType !== null"
-                  value="">-- Select a Topic type --</option>
+                  value="">{{ selectTopicTypeText }}</option>
           <option *ngFor="let data of endpointType"
                   i18n>{{ data | upperFirst }} </option>
         </cds-select>
         <ng-template #topicTypeError>
           <span class="invalid-feedback"
                 *ngIf="topicForm.showError('endpointType', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
         </ng-template>
       </div>
 
@@ -48,20 +44,19 @@
       <div cdsCol>
         <cds-select
           formControlName="owner"
-          label="User"
-          i18n-label
-          cdRequiredField="Owner"
+          [label]="ownerLabel"
+          [cdRequiredField]="ownerLabel"
           [invalid]="topicForm.controls.owner.invalid && topicForm.controls.owner.dirty"
           id="owner"
-          helperText="This owner will define and control the topic’s settings"
+          [helperText]="ownerHelperText"
           [invalidText]="ownerError"
-          i18n-helperText>
+          >
           <option i18n
                   *ngIf="owners === null"
-                  value="null">Loading... </option>
+                  value="null">{{ loadingText }} </option>
           <option i18n
                   *ngIf="owners !== null"
-                  value="">-- Select a user --</option>
+                  value="">{{ selectUserText }}</option>
           <option *ngFor="let data of owners"
                   i18n
                   [value]="data">{{ data }}</option>
@@ -69,7 +64,7 @@
         <ng-template #ownerError>
           <span class="invalid-feedback"
                 *ngIf="topicForm.showError('owner', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
         </ng-template>
       </div>
     </div>
@@ -87,7 +82,7 @@
             cdRequiredField="Name"
             [invalid]="topicForm.controls.name.invalid && topicForm.controls.name.dirty"
             [invalidText]="nameError"
-            helperText="Enter a Topic name">Name
+            [helperText]="nameHelperText">Name
 
           <input cdsText
                  type="text"
@@ -100,7 +95,7 @@
           <ng-template #nameError>
             <span class="invalid-feedback"
                   *ngIf="topicForm.showError('name', formDir, 'required')"
-                  i18n>This field is required.</span>
+                  >{{ requiredText }}</span>
             <span class="invalid-feedback"
                   *ngIf="topicForm.showError('name', formDir, 'notUnique')"
                   i18n>The name is already in use. Please choose a different one</span>
@@ -114,7 +109,7 @@
                   cdsCol
                   class="cd-header">
                 Generate push endpoint
-            <cd-help-text> Configure the endpoint URL to receive push notifications</cd-help-text>
+            <cd-help-text>{{ generatePushEndpointHelpText }}</cd-help-text>
           </legend>
 
           <!-- Enable SSL -->
@@ -162,24 +157,22 @@
         <div cdsCol>
           <cds-text-label
             labelInputID="fqdn"
-            cdRequiredField="RGW Gateway Hostname"
+            [cdRequiredField]="rgwGatewayHostnameLabel"
             [invalid]="topicForm.controls.fqdn.invalid && topicForm.controls.fqdn.dirty"
             [invalidText]="fqdnError"
-            helperText="Enter the FQDN to configure the topic's settings and behavior"
-            i18n-helperText
-            i18n>
-           RGW Gateway hostname
+            [helperText]="fqdnHelperText"
+            >{{ rgwGatewayHostnameLabel }}
           <input cdsText
                  type="text"
                  id="fqdn"
-                 placeholder="e.g., 127.0.0.1 or localhost"
+                 [placeholder]="fqdnPlaceholder"
                  formControlName="fqdn"
                  [invalid]="topicForm.controls.fqdn.invalid && topicForm.controls.fqdn.dirty"
                  (change)="generatePushEndpoint()"/>
           </cds-text-label>
           <ng-template #fqdnError>
             <span class="invalid-feedback"
-                  *ngIf="topicForm.showError('fqdn', formDir, 'required')">This field is required</span>
+                  *ngIf="topicForm.showError('fqdn', formDir, 'required')">{{ requiredText }}</span>
           </ng-template>
         </div>
 
@@ -195,13 +188,12 @@
             [invalid]="topicForm.controls.port.invalid && topicForm.controls.port.dirty"
             [invalidText]="portError"
             (change)="generatePushEndpoint()"
-            helperText="Enter the port number for the push endpoint"
-            i18n-helperText
+            [helperText]="portHelperText"
           ></cds-number>
           <ng-template #portError>
             <span class="invalid-feedback"
                   *ngIf="topicForm.showError('port', formDir, 'required')"
-                  i18n>This field is required</span>
+                  >{{ requiredText }}</span>
             <span class="invalid-feedback"
                   *ngIf="topicForm.controls.port.hasError('pattern') && topicForm.controls.port.touched"
                   i18n> Port must be a valid integer</span>
@@ -217,8 +209,7 @@
         <div cdsCol>
           <cds-text-label labelInputID="User"
                           i18n
-                          helperText="Enter the user for the push endpoint"
-                          i18n-helperText>
+                          [helperText]="pushEndpointUserHelperText">
             User
             <input cdsText
                    type="text"
@@ -235,8 +226,7 @@
                               [invalid]="!topicForm.controls.password.valid && topicForm.controls.password.dirty"
                               [invalidText]="passwordError"
                               i18n
-                              helperText="Enter the password for the push endpoint"
-                              i18n-helperText
+                              [helperText]="pushEndpointPasswordHelperText"
                               >
             Password
             <input cdsPassword
@@ -264,8 +254,7 @@
         <div cdsCol>
           <cds-text-label labelInputID="Virtual Host(vhost)"
                           i18n
-                          helperText="Enter the vhost for the push endpoint"
-                          i18n-helperText>
+                          [helperText]="vhostHelperText">
             Virtual Host(vhost)
           <input cdsText
                  type="text"
@@ -284,12 +273,10 @@
           <cds-text-label
             labelInputID="push_endpoint"
             i18n
-            cdRequiredField="Push endpoint"
+            [cdRequiredField]="pushEndpointLabel"
             [invalid]="topicForm.controls.push_endpoint.invalid && topicForm.controls.push_endpoint.dirty"
             [invalidText]="endpointError"
-            helperText="Specify the endpoint URL for receiving push notifications"
-            i18n-helperText>
-            Push endpoint
+            [helperText]="pushEndpointHelperText">{{ pushEndpointLabel }}
             <input
               cdsText
               type="text"
@@ -342,8 +329,7 @@
                *ngIf="selectedOption === hostProtocols.AMQP || selectedOption === hostProtocols.KAFKA">
             <cds-text-label labelInputID="Ca-location"
                             i18n
-                            helperText="The file path of the CA certificate used to verify the server"
-                            i18n-helperText>
+                            [helperText]="caLocationHelperText">
               CA location
               <input cdsText
                      type="text"
@@ -355,8 +341,7 @@
                *ngIf="selectedOption === hostProtocols.AMQP">
             <cds-text-label labelInputID="AMQP exchange"
                             i18n
-                            helperText="Name of the AMQP exchange to publish messages to; must exist on the broker"
-                            i18n-helperText>
+                            [helperText]="amqpExchangeHelperText">
               AMQP exchange
               <input cdsText
                      type="text"
@@ -372,10 +357,8 @@
                         label="Mechanism"
                         i18n-label
                         id="mechanism"
-                        helperText="Select the authentication mechanism to connect to the Kafka broker"
-                        i18n-helperText>
-              <option i18n
-                      value="">-- Select a KAFKA mechanism --</option>
+                        [helperText]="kafkaMechanismHelperText">
+              <option value="">{{ selectKafkaMechanismText }}</option>
               <option *ngFor="let data of kafkaMechanism"
                       i18n>{{ data }}</option>
             </cds-select>
@@ -388,11 +371,9 @@
           <div cdsCol
                *ngIf="selectedOption === hostProtocols.AMQP || selectedOption === hostProtocols.KAFKA">
             <cds-select formControlName="ack_level"
-                        label="Ack level"
-                        i18n-label
+                        [label]="ackLevelLabel"
                         id="ack_level"
-                        helperText="Select the acknowledgment level to control message delivery guarantees between client and broker"
-                        i18n-helperText>
+                        [helperText]="ackLevelHelperText">
               <option i18n
                       value="">-- Select the {{ selectedOption }} ack level --</option>
               <option *ngFor="let level of ackLevels"
@@ -406,8 +387,7 @@
                *ngIf="selectedOption === hostProtocols.KAFKA">
             <cds-text-label labelInputID="kafka_brokers"
                             i18n
-                            helperText="Specify the address of the Kafka broker (e.g., host:9092) "
-                            i18n-helperText>
+                            [helperText]="kafkaBrokersHelperText">
               Kafka brokers
               <input cdsText
                      type="text"
@@ -424,7 +404,7 @@
                   cdsCol
                   class="cd-header">
             Additional common attributes
-            <cd-help-text>Configure additional attributes to customize the topic's behavior and settings</cd-help-text>
+            <cd-help-text>{{ additionalCommonAttributesHelpText }}</cd-help-text>
           </legend>
 
           <!-- Persistent-->
@@ -444,8 +424,7 @@
           <div cdsCol>
             <cds-text-label labelInputID="opaque_data"
                             i18n
-                            i18n-helperText
-                            helperText="A user-defined metadata added to all notifications that are triggered by the topic.">
+                            [helperText]="opaqueDataHelperText">
               Opaque data
               <input cdsText
                      type="text"
@@ -458,36 +437,30 @@
           <div cdsCol>
             <cds-number id="time_to_live"
                         formControlName="time_to_live"
-                        label="Time to live"
-                        i18n-label
+                        [label]="timeToLiveLabel"
                         [min]="1"
-                        helperText="Time limit (in seconds) for retaining notifications"
-                        i18n-helperText>Time to live </cds-number>
+                        [helperText]="timeToLiveHelperText">{{ timeToLiveLabel }}</cds-number>
           </div>
 
           <!-- Max retries-->
           <div cdsCol>
             <cds-number id="max_retries"
-                        label="Max retries"
+                        [label]="maxRetriesLabel"
                         formControlName="max_retries"
-                        i18n-label
                         [min]="1"
-                        helperText="Max retries before expiring notifications"
-                        i18n-helperText> Max retries </cds-number>
+                        [helperText]="maxRetriesHelperText">{{ maxRetriesLabel }}</cds-number>
           </div>
 
           <!-- Retry sleep duration-->
           <div cdsCol>
             <cds-number
               id="retry_sleep_duration"
-              label="Retry sleep duration"
+              [label]="retrySleepDurationLabel"
               formControlName="retry_sleep_duration"
-              i18n-label
               [min]="1"
-              helperText="Controls the frequency of retrying the notifications"
-              i18n-helperText
+              [helperText]="retrySleepDurationHelperText"
             >
-              Retry sleep duration
+              {{ retrySleepDurationLabel }}
             </cds-number>
           </div>
         </div>

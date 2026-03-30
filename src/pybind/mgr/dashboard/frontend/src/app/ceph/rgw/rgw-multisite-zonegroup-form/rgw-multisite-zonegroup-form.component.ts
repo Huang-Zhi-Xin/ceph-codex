@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import {
   UntypedFormArray,
   UntypedFormBuilder,
@@ -51,18 +51,50 @@ export class RgwMultisiteZonegroupFormComponent implements OnInit {
   addedZones: string[];
   disableDefault = false;
   disableMaster = false;
+  isZhHans: boolean;
 
   constructor(
     public activeModal: NgbActiveModal,
     public actionLabels: ActionLabelsI18n,
     public rgwZonegroupService: RgwZonegroupService,
     public notificationService: NotificationService,
-    private formBuilder: UntypedFormBuilder
+    private formBuilder: UntypedFormBuilder,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.action = this.editing
       ? this.actionLabels.EDIT + this.resource
       : this.actionLabels.CREATE + this.resource;
     this.createForm();
+  }
+
+  get formTitle(): string {
+    if (this.isZhHans) {
+      return this.action === 'edit' ? '编辑 Zone Group' : '创建 Zone Group';
+    }
+    return `${this.action} Zone Group`;
+  }
+
+  get zonegroupNamePlaceholder(): string {
+    return this.isZhHans ? 'Zone Group 名称...' : 'Zone group name...';
+  }
+
+  get endpointPlaceholder(): string {
+    return 'e.g, http://ceph-node-00.com:80';
+  }
+
+  get placementIdPlaceholder(): string {
+    return this.isZhHans ? '例如：default-placement' : 'eg. default-placement';
+  }
+
+  get tagsPlaceholder(): string {
+    return this.isZhHans
+      ? '逗号分隔标签，例如：default-placement, ssd'
+      : 'comma separated tags, eg. default-placement, ssd';
+  }
+
+  get storageClassPlaceholder(): string {
+    return this.isZhHans ? '例如：Standard-tier' : 'eg. Standard-tier';
   }
 
   createForm() {

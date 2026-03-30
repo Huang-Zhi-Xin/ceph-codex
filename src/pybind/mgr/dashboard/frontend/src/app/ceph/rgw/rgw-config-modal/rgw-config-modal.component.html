@@ -9,7 +9,7 @@
       <div class="form-group row">
         <label class="cd-col-form-label required"
                for="encryptionType"
-               i18n>Encryption Type</label>
+               >{{ encryptionTypeLabel }}</label>
         <div class="col-md-auto custom-checkbox form-check-inline ms-3">
           <input class="form-check-input"
                  formControlName="encryptionType"
@@ -39,11 +39,11 @@
         </div>
       </div>
 
-      <div *ngIf="configForm.getValue('encryptionType') === ENCRYPTION_TYPE.SSE_KMS || configForm.getValue('encryptionType') === ENCRYPTION_TYPE.SSE_S3">
-        <div class="form-group row">
-          <label class="cd-col-form-label required"
-                 for="kms_provider"
-                 i18n>Key management service provider</label>
+        <div *ngIf="configForm.getValue('encryptionType') === ENCRYPTION_TYPE.SSE_KMS || configForm.getValue('encryptionType') === ENCRYPTION_TYPE.SSE_S3">
+          <div class="form-group row">
+            <label class="cd-col-form-label required"
+                   for="kms_provider"
+                   >{{ kmsProviderLabel }}</label>
           <div class="cd-col-form-input">
             <select id="kms_provider"
                     class="form-select"
@@ -59,7 +59,7 @@
                       [value]="provider">{{ provider }}</option>
             </select>
             <cd-help-text>
-              <span i18n>Where the encryption keys are stored.
+              <span>{{ kmsProviderHelpText }}
               </span>
             </cd-help-text>
             <span class="invalid-feedback"
@@ -74,7 +74,7 @@
           <div class="form-group row">
             <label class="cd-col-form-label required"
                    for="auth"
-                   i18n>Authentication Method</label>
+                   >{{ authenticationMethodLabel }}</label>
             <div class="cd-col-form-input">
               <select class="form-select"
                       id="auth"
@@ -83,7 +83,7 @@
                         [value]="auth">{{ auth }}</option>
               </select>
               <cd-help-text>
-                <span i18n>Type of authentication method to be used with Vault
+                <span>{{ authenticationMethodHelpText }}
                 </span>
               </cd-help-text>
               <span class="invalid-feedback"
@@ -97,7 +97,7 @@
           <div class="form-group row">
             <label class="cd-col-form-label required"
                    for="secret_engine"
-                   i18n>Secret Engine</label>
+                   >{{ secretEngineLabel }}</label>
             <div class="cd-col-form-input">
               <select class="form-select"
                       id="secret_engine"
@@ -106,7 +106,7 @@
                         [value]="secret_engine">{{ secret_engine }}</option>
               </select>
               <cd-help-text>
-                <span i18n>Vault Secret Engine to be used to retrieve encryption keys.
+                <span>{{ secretEngineHelpText }}
                 </span>
               </cd-help-text>
               <span class="invalid-feedback"
@@ -120,8 +120,7 @@
           <div class="form-group row">
             <label class="cd-col-form-label"
                    for="secret_path"
-                   i18n>Secret Path
-            </label>
+                   >{{ secretPathLabel }}</label>
             <div class="cd-col-form-input">
               <input  class="form-control"
                       type="text"
@@ -129,7 +128,7 @@
                       formControlName="secret_path"
                       [placeholder]="secretPathPlaceholder">
                 <cd-help-text>
-                  <span i18n>Vault secret URL prefix, which can be used to restrict access to a particular subset of the Vault secret space.
+                  <span>{{ secretPathHelpText }}
                   </span>
                 </cd-help-text>
               <span class="invalid-feedback"
@@ -143,8 +142,7 @@
           <div class="form-group row">
             <label class="cd-col-form-label"
                    for="namespace"
-                   i18n>Namespace
-            </label>
+                   >{{ namespaceLabel }}</label>
             <div class="cd-col-form-input">
               <input  class="form-control"
                       id="namespace"
@@ -152,7 +150,7 @@
                       [placeholder]="namespacePlaceholder"
                       formControlName="namespace">
               <cd-help-text>
-                <span i18n>Vault Namespace to be used to select your tenant.
+                <span>{{ namespaceHelpText }}
                 </span>
               </cd-help-text>
             </div>
@@ -163,8 +161,7 @@
           <div class="form-group row">
             <label  class="cd-col-form-label required"
                     for="addr">
-              <span i18n
-                    *ngIf="configForm.getValue('kms_provider') === KMS_PROVIDER.VAULT">Vault Address
+              <span *ngIf="configForm.getValue('kms_provider') === KMS_PROVIDER.VAULT">{{ vaultAddressLabel }}
               </span>
               <span i18n
                     *ngIf="configForm.getValue('kms_provider') === KMS_PROVIDER.KMIP">KMIP Address
@@ -177,8 +174,7 @@
                       [placeholder]="addressPlaceholder"
                       i18n>
                 <cd-help-text >
-                  <span *ngIf="configForm.getValue('kms_provider') === KMS_PROVIDER.VAULT"
-                        i18n>Vault server base address.
+                  <span *ngIf="configForm.getValue('kms_provider') === KMS_PROVIDER.VAULT">{{ vaultAddressHelpText }}
                   </span>
                   <span *ngIf="configForm.getValue('kms_provider') === KMS_PROVIDER.KMIP"
                         i18n>Kmip server base address.
@@ -196,7 +192,7 @@
                 class="form-group row">
           <label  class="cd-col-form-label required"
                   for="token">
-          <span i18n>Token</span>
+          <span>{{ tokenLabel }}</span>
           <cd-helper i18n>
             The token authentication method expects a Vault token to be present in a plaintext file.
           </cd-helper>
@@ -207,7 +203,7 @@
                     formControlName="token"
                     (change)="fileUpload($event.target.files, 'token')">
               <cd-help-text>
-                <span i18n>If authentication method is 'token', provide a path to the token file.
+                <span>{{ tokenFileHelpText }}
                 </span>
               </cd-help-text>
             <span class="invalid-feedback"
@@ -290,7 +286,7 @@
           <div class="form-group row">
             <label class="cd-col-form-label"
                    for="ssl_cert">
-            <span i18n>CA Certificate Path</span>
+            <span>{{ caCertificatePathLabel }}</span>
             <cd-helper i18n>The SSL certificate in PEM format. Please provide file path to the RGW host.</cd-helper>
             </label>
             <div class="cd-col-form-input">
@@ -300,8 +296,8 @@
                     formControlName="ssl_cert"
                     [placeholder]="caCertPathPlaceholder">
             <cd-help-text>
-              <span i18n>
-                Path for custom ca certificate for accessing server
+              <span>
+                {{ caCertificatePathHelpText }}
               </span>
             </cd-help-text>
             </div>
@@ -312,7 +308,7 @@
           <div class="form-group row">
             <label class="cd-col-form-label"
                    for="client_cert">
-            <span i18n>Client Certificate Path</span>
+            <span>{{ clientCertificatePathLabel }}</span>
             <cd-helper i18n>The Client certificate in PEM format. Please provide file path to the RGW host.</cd-helper>
             </label>
             <div class="cd-col-form-input">
@@ -322,8 +318,8 @@
                       formControlName="client_cert"
                       [placeholder]="clientCertPathPlaceholder">
               <cd-help-text>
-                <span i18n>
-                  Path for custom client certificate for accessing server
+                <span>
+                  {{ clientCertificatePathHelpText }}
                 </span>
               </cd-help-text>
             </div>
@@ -334,7 +330,7 @@
           <div class="form-group row">
             <label class="cd-col-form-label"
                    for="client_key">
-            <span i18n>Client Private Key Path</span>
+            <span>{{ clientPrivateKeyPathLabel }}</span>
             <cd-helper i18n>The Client Private Key in PEM format. Please provide file path to the RGW host.</cd-helper>
             </label>
             <div class="cd-col-form-input">
@@ -344,8 +340,8 @@
                       [placeholder]="clientKeyPathPlaceholder"
                       class="form-control">
               <cd-help-text>
-                <span i18n>
-                  Path for private key required for client cert
+                <span>
+                  {{ clientPrivateKeyPathHelpText }}
                 </span>
               </cd-help-text>
             </div>

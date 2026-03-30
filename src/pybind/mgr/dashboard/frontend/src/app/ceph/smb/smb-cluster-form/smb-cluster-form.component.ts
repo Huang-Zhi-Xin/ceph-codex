@@ -85,8 +85,10 @@ export class SmbClusterFormComponent extends CdForm implements OnInit {
   }
 
   get formTitle(): string {
-    const resourceLabel = this.isZhHans ? '集群' : this.resource;
-    return `${this.action || ''} ${resourceLabel}`.trim();
+    if (!this.isZhHans) {
+      return `${this.action || ''} ${this.resource}`.trim();
+    }
+    return this.isEdit ? '编辑集群' : '创建集群';
   }
 
   get clusterNameLabel(): string {
@@ -95,6 +97,161 @@ export class SmbClusterFormComponent extends CdForm implements OnInit {
 
   get authModeLabel(): string {
     return this.isZhHans ? '认证模式' : 'Authentication Mode';
+  }
+
+  get clusterIdHelperText(): string {
+    return this.isZhHans ? '唯一标识符' : 'Unique identifier';
+  }
+
+  get authModeHelperText(): string {
+    return this.isZhHans
+      ? 'Active Directory 认证用于域成员服务器，用户认证用于独立服务器配置。'
+      : 'Active-directory authentication for domain member servers and User authentication for Stand-alone servers configuration.';
+  }
+
+  get domainSettingsLabel(): string {
+    return this.isZhHans ? '域设置' : 'Domain Settings';
+  }
+
+  get domainSettingsFieldLabel(): string {
+    return this.isZhHans ? '域设置' : 'Active Directory (AD) Settings';
+  }
+
+  get domainSettingsRequiredHelpText(): string {
+    return this.isZhHans
+      ? '请在“域设置”中指定 Realm 和 AD 访问资源。'
+      : 'Specify the Realm and AD access resources in the Domain Settings field.';
+  }
+
+  get standaloneUserResourcesLabel(): string {
+    return this.isZhHans ? '独立用户访问资源' : 'Standalone user access resources';
+  }
+
+  get userGroupPlaceholder(): string {
+    return this.isZhHans
+      ? '-- 用户和用户组访问资源列表 --'
+      : '-- List of users and groups access resources --';
+  }
+
+  get addUserGroupText(): string {
+    return this.isZhHans ? '添加用户组' : 'Add user group';
+  }
+
+  get createUserGroupText(): string {
+    return this.isZhHans ? '创建用户组' : 'Create user group';
+  }
+
+  get serviceSpecificationsTitle(): string {
+    return this.isZhHans ? '服务规格' : 'Service specifications';
+  }
+
+  get placementLabel(): string {
+    return this.isZhHans ? '放置方式' : 'Placement';
+  }
+
+  get hostsOptionLabel(): string {
+    return this.isZhHans ? '主机' : 'Hosts';
+  }
+
+  get labelsOptionLabel(): string {
+    return this.isZhHans ? '标签' : 'Labels';
+  }
+
+  get labelFieldLabel(): string {
+    return this.isZhHans ? '标签' : 'Label';
+  }
+
+  get hostsFieldLabel(): string {
+    return this.isZhHans ? '主机' : 'Hosts';
+  }
+
+  get countLabel(): string {
+    return this.isZhHans ? '数量' : 'Count';
+  }
+
+  get dnsLabel(): string {
+    return this.isZhHans ? 'DNS' : 'DNS';
+  }
+
+  get addCustomDnsText(): string {
+    return this.isZhHans ? '添加自定义 DNS' : 'Add custom DNS';
+  }
+
+  get customDnsHelpText(): string {
+    return this.isZhHans
+      ? '一个或多个 IP 地址将应用到 Samba 容器中，用于覆盖默认 DNS 解析器。当宿主 Ceph 节点未配置为解析 AD 域中的 DNS 记录时，可使用该选项。'
+      : 'One or more IP Addresses that will be applied to the Samba containers to override the default DNS resolver(s). This option is intended to be used when the host Ceph node is not configured to resolve DNS entries within AD domain(s).';
+  }
+
+  get clusteringLabel(): string {
+    return this.isZhHans ? '集群模式' : 'Clustering';
+  }
+
+  get clusteringOptions(): { value: string; label: string }[] {
+    return this.allClustering.map((value) => ({
+      value,
+      label: this.getClusteringOptionLabel(value)
+    }));
+  }
+
+  get addressLabel(): string {
+    return this.isZhHans ? '地址' : 'Address';
+  }
+
+  get destinationLabel(): string {
+    return this.isZhHans ? '目标地址' : 'Destination';
+  }
+
+  get addPublicAddressText(): string {
+    return this.isZhHans ? '添加公网地址' : 'Add public address';
+  }
+
+  get publicAddressHelpText(): string {
+    return this.isZhHans
+      ? '分配由集群子系统管理的虚拟 IP 地址，这些地址可能会在运行 Samba 容器的节点之间自动迁移。'
+      : 'Assign virtual IP addresses that will be managed by the clustering subsystem and may automatically move between nodes running Samba containers.';
+  }
+
+  get selectLabelsPlaceholder(): string {
+    return this.isZhHans ? '选择标签...' : 'Select labels...';
+  }
+
+  get selectHostsPlaceholder(): string {
+    return this.isZhHans ? '选择主机...' : 'Select hosts...';
+  }
+
+  get clusteringHelperText(): string {
+    return this.isZhHans
+      ? '默认值表示当放置数量不为 1 时启用集群模式。Always 表示无论放置数量如何都启用集群模式，Never 表示无论放置数量如何都禁用集群模式。'
+      : 'Default value indicates that clustering should be enabled if the placement count value is any value other than 1. Always value enables clustering regardless of the placement count. Never value disables clustering regardless of the placement count.';
+  }
+
+  get managedAddressHelperText(): string {
+    return this.isZhHans
+      ? '该地址将分配给主机上的某个网络设备，并由系统自动管理。'
+      : "This address will be assigned to one of the host's network devices and managed automatically.";
+  }
+
+  get managedDestinationHelperText(): string {
+    return this.isZhHans
+      ? '定义系统分配托管 IP 的位置。每个字符串值都必须是网络地址。'
+      : 'Defines where the system will assign the managed IPs. Each string value must be a network address.';
+  }
+
+  private getClusteringOptionLabel(value: string): string {
+    if (!this.isZhHans) {
+      return value;
+    }
+    switch (value) {
+      case CLUSTERING.Default:
+        return '默认';
+      case CLUSTERING.Always:
+        return '始终';
+      case CLUSTERING.Never:
+        return '从不';
+      default:
+        return value;
+    }
   }
 
   ngOnInit() {

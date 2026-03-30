@@ -8,9 +8,8 @@
   how to configure and enable the monitoring functionality.</cd-alert-panel>
 
 <cd-alert-panel type="info"
-                *ngIf="!dashboardExist"
-                i18n>Grafana Dashboard doesn't exist. Please refer to
-  &nbsp;<cd-doc section="grafana"></cd-doc>&nbsp;on how to add dashboards to Grafana.</cd-alert-panel>
+                *ngIf="!dashboardExist">{{ grafanaDashboardMissingHelpText }}
+  &nbsp;<cd-doc section="grafana"></cd-doc>&nbsp;{{ grafanaDashboardMissingSuffixText }}</cd-alert-panel>
 
 <ng-container *ngIf="grafanaExist && dashboardExist">
   <div class="grafana-toolbar mb-3">
@@ -33,16 +32,14 @@
       </div>
       <div class="grafana-toolbar__button">
         <button class="btn btn-light ms-3"
-                i18n-title
-                title="Reset Settings"
+                [title]="resetSettingsTitle"
                 (click)="reset()">
           <i [ngClass]="[icons.undo]"></i>
         </button>
       </div>
       <div class="grafana-toolbar__button">
         <button class="btn btn-light ms-3"
-                i18n-title
-                title="Show hidden information"
+                [title]="showHiddenInfoTitle"
                 (click)="showMessage = !showMessage">
           <i [ngClass]="[icons.infoCircle, icons.large]"></i>
         </button>
@@ -57,11 +54,20 @@
                       class="mb-3"
                       *ngIf="showMessage"
                       dismissible="true"
-                      (dismissed)="showMessage = false"
-                      i18n>If no embedded Grafana Dashboard appeared below, please follow&nbsp;<a [href]="grafanaSrc"
+                      (dismissed)="showMessage = false">
+        <ng-container *ngIf="isZhHans; else grafanaReachabilityHelpEn">
+          如果下方未显示嵌入的 Grafana 仪表板，请访问&nbsp;<a [href]="grafanaSrc"
                       target="_blank"
                       noopener
-                      noreferrer>this link </a>&nbsp;to check if Grafana is reachable and there are no HTTPS certificate issues. You may need to reload this page after accepting any Browser certificate exceptions</cd-alert-panel>
+                      noreferrer>{{ grafanaReachabilityLinkText }} </a>&nbsp;{{ grafanaReachabilityHelpText }}
+        </ng-container>
+        <ng-template #grafanaReachabilityHelpEn>
+          If no embedded Grafana Dashboard appeared below, please follow&nbsp;<a [href]="grafanaSrc"
+                      target="_blank"
+                      noopener
+                      noreferrer>{{ grafanaReachabilityLinkText }} </a>&nbsp;{{ grafanaReachabilityHelpText }}
+        </ng-template>
+      </cd-alert-panel>
     </div>
   </div>
 

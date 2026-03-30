@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">Create System User</ng-container>
+  <ng-container class="modal-title">{{ formTitle }}</ng-container>
 
   <ng-container class="modal-content">
     <form name="multisiteSystemUserForm"
@@ -11,20 +10,20 @@
         <div class="form-group row">
           <label class="cd-col-form-label required"
                  for="userName"
-                 i18n>User Name</label>
+                 >{{ userNameLabel }}</label>
           <div class="cd-col-form-input">
             <input class="form-control"
                    type="text"
-                   placeholder="User name..."
+                   [placeholder]="userNamePlaceholder"
                    id="userName"
                    name="userName"
                    formControlName="userName">
             <span class="invalid-feedback"
                   *ngIf="multisiteSystemUserForm.showError('userName', formDir, 'required')"
-                  i18n>This field is required.</span>
+                  >{{ requiredText }}</span>
             <span class="invalid-feedback"
                   *ngIf="multisiteSystemUserForm.showError('userName', formDir, 'uniqueName')"
-                  i18n>The chosen realm name is already in use.</span>
+                  >{{ duplicateNameText }}</span>
           </div>
         </div>
       </div>

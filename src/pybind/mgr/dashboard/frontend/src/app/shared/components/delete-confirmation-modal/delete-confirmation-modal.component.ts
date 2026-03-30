@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormControl, AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -20,6 +20,7 @@ export class DeleteConfirmationModalComponent extends BaseModal implements OnIni
   impactEnum = DeletionImpact;
   childFormGroup: CdFormGroup;
   childFormGroupTemplate: TemplateRef<any>;
+  isZhHans: boolean;
 
   constructor(
     @Optional() @Inject('impact') public impact: DeletionImpact,
@@ -36,11 +37,21 @@ export class DeleteConfirmationModalComponent extends BaseModal implements OnIni
     public submitActionObservable?: () => Observable<any>,
     @Optional()
     @Inject('callBackAtionObservable')
-    public callBackAtionObservable?: () => Observable<any>
+    public callBackAtionObservable?: () => Observable<any>,
+    @Inject(LOCALE_ID) localeId?: string
   ) {
     super();
     this.actionDescription = actionDescription || 'delete';
     this.impact = this.impact || DeletionImpact.medium;
+    this.isZhHans = !!localeId && localeId.startsWith('zh');
+  }
+
+  get resourceNameLabel(): string {
+    return this.isZhHans ? '资源名称' : 'Resource Name';
+  }
+
+  get deletePlaceholder(): string {
+    return this.isZhHans ? '请输入要删除的资源名称' : 'Enter resource name to delete';
   }
 
   ngOnInit() {

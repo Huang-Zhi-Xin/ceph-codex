@@ -3,8 +3,7 @@
            [hasScrollingContent]="false"
            (overlaySelected)="closeModal()">
   <cds-modal-header (closeSelect)="closeModal()">
-    <h3 cdsModalHeaderHeading
-        i18n>{{ action | titlecase }} {{ resource | upperFirst }}</h3>
+    <h3 cdsModalHeaderHeading>{{ formTitle }}</h3>
   </cds-modal-header>
 
   <div cdsModalContent>
@@ -21,13 +20,12 @@
               multisiteRealmForm.controls.realmName.dirty)
           "
           [invalidText]="realmNameError"
-          cdRequiredField="Realm Name"
-          i18n
-          >Realm Name
+          [cdRequiredField]="realmNameLabel"
+          >{{ realmNameLabel }}
           <input
             cdsText
             type="text"
-            placeholder="Realm name..."
+            [placeholder]="realmNamePlaceholder"
             id="realmName"
             name="realmName"
             formControlName="realmName"
@@ -44,14 +42,12 @@
           <span
             class="invalid-feedback"
             *ngIf="multisiteRealmForm.showError('realmName', formDir, 'required')"
-            i18n
-            >This field is required.</span
+            >此字段为必填项。</span
           >
           <span
             class="invalid-feedback"
             *ngIf="multisiteRealmForm.showError('realmName', formDir, 'uniqueName')"
-            i18n
-            >The chosen realm name is already in use.</span
+            >所选 Realm 名称已被使用。</span
           >
         </ng-template>
       </div>
@@ -65,16 +61,15 @@
           i18n
           >Default
           <cd-help-text *ngIf="action === actionLabels.EDIT && info.data.is_default">
-            <span>You cannot unset the default flag.</span>
+            <span>{{ isZhHans ? '不能取消默认标记。' : 'You cannot unset the default flag.' }}</span>
           </cd-help-text>
           <cd-help-text *ngIf="action === actionLabels.EDIT && !info.data.is_default">
             <span
-              >Please consult the <a href="{{ docUrl }}">documentation</a> to follow the failover
-              mechanism</span
+              >{{ isZhHans ? '请查阅' : 'Please consult the ' }}<a href="{{ docUrl }}">{{ isZhHans ? '文档' : 'documentation' }}</a>{{ isZhHans ? ' 以遵循故障切换机制。' : ' to follow the failover mechanism.' }}</span
             >
           </cd-help-text>
           <cd-help-text *ngIf="defaultRealmDisabled && action === actionLabels.CREATE">
-            <span>Default realm already exists.</span>
+            <span>{{ isZhHans ? '默认 Realm 已存在。' : 'Default realm already exists.' }}</span>
           </cd-help-text>
         </cds-checkbox>
       </div>
@@ -83,7 +78,7 @@
   <cd-form-button-panel
     (submitActionEvent)="submit()"
     [form]="multisiteRealmForm"
-    [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"
+    [submitText]="formTitle"
     [modalForm]="true"
   >
   </cd-form-button-panel>

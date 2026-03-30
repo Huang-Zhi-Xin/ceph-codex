@@ -10,20 +10,17 @@
     @if(accounts.length > 0){
       <!-- Link Account -->
       <div class="form-item">
-        <cds-select label="Link Account"
-                    i18n-label
+        <cds-select [label]="linkAccountLabel"
                     id="link_account"
                     for="link_account"
                     formControlName="account_id"
                     [invalid]="userForm.controls.account_id.invalid && userForm.controls.account_id.dirty"
                     [invalidText]="accountError"
                     [helperText]="accountsHelper">
-          <option i18n
-                  *ngIf="accounts === null"
-                  [ngValue]="null">Loading...</option>
-          <option i18n
-                  *ngIf="accounts !== null"
-                  [value]="''">-- Select an Account --</option>
+          <option *ngIf="accounts === null"
+                  [ngValue]="null">{{ loadingText }}</option>
+          <option *ngIf="accounts !== null"
+                  [value]="''">{{ selectAccountText }}</option>
           <option *ngFor="let account of accounts"
                   [value]="account.id">{{ account.name }} {{account.tenant ? '- '+account.tenant : ''}}</option>
         </cds-select>
@@ -55,9 +52,9 @@
     <div class="form-item">
       <cds-text-label for="user_id"
                       i18n
-                      cdRequiredField="User ID"
+                      [cdRequiredField]="userIdLabel"
                       [invalid]="userForm.controls.user_id.invalid && (userForm.controls.user_id.dirty)"
-                      [invalidText]="userError">User ID
+                      [invalidText]="userError">{{ userIdLabel }}
         <input cdsText
                formControlName="user_id"
                name="user_id"
@@ -117,9 +114,9 @@
     <div class="form-item">
       <cds-text-label  for="display_name"
                        i18n
-                       cdRequiredField="Full name"
+                       [cdRequiredField]="fullNameLabel"
                        [invalid]="userForm.controls.display_name.invalid && (userForm.controls.display_name.dirty)"
-                       [invalidText]="displayNameError">Full name
+                       [invalidText]="displayNameError">{{ fullNameLabel }}
         <input cdsText
                formControlName="display_name"
                name="display_name"
@@ -160,7 +157,7 @@
 
     <!-- Max. buckets -->
     <div class="form-item">
-      <cds-select label="Maximum buckets"
+      <cds-select [label]="maximumBucketsLabel"
                   for="max_buckets_mode"
                   formControlName="max_buckets_mode"
                   id="max_buckets_mode"
@@ -195,7 +192,7 @@
       <cds-checkbox formControlName="suspended"
                     id="suspended"
                     i18n>Suspended
-        <cd-help-text>Suspending the user disables the user and subuser.</cd-help-text>
+        <cd-help-text>{{ suspendedHelpText }}</cd-help-text>
       </cds-checkbox>
     </div>
 
@@ -204,7 +201,7 @@
       <cds-checkbox formControlName="system"
                     id="system"
                     i18n>System user
-        <cd-help-text>System users are distinct from regular users, they are used by the RGW service to perform administrative tasks, manage buckets and objects</cd-help-text>
+        <cd-help-text>{{ systemUserHelpText }}</cd-help-text>
       </cds-checkbox>
     </div>
 
@@ -213,14 +210,13 @@
     <fieldset>
       <div class="form-item">
         <legend i18n
-                class="cd-header">Managed policies</legend>
+                class="cd-header">{{ managedPoliciesLabel }}</legend>
         <cds-combo-box label="Policies"
                        type="multi"
                        selectionFeedback="top-after-reopen"
                        formControlName="account_policies"
                        id="account_policies"
-                       placeholder="Select managed policies..."
-                       i18n-placeholder
+                       [placeholder]="selectManagedPoliciesText"
                        [appendInline]="true"
                        [items]="managedPolicies"
                        (selected)="multiSelector($event)"
@@ -236,7 +232,7 @@
     <!-- S3 key -->
     <fieldset *ngIf="!editing">
       <legend i18n
-              class="cd-header">S3 key</legend>
+              class="cd-header">{{ s3KeyLabel }}</legend>
 
       <!-- Auto-generate key -->
       <div class="form-item">
@@ -250,9 +246,9 @@
            *ngIf="!editing && !userForm.getValue('generate_key')">
         <cds-password-label for="access_key"
                             i18n
-                            cdRequiredField="Access key"
+                            [cdRequiredField]="accessKeyLabel"
                             [invalid]="userForm.controls.access_key.invalid && (userForm.controls.access_key.dirty)"
-                            [invalidText]="accessKeyError">Access key
+                            [invalidText]="accessKeyError">{{ accessKeyLabel }}
           <input cdsPassword
                  type="password"
                  formControlName="access_key"
@@ -275,9 +271,9 @@
            *ngIf="!editing && !userForm.getValue('generate_key')">
         <cds-password-label for="secret"
                             i18n
-                            cdRequiredField="Secret key"
+                            [cdRequiredField]="secretKeyLabel"
                             [invalid]="userForm.controls.secret_key.invalid && (userForm.controls.secret_key.dirty)"
-                            [invalidText]="secretKeyError">Secret key
+                            [invalidText]="secretKeyError">{{ secretKeyLabel }}
           <input cdsPassword
                  type="password"
                  formControlName="secret_key"
@@ -542,7 +538,7 @@
     <fieldset>
       <div class="form-item">
         <legend i18n
-                class="cd-header">User quota</legend>
+                class="cd-header">{{ userQuotaLabel }}</legend>
 
       <!-- Enabled -->
         <cds-checkbox formControlName="user_quota_enabled"
@@ -564,9 +560,9 @@
            *ngIf="userForm.controls.user_quota_enabled.value && !userForm.getValue('user_quota_max_size_unlimited')">
         <cds-text-label for="user_quota_max_size"
                         i18n
-                        cdRequiredField="Maximum size"
+                        [cdRequiredField]="maximumSizeLabel"
                         [invalid]="userForm.controls.user_quota_max_size.invalid && (userForm.controls.user_quota_max_size.dirty)"
-                        [invalidText]="quotaMaxSizeError">Maximum size
+                        [invalidText]="quotaMaxSizeError">{{ maximumSizeLabel }}
           <input cdsText
                  formControlName="user_quota_max_size"
                  name="user_quota_max_size"
@@ -604,8 +600,8 @@
                     [min]="0"
                     [invalid]="userForm.controls.user_quota_max_objects.invalid && (userForm.controls.user_quota_max_objects.dirty)"
                     [invalidText]="maxObjectsError"
-                    label="Maximum Objects"
-                    cdRequiredField="Maximum Objects"></cds-number>
+                    [label]="maximumObjectsLabel"
+                    [cdRequiredField]="maximumObjectsLabel"></cds-number>
         <ng-template #maxObjectsError>
           <span class="invalid-feedback"
                 *ngIf="userForm.showError('user_quota_max_objects', frm, 'required')"
@@ -621,7 +617,7 @@
     <fieldset>
       <div class="form-item">
         <legend i18n
-                class="cd-header">Bucket quota</legend>
+                class="cd-header">{{ bucketQuotaLabel }}</legend>
 
       <!-- Enabled -->
         <cds-checkbox formControlName="bucket_quota_enabled"
@@ -642,9 +638,9 @@
            *ngIf="userForm.controls.bucket_quota_enabled.value && !userForm.getValue('bucket_quota_max_size_unlimited')">
         <cds-text-label for="bucket_quota_max_size"
                         i18n
-                        cdRequiredField="Maximum size"
+                        [cdRequiredField]="maximumSizeLabel"
                         [invalid]="userForm.controls.bucket_quota_max_size.invalid && (userForm.controls.bucket_quota_max_size.dirty)"
-                        [invalidText]="bucketQuotaMaxSizeError">Maximum size
+                        [invalidText]="bucketQuotaMaxSizeError">{{ maximumSizeLabel }}
           <input cdsText
                  formControlName="bucket_quota_max_size"
                  name="bucket_quota_max_size"
@@ -682,8 +678,8 @@
                     [min]="0"
                     [invalid]="userForm.controls.bucket_quota_max_objects.invalid && ( userForm.controls.bucket_quota_max_objects.dirty)"
                     [invalidText]="bucketMaxObjectsError"
-                    label="Maximum objects"
-                    cdRequiredField="Maximum objects"></cds-number>
+                    [label]="maximumObjectsLabel"
+                    [cdRequiredField]="maximumObjectsLabel"></cds-number>
         <ng-template #bucketMaxObjectsError>
           <span class="invalid-feedback"
                 *ngIf="userForm.showError('bucket_quota_max_objects', frm, 'required')"

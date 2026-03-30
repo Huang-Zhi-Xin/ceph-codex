@@ -1,8 +1,7 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">Migrate Single Site to Multi-site
+  <ng-container class="modal-title">将单站点迁移到多站点
     <cd-helper>
-      <span>Migrate from a single-site deployment with a default zone group and zone to a multi-site system</span>
+      <span>将包含默认 Zone Group 和 Zone 的单站点部署迁移为多站点系统</span>
     </cd-helper>
   </ng-container>
 
@@ -19,13 +18,13 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Realm name..."
+                 [placeholder]="realmNamePlaceholder"
                  id="realmName"
                  name="realmName"
                  formControlName="realmName">
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('realmName', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('realmName', formDir, 'uniqueName')"
                 i18n>The chosen realm name is already in use.</span>
@@ -38,13 +37,13 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Zone group name..."
+                 [placeholder]="zonegroupNamePlaceholder"
                  id="zonegroupName"
                  name="zonegroupName"
                  formControlName="zonegroupName">
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('zonegroupName', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('zonegroupName', formDir, 'uniqueName')"
                 i18n>The chosen zone group name is already in use.</span>
@@ -58,16 +57,16 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="e.g, http://ceph-node-00.com:80"
+                 [placeholder]="endpointPlaceholder"
                  id="zonegroup_endpoints"
                  name="zonegroup_endpoints"
                  formControlName="zonegroup_endpoints">
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('zonegroup_endpoints', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('zonegroup_endpoints', formDir, 'invalidURL')"
-                i18n>Please enter a valid URL.</span>
+                >{{ validUrlText }}</span>
         </div>
       </div>
       <div class="form-group row">
@@ -77,13 +76,13 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Zone name..."
+                 [placeholder]="zoneNamePlaceholder"
                  id="zoneName"
                  name="zoneName"
                  formControlName="zoneName">
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('zoneName', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('zoneName', formDir, 'uniqueName')"
                 i18n>The chosen zone name is already in use.</span>
@@ -97,16 +96,16 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="e.g, http://ceph-node-00.com:80"
+                 [placeholder]="endpointPlaceholder"
                  id="zone_endpoints"
                  name="zone_endpoints"
                  formControlName="zone_endpoints">
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('zone_endpoints', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('zone_endpoints', formDir, 'invalidURL')"
-                i18n>Please enter a valid URL.</span>
+                >{{ validUrlText }}</span>
         </div>
       </div>
       <div class="form-group row">
@@ -116,7 +115,7 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="username"
+                 placeholder="用户名"
                  id="username"
                  name="username"
                  formControlName="username">
@@ -125,13 +124,13 @@
           </cd-help-text>
           <span class="invalid-feedback"
                 *ngIf="multisiteMigrateForm.showError('username', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <cd-form-button-panel (submitActionEvent)="submit()"
-                            [submitText]="actionLabels.MIGRATE + ' ' + 'to Multi-site'"
+                            [submitText]="'迁移到多站点'"
                             [form]="multisiteMigrateForm"></cd-form-button-panel>
     </div>
     </form>

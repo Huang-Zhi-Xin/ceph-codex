@@ -37,8 +37,8 @@
     <a ngbNavLink
        i18n>Overall Performance</a>
     <ng-template ngbNavContent>
-      <cd-grafana i18n-title
-                  title="Ceph pools overview"
+      <cd-grafana
+                  [title]="'Ceph 存储池概览'"
                   [grafanaPath]="'ceph-pools-overview?'"
                   [type]="'metrics'"
                   uid="z99hzWtmk"

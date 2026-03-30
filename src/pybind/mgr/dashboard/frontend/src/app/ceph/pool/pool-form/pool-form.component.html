@@ -5,8 +5,7 @@
         [formGroup]="form"
         novalidate>
     <div class="card">
-      <div i18n="form title|Example: Create Pool@@formTitle"
-           class="card-header">{{ action | titlecase }} {{ resource | upperFirst }}</div>
+      <div class="card-header">{{ formTitle }}</div>
 
       <div class="card-body">
         <!-- Name -->
@@ -19,8 +18,7 @@
                    name="name"
                    type="text"
                    class="form-control"
-                   placeholder="Name..."
-                   i18n-placeholder
+                   [placeholder]="namePlaceholder"
                    formControlName="name"
                    autofocus>
             <span class="invalid-feedback"
@@ -65,9 +63,9 @@
         <div *ngIf="isReplicated || isErasure">
           <!-- PG Autoscale Mode -->
           <div class="form-group row">
-            <label i18n
+            <label
                    class="cd-col-form-label"
-                   for="pgAutoscaleMode">PG Autoscale</label>
+                   for="pgAutoscaleMode">{{ pgAutoscaleLabel }}</label>
             <div class="cd-col-form-input">
               <select class="form-select"
                       id="pgAutoscaleMode"
@@ -190,8 +188,7 @@
                               (selection)="appSelection()">
             </cd-select-badges>
             <i *ngIf="data.applications.selected <= 0"
-               i18n-title
-               title="Pools should be associated with an application tag"
+               [title]="applicationsWarningTitle"
                class="{{icons.warning}} icon-warning-color">
             </i>
             <span class="invalid-feedback"
@@ -226,9 +223,9 @@
           <!-- Erasure Profile select -->
           <div class="form-group row"
                *ngIf="isErasure">
-            <label i18n
+            <label
                    class="cd-col-form-label"
-                   for="erasureProfile">Erasure code profile</label>
+                   for="erasureProfile">{{ erasureCodeProfileLabel }}</label>
             <div class="cd-col-form-input">
               <div class="input-group mb-1">
                 <select class="form-select"
@@ -469,7 +466,7 @@
                   {{ mode }}
                 </option>
               </select>
-              <cd-help-text>Policy used for compression algorithm</cd-help-text>
+              <cd-help-text>{{ compressionPolicyText }}</cd-help-text>
             </div>
           </div>
           <div *ngIf="hasCompressionEnabled()">
@@ -488,8 +485,7 @@
                           ngValue=""
                           i18n>Loading...</option>
                   <option *ngIf="info.compression_algorithms && info.compression_algorithms.length === 0"
-                          i18n
-                          ngValue="">-- No erasure compression algorithm available --</option>
+                          ngValue="">{{ noCompressionAlgorithmText }}</option>
                   <option *ngFor="let algorithm of info.compression_algorithms"
                           [value]="algorithm">
                     {{ algorithm }}
@@ -514,8 +510,7 @@
                        type="text"
                        min="0"
                        class="form-control"
-                       i18n-placeholder
-                       placeholder="e.g., 128KiB"
+                       [placeholder]="minBlobPlaceholder"
                        defaultUnit="KiB"
                        cdDimlessBinary>
                 <cd-help-text>
@@ -545,8 +540,7 @@
                        min="0"
                        formControlName="maxBlobSize"
                        class="form-control"
-                       i18n-placeholder
-                       placeholder="e.g., 512KiB"
+                       [placeholder]="maxBlobPlaceholder"
                        defaultUnit="KiB"
                        cdDimlessBinary>
                 <cd-help-text>
@@ -607,8 +601,7 @@
                      name="max_bytes"
                      type="text"
                      formControlName="max_bytes"
-                     i18n-placeholder
-                     placeholder="e.g., 10GiB"
+                     [placeholder]="maxBytesPlaceholder"
                      defaultUnit="GiB"
                      cdDimlessBinary>
               <cd-help-text>

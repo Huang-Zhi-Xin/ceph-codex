@@ -15,7 +15,7 @@
           class="lead text-primary"
           i18n>Not Syncing</a>
     </ng-template>
-    <li><b>Status:</b></li>
+    <li><b>{{ statusLabel }}</b></li>
     <li *ngIf="zone.syncstatus?.includes('failed') || zone.syncstatus?.includes('error'); else showStatus">
       <i  [ngClass]="[icons.danger]"
           class="text-danger"></i>
@@ -43,9 +43,7 @@
   </div>
   </cds-toggletip>
   <li class="mt-4 fw-bold"
-      i18n>
-      Last Synced:
-  </li>
+      >{{ lastSyncedLabel }}</li>
   <li class="badge badge-info"
       *ngIf="zone.timestamp; else upToDateTpl">{{ zone.timestamp | relativeDate }}</li>
 </ul>

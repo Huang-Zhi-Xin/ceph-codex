@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">Import Multi-site Token</ng-container>
+  <ng-container class="modal-title">导入多站点令牌</ng-container>
 
   <ng-container class="modal-content">
     <form name="importTokenForm"
@@ -10,9 +9,9 @@
       <cd-alert-panel type="info"
                       spacingClass="mb-3">
         <ul>
-          <li>This feature allows you to configure a connection between your primary and secondary Ceph clusters for data replication. By importing a token, you establish a link between the clusters, enabling data synchronization.</li>
-          <li>To obtain the token, generate it from your primary Ceph cluster. This token includes encoded information about the primary cluster's endpoint, access key, and secret key.</li>
-          <li>The secondary zone represents the destination cluster where your data will be replicated.</li>
+          <li>此功能允许你为主 Ceph 集群和辅助 Ceph 集群配置复制连接。导入令牌后，将在集群之间建立链路并启用数据同步。</li>
+          <li>要获取令牌，请在主 Ceph 集群上生成。该令牌包含主集群端点、访问密钥和密钥的编码信息。</li>
+          <li>辅助 Zone 表示你的数据将复制到的目标集群。</li>
         </ul>
       </cd-alert-panel>
       <legend i18n>Zone Details</legend>
@@ -39,13 +38,13 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Zone name..."
+                 [placeholder]="zoneNamePlaceholder"
                  id="zoneName"
                  name="zoneName"
                  formControlName="zoneName">
           <span class="invalid-feedback"
                 *ngIf="importTokenForm.showError('zoneName', frm, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
           <span class="invalid-feedback"
                 *ngIf="importTokenForm.showError('zoneName', frm, 'uniqueName')"
                 i18n>The chosen zone name is already in use.</span>
@@ -103,7 +102,7 @@
                  (click)="labelClick.next($any($event).target.value)">
           <span class="invalid-feedback"
                 *ngIf="importTokenForm.showError('label', frm, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
         </div>
       </div>
 

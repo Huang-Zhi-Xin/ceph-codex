@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, Output } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RgwZoneService } from '~/app/shared/api/rgw-zone.service';
@@ -15,6 +15,7 @@ import { NotificationService } from '~/app/shared/services/notification.service'
 export class RgwSystemUserComponent {
   multisiteSystemUserForm: CdFormGroup;
   zoneName: string;
+  isZhHans: boolean;
 
   @Output()
   submitAction = new EventEmitter();
@@ -23,9 +24,31 @@ export class RgwSystemUserComponent {
     public activeModal: NgbActiveModal,
     public actionLabels: ActionLabelsI18n,
     public rgwZoneService: RgwZoneService,
-    public notificationService: NotificationService
+    public notificationService: NotificationService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.createForm();
+  }
+
+  get formTitle(): string {
+    return this.isZhHans ? '创建系统用户' : 'Create System User';
+  }
+
+  get userNameLabel(): string {
+    return this.isZhHans ? '用户名' : 'User Name';
+  }
+
+  get userNamePlaceholder(): string {
+    return this.isZhHans ? '用户名...' : 'User name...';
+  }
+
+  get requiredText(): string {
+    return this.isZhHans ? '此字段为必填项。' : 'This field is required.';
+  }
+
+  get duplicateNameText(): string {
+    return this.isZhHans ? '所选 Realm 名称已被使用。' : 'The chosen realm name is already in use.';
   }
 
   createForm() {

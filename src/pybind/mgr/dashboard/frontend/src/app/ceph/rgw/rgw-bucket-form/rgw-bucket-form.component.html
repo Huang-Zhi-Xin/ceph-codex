@@ -24,10 +24,10 @@
     <!-- Name -->
     <div class="form-item">
       <cds-text-label for="bid"
-                      cdRequiredField="Name"
+                      [cdRequiredField]="nameLabel"
                       [invalid]="!bucketForm.controls.bid.valid && bucketForm.controls.bid.dirty"
                       [invalidText]="nameError"
-                      i18n>Name
+                      >{{ nameLabel }}
         <input cdsText
                [placeholder]="namePlaceholder"
                id="bid"
@@ -203,12 +203,10 @@
     <!-- Object Locking -->
     <fieldset *ngIf="!editing || (editing && bucketForm.getValue('lock_enabled'))">
       <div class="form-item">
-        <legend class="cd-header"
-                i18n>
-          Object Locking
+        <legend class="cd-header">
+          {{ objectLockingTitle }}
           <cd-help-text>
-              Store objects using a write-once-read-many (WORM) model to prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely.
-              Object Locking works only in versioned buckets.
+              {{ objectLockingDescription }}
           </cd-help-text>
         </legend>
         <!-- Object Locking enable -->
@@ -377,10 +375,8 @@
                           class="me-1"
                           id="replication-info"
                           spacingClass="mt-1"
-                          *ngIf="!editing"
-                          i18n>
-            A bi-directional sync policy group will be created by the dashboard along with flows and pipes.
-            The pipe id will then be used for applying the replication policy to the bucket.
+                          *ngIf="!editing">
+            {{ replicationInfoText }}
           </cd-alert-panel>
         </ng-container>
       </div>
@@ -532,23 +528,22 @@
 
         <!-- ACL -->
         <cds-text-label i18n>ACL
-          <cd-help-text>Any changes to the ACL will overwrite previous one.
-            You can choose any of the available options to modify the spcified user group.</cd-help-text>
+          <cd-help-text>{{ aclHelpText }}</cd-help-text>
         </cds-text-label>
         <div cdsRow
              class="form-item-append">
           <div cdsCol>
             <cds-select id="grantee"
                         name="grantee"
-                        label="Grantee"
+                        [label]="granteeLabel"
                         formControlName="grantee"
                         [helperText]="granteeHelperText"
                         [invalid]="!bucketForm.controls.grantee.valid && (bucketForm.controls.grantee.dirty)"
                         [invalidText]="granteeError"
                         (valueChange)="onSelectionFilter()"
-                        i18n>Grantee
+                        >{{ granteeLabel }}
               <option *ngFor="let item of grantees"
-                      [value]="item">{{ item }}</option>
+                      [value]="item">{{ item === 'Owner' ? ownerLabel : item }}</option>
             </cds-select>
             <ng-template #granteeError>
               <span class="invalid-feedback"
@@ -561,12 +556,12 @@
                         name="aclPermission"
                         [invalid]="!bucketForm.controls.aclPermission.valid && (bucketForm.controls.aclPermission.dirty)"
                         [invalidText]="aclPermissionError"
-                        label="Permissions"
+                        [label]="permissionsLabel"
                         [helperText]="permissionsHelperText"
                         formControlName="aclPermission">
               <option *ngFor="let permission of aclPermissions"
                       [value]="permission"
-                      i18n>{{ permission }}</option>
+                      >{{ permission === 'Full control' ? fullControlText : permission }}</option>
             </cds-select>
             <ng-template #aclPermissionError>
               <span class="invalid-feedback"

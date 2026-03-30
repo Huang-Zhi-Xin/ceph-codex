@@ -37,8 +37,7 @@
              let-value="data.value"
              let-row="data.row">
   <i *ngIf="row.remainingDays < this.expirationWarningAlert"
-     i18n-title
-     title="User's password is about to expire"
+     [title]="passwordExpiringTitle"
      [class.icon-danger-color]="row.remainingDays < this.expirationDangerAlert"
      [class.icon-warning-color]="row.remainingDays < this.expirationWarningAlert && row.remainingDays >= this.expirationDangerAlert"
      class="{{ icons.warning }}"></i>

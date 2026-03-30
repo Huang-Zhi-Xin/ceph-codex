@@ -17,6 +17,7 @@
                  [placeholder]="usernamePlaceholder"
                  id="username"
                  formControlName="username"
+                 autocomplete="username"
                  [invalid]="!userForm.controls.username.valid && userForm.controls.username.dirty"
                  autofocus
                  [ngbTooltip]="usernameTrimTooltip"
@@ -78,6 +79,7 @@
                  type="password"
                  [placeholder]="confirmPasswordPlaceholder"
                  id="confirmpassword"
+                 autocomplete="new-password"
                  formControlName="confirmpassword">
         </cds-password-label>
         <ng-template #confirmpasswordError>
@@ -127,6 +129,7 @@
                  type="text"
                  [placeholder]="fullNamePlaceholder"
                  id="name"
+                 autocomplete="name"
                  formControlName="name">
         </cds-text-label>
       </div>
@@ -140,6 +143,7 @@
                  type="email"
                  [placeholder]="emailPlaceholder"
                  id="email"
+                 autocomplete="email"
                  formControlName="email">
         </cds-text-label>
         <ng-template #emailError>

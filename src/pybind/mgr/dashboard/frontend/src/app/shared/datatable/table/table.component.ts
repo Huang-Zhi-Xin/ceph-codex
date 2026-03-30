@@ -4,8 +4,10 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChild,
+  Inject,
   EventEmitter,
   Input,
+  LOCALE_ID,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -51,6 +53,7 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
     SINGLE: $localize`已选择 1 项`,
     MULTIPLE: $localize`已选择 {{count}} 项`
   };
+  isZhHans: boolean;
 
   @ViewChild('tableCellBoldTpl', { static: true })
   tableCellBoldTpl: TemplateRef<any>;
@@ -391,9 +394,20 @@ export class TableComponent implements AfterViewInit, OnInit, OnChanges, OnDestr
 
   constructor(
     // private ngZone: NgZone,
+    @Inject(LOCALE_ID) localeId: string,
     private cdRef: ChangeDetectorRef,
     private timerService: TimerService
-  ) {}
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get searchAriaLabel(): string {
+    return this.isZhHans ? '搜索' : 'search';
+  }
+
+  get expandCollapseRowTitle(): string {
+    return this.isZhHans ? '展开/折叠行' : 'Expand/Collapse Row';
+  }
 
   static prepareSearch(search: string) {
     search = search.toLowerCase().replace(/,/g, '');

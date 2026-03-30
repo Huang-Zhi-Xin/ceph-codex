@@ -92,6 +92,10 @@ export class RgwMultisiteSyncFlowModalComponent implements OnInit {
     return this.isZhHans ? `-- 选择${label} --` : `-- Select ${label} --`;
   }
 
+  get loadingText(): string {
+    return this.isZhHans ? '加载中...' : 'Loading...';
+  }
+
   ngOnInit(): void {
     if (this.action === 'edit') {
       this.editing = true;

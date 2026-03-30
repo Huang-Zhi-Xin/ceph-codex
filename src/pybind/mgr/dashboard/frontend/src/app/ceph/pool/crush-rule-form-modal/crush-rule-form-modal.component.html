@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">{{ action | titlecase }} {{ resource | upperFirst }}</ng-container>
+  <ng-container class="modal-title">{{ action === actionLabels.CREATE ? '创建 CRUSH 规则' : '编辑 CRUSH 规则' }}</ng-container>
 
   <ng-container class="modal-content">
     <form #frm="ngForm"
@@ -18,7 +17,7 @@
                    id="name"
                    name="name"
                    class="form-control"
-                   placeholder="Name..."
+                   placeholder="名称..."
                    formControlName="name"
                    autofocus>
             <span class="invalid-feedback"
@@ -117,7 +116,7 @@
       <div class="modal-footer">
         <cd-form-button-panel (submitActionEvent)="onSubmit()"
                               [form]="form"
-                              [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"></cd-form-button-panel>
+                              [submitText]="action === actionLabels.CREATE ? '创建 CRUSH 规则' : '编辑 CRUSH 规则'"></cd-form-button-panel>
       </div>
     </form>
   </ng-container>

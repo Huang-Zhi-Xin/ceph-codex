@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
+  LOCALE_ID,
   OnDestroy,
   OnInit,
   TemplateRef,
@@ -122,6 +124,7 @@ export class RgwMultisiteDetailsComponent implements OnDestroy, OnInit {
   rgwModuleData: string | any[] = [];
   activeId: string;
   activeNodeId?: string;
+  isZhHans: boolean;
   MODULE_NAME = 'rgw';
   NAVIGATE_TO = '/rgw/multisite';
 
@@ -140,9 +143,11 @@ export class RgwMultisiteDetailsComponent implements OnDestroy, OnInit {
     private notificationService: NotificationService,
     private cdsModalService: ModalCdsService,
     private rgwMultisiteService: RgwMultisiteService,
-    private changeDetectionRef: ChangeDetectorRef
+    private changeDetectionRef: ChangeDetectorRef,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.permissions = this.authStorageService.getPermissions();
+    this.isZhHans = localeId.startsWith('zh');
   }
 
   openModal(entity: any | string, edit = false) {
@@ -434,8 +439,8 @@ export class RgwMultisiteDetailsComponent implements OnDestroy, OnInit {
     if (this.realms.length < 1 && this.zonegroups.length < 1 && this.zones.length < 1) {
       return [
         {
-          name: 'No nodes!',
-          label: 'No nodes!'
+          name: this.isZhHans ? '无节点！' : 'No nodes!',
+          label: this.isZhHans ? '无节点！' : 'No nodes!'
         }
       ];
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import _ from 'lodash';
@@ -18,14 +18,26 @@ export class LoginComponent implements OnInit {
   isLoginActive = false;
   returnUrl: string;
   postInstalled = false;
+  isZhHans: boolean;
 
   constructor(
     private authService: AuthService,
     private authStorageService: AuthStorageService,
     private modalService: ModalService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get loginTitle(): string {
+    return this.isZhHans ? 'KX Storage 登录' : 'KX Storage login';
+  }
+
+  get togglePasswordAriaLabel(): string {
+    return this.isZhHans ? '显示或隐藏密码' : 'toggle-password';
+  }
 
   ngOnInit() {
     if (this.authStorageService.isLoggedIn()) {

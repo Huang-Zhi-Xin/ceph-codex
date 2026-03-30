@@ -54,11 +54,11 @@
                   [columnNumbers]="{ lg: 14 }"
                 >
                   <cds-select
-                    label="Active Directory access resources"
-                    i18n-label
+                    label="Active Directory 访问资源"
                     formControlName="ref"
                     [invalid]="domainSettingsForm.controls?.join_sources.controls[i].invalid && domainSettingsForm.controls?.join_sources.controls[i].controls.ref.dirty"
                     [invalidText]="joinSourceError"
+                    i18n-label
                   >
                     <option
                       [value]="null"

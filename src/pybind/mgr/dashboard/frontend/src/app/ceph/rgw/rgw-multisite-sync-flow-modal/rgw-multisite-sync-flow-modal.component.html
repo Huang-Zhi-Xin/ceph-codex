@@ -112,7 +112,7 @@
           [autofocus]="editing">
   <option i18n
           *ngIf="zones.data.available.length == 0"
-          [ngValue]="null">Loading...</option>
+          [ngValue]="null">{{ loadingText }}</option>
   <option i18n
           *ngIf="zones.data.available.length > 0"
           [ngValue]="null">{{ getSelectZoneText(name) }}</option>

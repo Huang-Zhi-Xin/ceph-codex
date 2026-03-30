@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">{{ action | titlecase }} {{ resource | upperFirst }}</ng-container>
+  <ng-container class="modal-title">{{ formTitle }}</ng-container>
 
   <ng-container class="modal-content">
     <form name="multisiteZoneForm"
@@ -34,13 +33,13 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="Zone name..."
+                 [placeholder]="zoneNamePlaceholder"
                  id="zoneName"
                  name="zoneName"
                  formControlName="zoneName">
           <span class="invalid-feedback"
                 *ngIf="multisiteZoneForm.showError('zoneName', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
           <span class="invalid-feedback"
                 *ngIf="multisiteZoneForm.showError('zoneName', formDir, 'uniqueName')"
                 i18n>The chosen zone name is already in use.</span>
@@ -97,16 +96,16 @@
         <div class="cd-col-form-input">
           <input class="form-control"
                  type="text"
-                 placeholder="e.g, http://ceph-node-00.com:80"
+                 [placeholder]="endpointPlaceholder"
                  id="zone_endpoints"
                  name="zone_endpoints"
                  formControlName="zone_endpoints">
           <span class="invalid-feedback"
                 *ngIf="multisiteZoneForm.showError('zone_endpoints', formDir, 'required')"
-                i18n>This field is required.</span>
+                >{{ requiredText }}</span>
           <span class="invalid-feedback"
                 *ngIf="multisiteZoneForm.showError('zone_endpoints', formDir, 'invalidURL')"
-                i18n>Please enter a valid URL.</span>
+                >{{ validUrlText }}</span>
         </div>
       </div>
       <div class="form-group row">
@@ -114,7 +113,7 @@
                for="access_key"
                i18n>S3 access key
           <cd-helper>
-            <span>To see or copy your S3 access key, go to <b>Object Gateway > Users</b> and click on your user name. In <b>Keys</b>, click <b>Show</b>. View the access key by clicking Show and copy the key by clicking <b>Copy to Clipboard</b>.</span>
+            <span>{{ accessKeyHelperText }}</span>
           </cd-helper>
         </label>
         <div class="cd-col-form-input">
@@ -137,7 +136,7 @@
                for="secret_key"
                i18n>S3 secret key
           <cd-helper>
-            <span>To see or copy your S3 access key, go to <b>Object Gateway > Users</b> and click on your user name. In <b>Keys</b>, click <b>Show</b>. View the secret key by clicking Show and copy the key by clicking <b>Copy to Clipboard</b>.</span>
+            <span>{{ secretKeyHelperText }}</span>
           </cd-helper>
         </label>
         <div class="cd-col-form-input">
@@ -158,7 +157,7 @@
       <div class="form-group row"
            *ngIf="action === 'edit'">
         <div *ngIf="action === 'edit'">
-          <legend>Placement Targets</legend>
+          <legend>放置目标</legend>
           <div class="form-group row">
             <label class="cd-col-form-label"
                    for="placementTarget"
@@ -230,7 +229,7 @@
             </div>
           </div>
           <div>
-            <legend>Storage Classes</legend>
+            <legend>存储类别</legend>
             <div class="form-group row">
               <label class="cd-col-form-label"
                      for="storageClass"

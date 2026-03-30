@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 
 import { NEVER, Subscription } from 'rxjs';
@@ -21,6 +21,7 @@ import { TimerService } from '~/app/shared/services/timer.service';
 })
 export class ContextComponent implements OnInit, OnDestroy {
   readonly REFRESH_INTERVAL = 5000;
+  isZhHans: boolean;
   private subs = new Subscription();
   private rgwUrlPrefix = '/rgw';
   private rgwUserUrlPrefix = '/rgw/user';
@@ -40,8 +41,15 @@ export class ContextComponent implements OnInit, OnDestroy {
     private featureToggles: FeatureTogglesService,
     private router: Router,
     private timerService: TimerService,
-    public rgwDaemonService: RgwDaemonService
-  ) {}
+    public rgwDaemonService: RgwDaemonService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get selectObjectGatewayTitle(): string {
+    return this.isZhHans ? '选择对象网关' : 'Select Object Gateway';
+  }
 
   ngOnInit() {
     this.permissions = this.authStorageService.getPermissions();

@@ -8,8 +8,7 @@
            class="d-inline-block ms-2">
         <button ngbDropdownToggle
                 class="btn btn-outline-info ctx-bar-selected-rgw-daemon"
-                i18n-title
-                title="Select Object Gateway">
+                [title]="selectObjectGatewayTitle">
           {{ data.selectedDaemon.id }} ( {{ data.selectedDaemon.zonegroup_name }} )
         </button>
         <div ngbDropdownMenu>

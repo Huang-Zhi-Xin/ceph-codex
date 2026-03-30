@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { RgwRealmService } from '~/app/shared/api/rgw-realm.service';
@@ -35,6 +35,7 @@ export class RgwMultisiteImportComponent implements OnInit {
   labels: string[];
   labelClick = new Subject<string>();
   labelFocus = new Subject<string>();
+  isZhHans: boolean;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -42,8 +43,10 @@ export class RgwMultisiteImportComponent implements OnInit {
 
     public rgwRealmService: RgwRealmService,
     public actionLabels: ActionLabelsI18n,
-    public notificationService: NotificationService
+    public notificationService: NotificationService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.hosts = {
       options: [],
       messages: new SelectMessages({
@@ -52,6 +55,14 @@ export class RgwMultisiteImportComponent implements OnInit {
       })
     };
     this.createForm();
+  }
+
+  get zoneNamePlaceholder(): string {
+    return this.isZhHans ? 'Zone 名称...' : 'Zone name...';
+  }
+
+  get requiredText(): string {
+    return this.isZhHans ? '此字段为必填项。' : 'This field is required.';
   }
   ngOnInit(): void {
     this.zoneList =

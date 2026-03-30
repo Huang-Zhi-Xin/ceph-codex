@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import _ from 'lodash';
@@ -52,6 +52,7 @@ export class RgwMultisiteZoneFormComponent implements OnInit {
   master_zonegroup_of_realm: RgwZonegroup;
   compressionTypes = ['lz4', 'zlib', 'snappy'];
   userListReady: boolean = false;
+  isZhHans: boolean;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -61,12 +62,50 @@ export class RgwMultisiteZoneFormComponent implements OnInit {
     public rgwZoneGroupService: RgwZonegroupService,
     public notificationService: NotificationService,
     public rgwUserService: RgwUserService,
-    public modalService: ModalService
+    public modalService: ModalService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.action = this.editing
       ? this.actionLabels.EDIT + this.resource
       : this.actionLabels.CREATE + this.resource;
     this.createForm();
+  }
+
+  get formTitle(): string {
+    return this.isZhHans
+      ? this.action === 'edit'
+        ? '编辑 Zone'
+        : '创建 Zone'
+      : `${this.action} ${this.resource}`;
+  }
+
+  get zoneNamePlaceholder(): string {
+    return this.isZhHans ? 'Zone 名称...' : 'Zone name...';
+  }
+
+  get endpointPlaceholder(): string {
+    return 'e.g, http://ceph-node-00.com:80';
+  }
+
+  get requiredText(): string {
+    return this.isZhHans ? '此字段为必填项。' : 'This field is required.';
+  }
+
+  get validUrlText(): string {
+    return this.isZhHans ? '请输入有效的 URL。' : 'Please enter a valid URL.';
+  }
+
+  get accessKeyHelperText(): string {
+    return this.isZhHans
+      ? '要查看或复制你的 S3 访问密钥，请前往对象网关 > 用户，点击用户名，在 Keys 中点击 Show 后再点击 Copy to Clipboard 进行复制。'
+      : 'To view or copy your S3 access key, go to Object Gateway > Users, select the username, click Show in Keys, then click Copy to Clipboard.';
+  }
+
+  get secretKeyHelperText(): string {
+    return this.isZhHans
+      ? '要查看或复制你的 S3 密钥，请前往对象网关 > 用户，点击用户名，在 Keys 中点击 Show 后再点击 Copy to Clipboard 进行复制。'
+      : 'To view or copy your S3 secret key, go to Object Gateway > Users, select the username, click Show in Keys, then click Copy to Clipboard.';
   }
 
   createForm() {

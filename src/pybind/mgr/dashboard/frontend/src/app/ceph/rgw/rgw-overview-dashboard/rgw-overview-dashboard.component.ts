@@ -204,4 +204,10 @@ export class RgwOverviewDashboardComponent implements OnInit, OnDestroy {
   trackByFn(zone: any) {
     return zone;
   }
+
+  get multisiteConfiguredHint(): string {
+    return this.isZhHans
+      ? '请参考文档完成配置。'
+      : 'Please consult the documentation on how to configure and enable the multi-site functionality.';
+  }
 }

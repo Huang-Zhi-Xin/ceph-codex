@@ -15,12 +15,11 @@
         <cds-text-label
           labelInputID="share_id"
           i18n
-          helperText="Unique share identifier"
-          i18n-helperText
-          cdRequiredField="Share Name"
+          helperText="唯一共享标识符"
+          cdRequiredField="共享名称"
           [invalid]="smbShareForm.controls.share_id.invalid && smbShareForm.controls.share_id.dirty"
           [invalidText]="shareError"
-          >Share Name
+          >共享名称
           <input
             cdsText
             type="text"
@@ -33,8 +32,7 @@
           <span
             class="invalid-feedback"
             *ngIf="smbShareForm.showError('share_id', formDir, 'required')"
-            i18n
-            >This field is required.</span
+            >此字段为必填项。</span
           >
         </ng-template>
       </div>
@@ -43,8 +41,8 @@
       <div class="form-item">
         <cds-select
           formControlName="volume"
-          label="Volume"
-          cdRequiredField="Volume"
+          label="卷"
+          cdRequiredField="卷"
           id="volume"
           (change)="volumeChangeHandler()"
           [invalid]="smbShareForm.controls.volume.invalid && smbShareForm.controls.volume.dirty"
@@ -70,8 +68,7 @@
           <span
             class="invalid-feedback"
             *ngIf="smbShareForm.showError('volume', formDir, 'required')"
-            i18n
-            >This field is required.</span
+            >此字段为必填项。</span
           >
         </ng-template>
       </div>
@@ -80,7 +77,7 @@
            *ngIf="smbShareForm.getValue('volume')">
         <cds-select
           formControlName="subvolume_group"
-          label="Subvolume Group"
+          label="子卷组"
           id="subvolume_group"
           (change)="getSubVol()"
           [skeleton]="allsubvolgrps === null"
@@ -143,7 +140,7 @@
       <div cdsCol>
         <cds-text-label labelInputID="prefixedPath"
                         i18n
-                        helperText="A path is a relative path.">Prefixed Path
+                        helperText="路径为相对路径。">前缀路径
           <input cdsText
                  type="text"
                  id="prefixedPath"
@@ -158,9 +155,9 @@
             smbShareForm.controls.inputPath.invalid && smbShareForm.controls.inputPath.dirty
           "
           [invalidText]="pathError"
-          helperText="A relative path in a cephFS file system."
-          cdRequiredField="Path"
-          >Input Path
+          helperText="CephFS 文件系统中的相对路径。"
+          cdRequiredField="路径"
+          >输入路径
           <input
             cdsText
             type="text"
@@ -175,8 +172,7 @@
           <span
             class="invalid-feedback"
             *ngIf="smbShareForm.showError('inputPath', formDir, 'required')"
-            i18n
-            >This field is required.</span
+            >此字段为必填项。</span
           >
         </ng-template>
       </div>
@@ -198,8 +194,8 @@
       <div class="form-item">
         <cds-checkbox id="readonly"
                       formControlName="readonly"
-                      i18n>Readonly
-          <cd-help-text>If selected no clients are permitted to write to the share.</cd-help-text>
+        i18n>Readonly
+          <cd-help-text>如果选中，则不允许任何客户端向该共享写入。</cd-help-text>
         </cds-checkbox>
       </div>
       <cd-form-button-panel

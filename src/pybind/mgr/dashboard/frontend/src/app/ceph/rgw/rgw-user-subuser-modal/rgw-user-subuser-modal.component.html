@@ -56,13 +56,13 @@
                     formControlName="perm"
                     [invalid]="formGroup.controls.perm.invalid && formGroup.controls.perm.dirty"
                     [invalidText]="permError">
-          <option value="">--- Select a permission ---</option>
+          <option value="" i18n>--- 选择权限 ---</option>
           <option *ngFor="let perm of ['read', 'write']"
                   [value]="perm">
             {{ perm }}
           </option>
           <option i18n
-                  value="read-write">read, write</option>
+                  value="read-write">读、写</option>
           <option i18n
                   value="full-control">full</option>
         </cds-select>

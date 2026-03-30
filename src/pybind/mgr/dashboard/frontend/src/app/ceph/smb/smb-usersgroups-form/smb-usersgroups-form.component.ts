@@ -72,6 +72,28 @@ export class SmbUsersgroupsFormComponent extends CdForm implements OnInit, OnDes
     return `${this.action || ''} ${resourceLabel}`.trim();
   }
 
+  get uploaderTitle(): string {
+    return this.isZhHans ? '上传用户和组' : 'Upload Users and Groups';
+  }
+
+  get uploaderButtonText(): string {
+    return this.isZhHans ? '从文件添加' : 'Add from file';
+  }
+
+  get usersGroupsHelperText(): string {
+    return this.isZhHans ? '唯一标识符' : 'Unique identifier';
+  }
+
+  get linkedToClusterLabel(): string {
+    return this.isZhHans ? '关联到集群' : 'Linked to cluster';
+  }
+
+  get linkedToClusterHelperText(): string {
+    return this.isZhHans
+      ? '该资源只能与所关联的集群一起使用，并会在关联集群被删除时自动移除。'
+      : 'This resource may only be used with the linked cluster and will automatically be removed when the linked cluster is removed.';
+  }
+
   ngOnInit() {
     this.action = this.actionLabels.CREATE;
     this.smbClusters$ = this.smbService.listClusters();

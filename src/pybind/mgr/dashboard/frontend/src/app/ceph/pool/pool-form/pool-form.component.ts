@@ -1,4 +1,4 @@
-import { Component, OnInit, Type, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Type, ViewChild } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -88,6 +88,7 @@ export class PoolFormComponent extends CdForm implements OnInit {
   DEFAULT_RATIO = 0.875;
   isApplicationsSelected = true;
   msrCrush: boolean = false;
+  isZhHans: boolean;
 
   private modalSubscription: Subscription;
 
@@ -103,14 +104,61 @@ export class PoolFormComponent extends CdForm implements OnInit {
     private ecpService: ErasureCodeProfileService,
     private crushRuleService: CrushRuleService,
     public actionLabels: ActionLabelsI18n,
-    private rbdMirroringService: RbdMirroringService
+    private rbdMirroringService: RbdMirroringService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.editing = this.router.url.startsWith(`/pool/${URLVerbs.EDIT}`);
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
     this.resource = $localize`pool`;
     this.authenticate();
     this.createForm();
+  }
+
+  get formTitle(): string {
+    if (this.isZhHans) {
+      return this.editing ? '编辑存储池' : '创建存储池';
+    }
+    return `${this.action} ${this.resource}`.trim();
+  }
+
+  get namePlaceholder(): string {
+    return this.isZhHans ? '名称...' : 'Name...';
+  }
+
+  get applicationsWarningTitle(): string {
+    return this.isZhHans ? '存储池应关联应用标签' : 'Pools should be associated with an application tag';
+  }
+
+  get pgAutoscaleLabel(): string {
+    return this.isZhHans ? 'PG 自动伸缩' : 'PG Autoscale';
+  }
+
+  get erasureCodeProfileLabel(): string {
+    return this.isZhHans ? '纠删码配置文件' : 'Erasure code profile';
+  }
+
+  get compressionPolicyText(): string {
+    return this.isZhHans ? '用于压缩算法的策略' : 'Policy used for compression algorithm';
+  }
+
+  get noCompressionAlgorithmText(): string {
+    return this.isZhHans
+      ? '-- 无可用的纠删码压缩算法 --'
+      : '-- No erasure compression algorithm available --';
+  }
+
+  get minBlobPlaceholder(): string {
+    return this.isZhHans ? '例如：128KiB' : 'e.g., 128KiB';
+  }
+
+  get maxBlobPlaceholder(): string {
+    return this.isZhHans ? '例如：512KiB' : 'e.g., 512KiB';
+  }
+
+  get maxBytesPlaceholder(): string {
+    return this.isZhHans ? '例如：10GiB' : 'e.g., 10GiB';
   }
 
   authenticate() {

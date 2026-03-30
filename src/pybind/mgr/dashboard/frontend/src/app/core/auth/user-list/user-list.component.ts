@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
@@ -44,6 +44,7 @@ export class UserListComponent implements OnInit {
   expirationDangerAlert: number;
   selection = new CdTableSelection();
   icons = Icons;
+  isZhHans: boolean;
 
   modalRef: NgbModalRef;
 
@@ -55,8 +56,10 @@ export class UserListComponent implements OnInit {
     private authStorageService: AuthStorageService,
     private urlBuilder: URLBuilderService,
     private settingsService: SettingsService,
-    public actionLabels: ActionLabelsI18n
+    public actionLabels: ActionLabelsI18n,
+    @Inject(LOCALE_ID) localeId: string
   ) {
+    this.isZhHans = localeId.startsWith('zh');
     this.permission = this.authStorageService.getPermissions().user;
     const addAction: CdTableAction = {
       permission: 'create',
@@ -78,6 +81,10 @@ export class UserListComponent implements OnInit {
       name: this.actionLabels.DELETE
     };
     this.tableActions = [addAction, editAction, deleteAction];
+  }
+
+  get passwordExpiringTitle(): string {
+    return this.isZhHans ? '用户密码即将过期' : "User's password is about to expire";
   }
 
   ngOnInit() {

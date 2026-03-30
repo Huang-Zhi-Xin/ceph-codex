@@ -89,6 +89,94 @@ export class RgwConfigModalComponent implements OnInit {
   get submitText(): string {
     return this.isZhHans ? '提交' : this.actionLabels.SUBMIT;
   }
+
+  get encryptionTypeLabel(): string {
+    return this.isZhHans ? '加密类型' : 'Encryption Type';
+  }
+
+  get kmsProviderLabel(): string {
+    return this.isZhHans ? '密钥管理服务提供方' : 'Key management service provider';
+  }
+
+  get kmsProviderHelpText(): string {
+    return this.isZhHans ? '加密密钥的存储位置。' : 'Where the encryption keys are stored.';
+  }
+
+  get authenticationMethodLabel(): string {
+    return this.isZhHans ? '认证方式' : 'Authentication Method';
+  }
+
+  get authenticationMethodHelpText(): string {
+    return this.isZhHans ? '与 Vault 一起使用的认证方式类型。' : 'Type of authentication method to be used with Vault';
+  }
+
+  get secretEngineLabel(): string {
+    return this.isZhHans ? 'Secret Engine' : 'Secret Engine';
+  }
+
+  get secretEngineHelpText(): string {
+    return this.isZhHans ? '用于检索加密密钥的 Vault Secret Engine。' : 'Vault Secret Engine to be used to retrieve encryption keys.';
+  }
+
+  get secretPathLabel(): string {
+    return this.isZhHans ? 'Secret Path' : 'Secret Path';
+  }
+
+  get secretPathHelpText(): string {
+    return this.isZhHans
+      ? 'Vault 密钥 URL 前缀，可用于将访问限制在 Vault 密钥空间的特定子集。'
+      : 'Vault secret URL prefix, which can be used to restrict access to a particular subset of the Vault secret space.';
+  }
+
+  get namespaceLabel(): string {
+    return this.isZhHans ? '命名空间' : 'Namespace';
+  }
+
+  get namespaceHelpText(): string {
+    return this.isZhHans ? '用于选择你的租户的 Vault Namespace。' : 'Vault Namespace to be used to select your tenant.';
+  }
+
+  get vaultAddressLabel(): string {
+    return this.isZhHans ? 'Vault 地址' : 'Vault Address';
+  }
+
+  get vaultAddressHelpText(): string {
+    return this.isZhHans ? 'Vault 服务器基础地址。' : 'Vault server base address.';
+  }
+
+  get tokenLabel(): string {
+    return this.isZhHans ? '令牌' : 'Token';
+  }
+
+  get tokenFileHelpText(): string {
+    return this.isZhHans
+      ? "如果认证方式为 'token'，请提供令牌文件路径。"
+      : "If authentication method is 'token', provide a path to the token file.";
+  }
+
+  get caCertificatePathLabel(): string {
+    return this.isZhHans ? 'CA 证书路径' : 'CA Certificate Path';
+  }
+
+  get caCertificatePathHelpText(): string {
+    return this.isZhHans ? '访问服务器时使用的自定义 CA 证书路径。' : 'Path for custom ca certificate for accessing server';
+  }
+
+  get clientCertificatePathLabel(): string {
+    return this.isZhHans ? '客户端证书路径' : 'Client Certificate Path';
+  }
+
+  get clientCertificatePathHelpText(): string {
+    return this.isZhHans ? '访问服务器时使用的自定义客户端证书路径。' : 'Path for custom client certificate for accessing server';
+  }
+
+  get clientPrivateKeyPathLabel(): string {
+    return this.isZhHans ? '客户端私钥路径' : 'Client Private Key Path';
+  }
+
+  get clientPrivateKeyPathHelpText(): string {
+    return this.isZhHans ? '客户端证书所需的私钥路径。' : 'Path for private key required for client cert';
+  }
   ngOnInit(): void {
     this.kmsProviders = rgwBucketEncryptionModel.kmsProviders;
     this.authMethods = rgwBucketEncryptionModel.authMethods;

@@ -131,6 +131,10 @@ export class RgwBucketFormComponent extends CdForm implements OnInit, AfterViewC
     return this.isZhHans ? '名称...' : 'Name...';
   }
 
+  get nameLabel(): string {
+    return this.isZhHans ? '名称' : 'Name';
+  }
+
   get loadingText(): string {
     return this.isZhHans ? '加载中...' : 'Loading...';
   }
@@ -203,8 +207,24 @@ export class RgwBucketFormComponent extends CdForm implements OnInit, AfterViewC
       : 'Enables locking for the objects in the bucket. Locking can only be enabled while creating a bucket.';
   }
 
+  get objectLockingTitle(): string {
+    return this.isZhHans ? '对象锁定' : 'Object Locking';
+  }
+
+  get objectLockingDescription(): string {
+    return this.isZhHans
+      ? '使用一次写入、多次读取（WORM）模型存储对象，以防止对象在固定时间内或永久被删除或覆盖。对象锁定仅适用于已启用版本控制的 Bucket。'
+      : 'Store objects using a write-once-read-many (WORM) model to prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely. Object Locking works only in versioned buckets.';
+  }
+
   get replicationHelperText(): string {
     return this.isZhHans ? '为桶中的对象启用复制。' : 'Enables replication for the objects in the bucket.';
+  }
+
+  get replicationInfoText(): string {
+    return this.isZhHans
+      ? 'Dashboard 会同时创建一个双向同步策略组以及对应的 flow 和 pipe，随后使用 pipe ID 将复制策略应用到该 Bucket。'
+      : 'A bi-directional sync policy group will be created by the dashboard along with flows and pipes. The pipe id will then be used for applying the replication policy to the bucket.';
   }
 
   get taggingHelperText(): string {
@@ -225,6 +245,28 @@ export class RgwBucketFormComponent extends CdForm implements OnInit, AfterViewC
     return this.isZhHans
       ? '为选定的被授权方选择要授予的权限。无论如何，桶所有者始终具有完全控制权限。'
       : 'Select the permision to give to the selected grantee. Regardless, the owner of the bucket will always have FULL CONTROL access';
+  }
+
+  get aclHelpText(): string {
+    return this.isZhHans
+      ? '对 ACL 的任何更改都会覆盖之前的设置。你可以从可用选项中选择，以修改指定用户组的权限。'
+      : 'Any changes to the ACL will overwrite previous one. You can choose any of the available options to modify the spcified user group.';
+  }
+
+  get granteeLabel(): string {
+    return this.isZhHans ? '被授权方' : 'Grantee';
+  }
+
+  get ownerLabel(): string {
+    return this.isZhHans ? '所有者' : 'Owner';
+  }
+
+  get permissionsLabel(): string {
+    return this.isZhHans ? '权限' : 'Permissions';
+  }
+
+  get fullControlText(): string {
+    return this.isZhHans ? '完全控制' : 'Full control';
   }
 
   get placementTargetLabel(): string {

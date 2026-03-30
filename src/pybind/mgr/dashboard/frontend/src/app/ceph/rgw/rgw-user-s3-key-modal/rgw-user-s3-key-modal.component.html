@@ -37,7 +37,7 @@
                     formControlName="user"
                     [invalid]="formGroup.controls.user.invalid && formGroup.controls.user.dirty"
                     [invalidText]="userError">
-          <option value="">--- Select a username ---</option>
+          <option value="" i18n>--- 选择用户名 ---</option>
           <option *ngFor="let userCandidate of userCandidates"
                   [value]="userCandidate">{{ userCandidate }}</option>
         </cds-select>

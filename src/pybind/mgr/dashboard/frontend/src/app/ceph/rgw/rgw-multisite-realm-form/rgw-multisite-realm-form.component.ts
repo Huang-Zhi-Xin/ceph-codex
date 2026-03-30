@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Optional } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RgwRealmService } from '~/app/shared/api/rgw-realm.service';
@@ -26,6 +26,7 @@ export class RgwMultisiteRealmFormComponent extends BaseModal implements OnInit 
   isMaster: boolean;
   defaultRealmDisabled = false;
   docUrl: string;
+  isZhHans: boolean;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -33,6 +34,7 @@ export class RgwMultisiteRealmFormComponent extends BaseModal implements OnInit 
     public rgwRealmService: RgwRealmService,
     public notificationService: NotificationService,
     public docService: DocService,
+    @Inject(LOCALE_ID) localeId: string,
     @Optional() @Inject('action') public action: string,
     @Optional() @Inject('resource') public resource: string,
     @Optional() @Inject('info') public info: any,
@@ -41,9 +43,26 @@ export class RgwMultisiteRealmFormComponent extends BaseModal implements OnInit 
     @Optional() @Inject('editing') public editing: boolean
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
 
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
     this.createForm();
+  }
+
+  get formTitle(): string {
+    return this.isZhHans
+      ? this.action === this.actionLabels.CREATE
+        ? '创建 Realm'
+        : '编辑 Realm'
+      : `${this.action} ${this.resource}`;
+  }
+
+  get realmNameLabel(): string {
+    return this.isZhHans ? 'Realm 名称' : 'Realm Name';
+  }
+
+  get realmNamePlaceholder(): string {
+    return this.isZhHans ? 'Realm 名称...' : 'Realm name...';
   }
 
   createForm() {

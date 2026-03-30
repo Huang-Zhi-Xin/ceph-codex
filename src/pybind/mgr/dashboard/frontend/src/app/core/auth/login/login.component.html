@@ -1,6 +1,6 @@
 <div class="container"
      *ngIf="isLoginActive">
-  <h1 class="sr-only">KX Storage login</h1>
+  <h1 class="sr-only">{{ loginTitle }}</h1>
   <form name="loginForm"
         (ngSubmit)="login()"
         #loginForm="ngForm"
@@ -51,7 +51,7 @@
           <button type="button"
                   class="btn btn-outline-light btn-password h-100 px-4"
                   cdPasswordButton="password"
-                  aria-label="toggle-password">
+                  [attr.aria-label]="togglePasswordAriaLabel">
           </button>
         </span>
       </div>

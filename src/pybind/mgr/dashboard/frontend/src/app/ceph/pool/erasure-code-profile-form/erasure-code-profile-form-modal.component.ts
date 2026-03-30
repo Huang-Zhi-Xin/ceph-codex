@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, OnInit, Output } from '@angular/core';
 import { Validators } from '@angular/forms';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -46,6 +46,7 @@ export class ErasureCodeProfileFormModalComponent
   dCalc: boolean;
   lrcGroups: number;
   lrcMultiK: number;
+  isZhHans: boolean;
 
   public CrushFailureDomains = CrushFailureDomains;
 
@@ -54,13 +55,19 @@ export class ErasureCodeProfileFormModalComponent
     public activeModal: NgbActiveModal,
     private taskWrapper: TaskWrapperService,
     private ecpService: ErasureCodeProfileService,
-    public actionLabels: ActionLabelsI18n
+    public actionLabels: ActionLabelsI18n,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.action = this.actionLabels.CREATE;
     this.resource = $localize`EC Profile`;
     this.createForm();
     this.setJerasureDefaults();
+  }
+
+  get formTitle(): string {
+    return this.isZhHans ? '创建纠删码配置文件' : `${this.action} ${this.resource}`;
   }
 
   createForm() {

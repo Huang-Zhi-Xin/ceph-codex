@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RgwUserAccountsService } from '~/app/shared/api/rgw-user-accounts.service';
@@ -25,6 +25,7 @@ export class RgwUserAccountsFormComponent extends CdForm implements OnInit {
   resource: string;
   editing: boolean = false;
   submitObservables: Observable<Object>[] = [];
+  isZhHans: boolean;
 
   constructor(
     private router: Router,
@@ -32,14 +33,56 @@ export class RgwUserAccountsFormComponent extends CdForm implements OnInit {
     private rgwUserAccountsService: RgwUserAccountsService,
     private notificationService: NotificationService,
     private formBuilder: CdFormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.editing = this.router.url.includes('rgw/accounts/edit');
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
     this.resource = $localize`Account`;
     this.createForm();
     this.loadingReady();
+  }
+
+  get accountNameLabel(): string {
+    return this.isZhHans ? '账户名称' : 'Account Name';
+  }
+
+  get accountNamePlaceholder(): string {
+    return this.isZhHans ? '输入账户名称' : 'Enter account name';
+  }
+
+  get tenantPlaceholder(): string {
+    return this.isZhHans ? '输入租户' : 'Enter tenant';
+  }
+
+  get emailPlaceholder(): string {
+    return this.isZhHans ? '输入邮箱' : 'Enter email';
+  }
+
+  get accountQuotaHeading(): string {
+    return this.isZhHans ? '为用户所属的账户设置配额。' : 'Set quota on account owned by users.';
+  }
+
+  get bucketQuotaHeading(): string {
+    return this.isZhHans ? '为账户拥有的 Bucket 设置配额。' : 'Set quota on buckets owned by an account.';
+  }
+
+  get maxSizeLabel(): string {
+    return this.isZhHans ? '最大大小' : 'Max. size';
+  }
+
+  get maxSizePlaceholder(): string {
+    return this.isZhHans ? '输入大小' : 'Enter size';
+  }
+
+  get maxObjectsLabel(): string {
+    return this.isZhHans ? '最大对象数' : 'Max. objects';
+  }
+
+  get maxObjectsPlaceholder(): string {
+    return this.isZhHans ? '输入对象数量' : 'Enter number of objects';
   }
 
   ngOnInit(): void {

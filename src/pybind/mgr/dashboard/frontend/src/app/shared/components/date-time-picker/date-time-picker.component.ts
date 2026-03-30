@@ -54,12 +54,13 @@ export class DateTimePickerComponent implements OnInit {
       this.format = 'YYYY-MM-DD HH:mm';
     }
 
+    const hasInitialValue = !!this.control?.value;
     let mom = moment(this.control?.value, this.format);
 
     if (!mom.isValid() || mom.isBefore(moment())) {
       mom = moment();
     }
-    if (this.defaultDate) {
+    if (this.defaultDate && !hasInitialValue) {
       this.date.push([]);
     } else {
       this.date.push(mom.format('YYYY-MM-DD'));
@@ -75,7 +76,9 @@ export class DateTimePickerComponent implements OnInit {
       ampm: this.ampm
     };
 
-    this.onModelChange();
+    if (!this.defaultDate || hasInitialValue) {
+      this.onModelChange();
+    }
   }
 
   onModelChange(event?: any) {
@@ -100,6 +103,12 @@ export class DateTimePickerComponent implements OnInit {
       }
     }
     if (this.datetime) {
+      if (!this.datetime.date) {
+        setTimeout(() => {
+          this.control.setValue('');
+        });
+        return;
+      }
       const datetime = moment(`${this.datetime.date} ${this.datetime.time}`).format(this.format);
 
       setTimeout(() => {

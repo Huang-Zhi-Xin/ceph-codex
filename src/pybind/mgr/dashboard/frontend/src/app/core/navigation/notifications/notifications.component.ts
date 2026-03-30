@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
@@ -16,12 +16,20 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   icons = Icons;
   hasRunningTasks = false;
   hasNotifications = false;
+  isZhHans: boolean;
   private subs = new Subscription();
 
   constructor(
     public notificationService: NotificationService,
-    private summaryService: SummaryService
-  ) {}
+    private summaryService: SummaryService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get notificationsTitle(): string {
+    return this.isZhHans ? '任务与通知' : 'Tasks and Notifications';
+  }
 
   ngOnInit() {
     this.subs.add(

@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">Export Multi-site Realm Token</ng-container>
+  <ng-container class="modal-title">导出多站点 Realm 令牌</ng-container>
 
   <ng-container class="modal-content">
     <form name="exportTokenForm"
@@ -13,8 +12,8 @@
          *ngIf="!loading">
       <cd-alert-panel *ngIf="!tokenValid"
                       type="warning"
-                      class="mx-3"
-                      i18n>
+                      class="mx-3">
+      当前没有可导出的有效多站点 Realm 令牌。
       <div *ngFor="let realminfo of realms">
         <b>{{realminfo.realm}}</b> -
         {{realminfo.token}}
@@ -57,7 +56,7 @@
     </div>
     <div class="modal-footer">
       <cd-back-button class="m-2 float-end"
-                      aria-label="Close"
+                      aria-label="关闭"
                       (backAction)="activeModal.close()"></cd-back-button>
     </div>
     </form>

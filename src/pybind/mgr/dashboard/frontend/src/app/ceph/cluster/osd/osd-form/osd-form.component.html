@@ -52,8 +52,8 @@
             </div>
             <!-- @TODO: Visualize the storage used on a chart -->
             <!-- <div class="pie-chart">
-              <h4 class="text-center">Selected Capacity</h4>
-              <h5 class="margin text-center">10 Hosts | 30 NVMes </h5>
+              <h4 class="text-center">{{ selectedCapacityTitle }}</h4>
+              <h5 class="margin text-center">{{ selectedCapacitySummary }} </h5>
               <div class="char-i-contain">
                 <cd-health-pie [data]="data"
                                [config]="rawCapacityChartConfig"
@@ -174,7 +174,7 @@
             <button class="accordion-button"
                     type="button"
                     data-toggle="collapse"
-                    aria-label="features"
+                    [attr.aria-label]="isZhHans ? '功能特性' : 'features'"
                     aria-expanded="true"
                     >{{ featuresLabel }}</button>
           </h2>

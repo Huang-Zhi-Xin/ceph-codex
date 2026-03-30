@@ -30,8 +30,7 @@
           <td class="w-75">{{ user.tenant }}</td>
         </tr>
         <tr>
-          <td i18n
-              class="bold w-25">User ID</td>
+          <td class="bold w-25">{{ userIdLabel }}</td>
           <td class="w-75">{{ user.uid }}</td>
         </tr>
         <tr>
@@ -40,13 +39,11 @@
           <td class="w-75">{{ user.uid }}</td>
         </tr>
         <tr>
-          <td i18n
-              class="bold">Full name</td>
+          <td class="bold">{{ fullNameLabel }}</td>
           <td>{{ user.display_name }}</td>
         </tr>
         <tr *ngIf="user.email?.length">
-          <td i18n
-              class="bold">Email address</td>
+          <td class="bold">{{ emailAddressLabel }}</td>
           <td>{{ user.email }}</td>
         </tr>
         <tr>
@@ -55,19 +52,16 @@
           <td>{{ user.suspended | booleanText }}</td>
         </tr>
         <tr>
-          <td i18n
-              class="bold">System user</td>
+          <td class="bold">{{ systemUserLabel }}</td>
           <td>{{ user.system | booleanText }}</td>
         </tr>
         <tr>
-          <td i18n
-              class="bold">Maximum buckets</td>
+          <td class="bold">{{ maximumBucketsLabel }}</td>
           <td>{{ user.max_buckets | map: maxBucketsMap }}</td>
         </tr>
         @if (user.type === 'rgw' && selection.account?.id){
         <tr>
-          <td i18n
-              class="bold">Managed policies</td>
+          <td class="bold">{{ managedPoliciesLabel }}</td>
           <td i18n>{{ extractPolicyNamesFromArns(user.managed_user_policies) }}</td>
         </tr>
         }
@@ -88,8 +82,7 @@
           </td>
         </tr>
         <tr *ngIf="user.mfa_ids?.length">
-          <td i18n
-              class="bold">MFAs(Id)</td>
+          <td class="bold">{{ mfasIdLabel }}</td>
           <td>{{ user.mfa_ids | join }}</td>
         </tr>
       </tbody>
@@ -101,8 +94,7 @@
              id="accountsDetails">
         <tbody>
           <tr>
-            <td i18n
-                class="bold w-25">Account ID</td>
+            <td class="bold w-25">{{ accountIdLabel }}</td>
             <td class="w-75">{{ selection.account?.id }}</td>
           </tr>
           <tr>
@@ -116,8 +108,7 @@
             <td class="w-75">{{ selection.account?.tenant || '-'}}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold w-25">User type</td>
+            <td class="bold w-25">{{ userTypeLabel }}</td>
             <td class="w-75"
                 i18n>{{ user?.type === 'root' ? 'Account root user' : 'rgw user' }}</td>
           </tr>
@@ -138,8 +129,7 @@
             <td class="w-75">{{ user.user_quota.enabled | booleanText }}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">Maximum size</td>
+            <td class="bold">{{ maximumSizeLabel }}</td>
             <td *ngIf="!user.user_quota.enabled">-</td>
             <td *ngIf="user.user_quota.enabled && user.user_quota.max_size <= -1"
                 i18n>
@@ -150,8 +140,7 @@
             </td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">Maximum objects</td>
+            <td class="bold">{{ maximumObjectsLabel }}</td>
             <td *ngIf="!user.user_quota.enabled">-</td>
             <td *ngIf="user.user_quota.enabled && user.user_quota.max_objects <= -1"
                 i18n>
@@ -178,8 +167,7 @@
             <td class="w-75">{{ user.bucket_quota.enabled | booleanText }}</td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">Maximum size</td>
+            <td class="bold">{{ maximumSizeLabel }}</td>
             <td *ngIf="!user.bucket_quota.enabled">-</td>
             <td *ngIf="user.bucket_quota.enabled && user.bucket_quota.max_size <= -1"
                 i18n>
@@ -190,8 +178,7 @@
             </td>
           </tr>
           <tr>
-            <td i18n
-                class="bold">Maximum objects</td>
+            <td class="bold">{{ maximumObjectsLabel }}</td>
             <td *ngIf="!user.bucket_quota.enabled">-</td>
             <td *ngIf="user.bucket_quota.enabled && user.bucket_quota.max_objects <= -1"
                 i18n>

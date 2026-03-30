@@ -14,12 +14,10 @@
 
     <cds-file-uploader
       *ngIf="!editing && !hideUploader"
-      title="Upload Users and Groups"
-      i18n-title
+      [title]="uploaderTitle"
       description="only .json and .yaml files are supported"
       i18n-description
-      buttonText="Add from file"
-      i18n-buttonText
+      [buttonText]="uploaderButtonText"
       buttonType="primary"
       [accept]="['yaml', 'json']"
       [multiple]="false"
@@ -32,8 +30,7 @@
       <cds-text-label
         for="usersGroupsId"
         i18n
-        helperText="Unique identifier"
-        i18n-helperText
+        [helperText]="usersGroupsHelperText"
         [invalid]="form.controls.usersGroupsId.invalid && form.controls.usersGroupsId.dirty"
         [invalidText]="usersgroupsError"
       >Users and groups access resource name
@@ -49,8 +46,7 @@
         <span
           class="invalid-feedback"
           *ngIf="form.showError('usersGroupsId', form, 'required')"
-          i18n
-          >This field is required.</span
+          >此字段为必填项。</span
         >
       </ng-template>
     </div>
@@ -61,13 +57,11 @@
       class="form-item"
     >
       <cds-select
-        label="Linked to cluster"
-        i18n-label
+        [label]="linkedToClusterLabel"
         formControlName="linkedToCluster"
         name="linkedToCluster"
-        helperText="This resource may only be used with the linked cluster and will automatically be removed when the linked cluster is removed."
-        i18n-helperText
-        cdOptionalField="Linked to cluster"
+        [helperText]="linkedToClusterHelperText"
+        [cdOptionalField]="linkedToClusterLabel"
       >
         <option
           [value]="null"
@@ -113,8 +107,7 @@
             <ng-template #usersNameError>
               <span
                 class="invalid-feedback"
-                i18n
-                >This field is required.</span
+                >此字段为必填项。</span
               >
             </ng-template>
           </div>
@@ -141,8 +134,7 @@
           <ng-template #usersPasswordError>
             <span
               class="invalid-feedback"
-              i18n
-              >This field is required.</span
+              >此字段为必填项。</span
             >
           </ng-template>
           </div>

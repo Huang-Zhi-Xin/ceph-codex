@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 
 import { SettingsService } from '~/app/shared/api/settings.service';
 import { CdPwdExpirationSettings } from '~/app/shared/models/cd-pwd-expiration-settings';
@@ -14,11 +14,15 @@ export class PwdExpirationNotificationComponent implements OnInit, OnDestroy {
   expirationDays: number;
   pwdExpirationSettings: CdPwdExpirationSettings;
   displayNotification = false;
+  isZhHans: boolean;
 
   constructor(
     private settingsService: SettingsService,
-    private authStorageService: AuthStorageService
-  ) {}
+    private authStorageService: AuthStorageService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
 
   ngOnInit() {
     this.settingsService.getStandardSettings().subscribe((pwdExpirationSettings) => {
@@ -51,5 +55,9 @@ export class PwdExpirationNotificationComponent implements OnInit, OnDestroy {
   onDismissed(): void {
     this.authStorageService.isPwdDisplayedSource.next(false);
     this.displayNotification = false;
+  }
+
+  get lessThanOneDayText(): string {
+    return this.isZhHans ? '不到 1' : 'less than 1';
   }
 }

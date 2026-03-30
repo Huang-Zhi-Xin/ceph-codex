@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -47,6 +47,7 @@ export class TelemetryComponent extends CdForm implements OnInit {
   sendToDeviceUrl = '';
   step = 1;
   showContactInfo: boolean;
+  isZhHans: boolean;
 
   constructor(
     public actionLabels: ActionLabelsI18n,
@@ -55,9 +56,35 @@ export class TelemetryComponent extends CdForm implements OnInit {
     private notificationService: NotificationService,
     private router: Router,
     private telemetryService: TelemetryService,
-    private telemetryNotificationService: TelemetryNotificationService
+    private telemetryNotificationService: TelemetryNotificationService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get moduleAlreadyEnabledText(): string {
+    return this.isZhHans
+      ? '该插件已启用。点击“停用”可将其禁用。'
+      : 'The plugin is already enabled. Click Deactivate to disable it.';
+  }
+
+  get identItems(): string[] {
+    return this.isZhHans
+      ? ['集群描述', '联系邮箱地址']
+      : ['Cluster description', 'Contact email address'];
+  }
+
+  get contactPlaceholder(): string {
+    return this.isZhHans ? '示例用户 <user@example.com>' : 'Example User <user@example.com>';
+  }
+
+  get descriptionPlaceholder(): string {
+    return this.isZhHans ? '我的第一个存储集群' : 'My first storage cluster';
+  }
+
+  get organizationPlaceholder(): string {
+    return this.isZhHans ? '组织名称' : 'Organization name';
   }
 
   ngOnInit() {

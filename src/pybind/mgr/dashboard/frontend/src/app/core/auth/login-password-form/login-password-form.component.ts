@@ -16,6 +16,18 @@ import { UserPasswordFormComponent } from '../user-password-form/user-password-f
   styleUrls: ['./login-password-form.component.scss']
 })
 export class LoginPasswordFormComponent extends UserPasswordFormComponent {
+  get oldPasswordPlaceholder(): string {
+    return this.isZhHans ? '请输入旧密码...' : 'Old password...';
+  }
+
+  get newPasswordPlaceholder(): string {
+    return this.isZhHans ? '请输入新密码...' : 'New password...';
+  }
+
+  get confirmNewPasswordPlaceholder(): string {
+    return this.isZhHans ? '请再次输入新密码...' : 'Confirm new password...';
+  }
+
   constructor(
     public actionLabels: ActionLabelsI18n,
     public notificationService: NotificationService,

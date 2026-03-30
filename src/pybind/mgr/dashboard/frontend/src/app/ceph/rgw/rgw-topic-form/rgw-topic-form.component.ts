@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { ActionLabelsI18n, URLVerbs } from '~/app/shared/constants/app.constants';
 import { CdForm } from '~/app/shared/forms/cd-form';
 import { CdFormGroup } from '~/app/shared/forms/cd-form-group';
@@ -54,6 +54,7 @@ export class RgwTopicFormComponent extends CdForm implements OnInit, AfterViewCh
     AMQP: URL_FORMAT_PLACEHOLDERS.amqp,
     KAFKA: URL_FORMAT_PLACEHOLDERS.kafka
   };
+  isZhHans: boolean;
 
   constructor(
     public actionLabels: ActionLabelsI18n,
@@ -62,12 +63,177 @@ export class RgwTopicFormComponent extends CdForm implements OnInit, AfterViewCh
     private rgwUserService: RgwUserService,
     public notificationService: NotificationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     super();
+    this.isZhHans = localeId.startsWith('zh');
     this.editing = this.router.url.startsWith(`/rgw/topic/${URLVerbs.EDIT}`);
     this.action = this.editing ? this.actionLabels.EDIT : this.actionLabels.CREATE;
     this.resource = $localize`topic`;
+  }
+
+  get topicConfigHelpText(): string {
+    return this.isZhHans
+      ? '配置推送端点参数以发送通知。创建成功后，你将收到该主题唯一的 Amazon Resource Name。'
+      : "Configure the push endpoint parameters to send notifications. On successful creation, you'll receive the topic's unique Amazon Resource Name";
+  }
+
+  get formTitle(): string {
+    if (this.isZhHans) {
+      return this.editing ? '编辑 Topic' : '创建 Topic';
+    }
+    return `${this.action} ${_.upperFirst(this.resource)}`.trim();
+  }
+
+  get topicTypeLabel(): string {
+    return this.isZhHans ? '类型' : 'Type';
+  }
+
+  get endpointTypeHelperText(): string {
+    return this.isZhHans
+      ? '选择主题类型以配置对应的推送端点。'
+      : 'Select the topic type to configure the corresponding push endpoint.';
+  }
+
+  get ownerLabel(): string {
+    return this.isZhHans ? '所有者' : 'Owner';
+  }
+
+  get loadingText(): string {
+    return this.isZhHans ? '加载中...' : 'Loading...';
+  }
+
+  get selectTopicTypeText(): string {
+    return this.isZhHans ? '-- 选择主题类型 --' : '-- Select a Topic type --';
+  }
+
+  get ownerHelperText(): string {
+    return this.isZhHans ? '该所有者将定义并控制主题的设置。' : 'This owner will define and control the topic’s settings';
+  }
+
+  get selectUserText(): string {
+    return this.isZhHans ? '-- 选择用户 --' : '-- Select a user --';
+  }
+
+  get nameHelperText(): string {
+    return this.isZhHans ? '输入主题名称' : 'Enter a Topic name';
+  }
+
+  get requiredText(): string {
+    return this.isZhHans ? '此字段为必填项。' : 'This field is required.';
+  }
+
+  get fqdnHelperText(): string {
+    return this.isZhHans ? '输入 FQDN 以配置主题的设置和行为。' : "Enter the FQDN to configure the topic's settings and behavior";
+  }
+
+  get fqdnPlaceholder(): string {
+    return this.isZhHans ? '例如：127.0.0.1 或 localhost' : 'e.g., 127.0.0.1 or localhost';
+  }
+
+  get portHelperText(): string {
+    return this.isZhHans ? '输入推送端点的端口号。' : 'Enter the port number for the push endpoint';
+  }
+
+  get generatePushEndpointHelpText(): string {
+    return this.isZhHans ? '配置端点 URL 以接收推送通知。' : 'Configure the endpoint URL to receive push notifications';
+  }
+
+  get rgwGatewayHostnameLabel(): string {
+    return this.isZhHans ? 'RGW 网关主机名' : 'RGW Gateway Hostname';
+  }
+
+  get pushEndpointUserHelperText(): string {
+    return this.isZhHans ? '输入推送端点的用户名。' : 'Enter the user for the push endpoint';
+  }
+
+  get pushEndpointPasswordHelperText(): string {
+    return this.isZhHans ? '输入推送端点的密码。' : 'Enter the password for the push endpoint';
+  }
+
+  get vhostHelperText(): string {
+    return this.isZhHans ? '输入推送端点的 vhost。' : 'Enter the vhost for the push endpoint';
+  }
+
+  get pushEndpointLabel(): string {
+    return this.isZhHans ? '推送端点' : 'Push endpoint';
+  }
+
+  get pushEndpointHelperText(): string {
+    return this.isZhHans ? '指定用于接收推送通知的端点 URL。' : 'Specify the endpoint URL for receiving push notifications';
+  }
+
+  get caLocationHelperText(): string {
+    return this.isZhHans ? '用于验证服务器的 CA 证书文件路径。' : 'The file path of the CA certificate used to verify the server';
+  }
+
+  get amqpExchangeHelperText(): string {
+    return this.isZhHans
+      ? '用于发布消息的 AMQP exchange 名称；该 exchange 必须已存在于 broker 上。'
+      : 'Name of the AMQP exchange to publish messages to; must exist on the broker';
+  }
+
+  get kafkaMechanismHelperText(): string {
+    return this.isZhHans
+      ? '选择连接 Kafka broker 使用的认证机制。'
+      : 'Select the authentication mechanism to connect to the Kafka broker';
+  }
+
+  get selectKafkaMechanismText(): string {
+    return this.isZhHans ? '-- 选择 KAFKA 机制 --' : '-- Select a KAFKA mechanism --';
+  }
+
+  get ackLevelLabel(): string {
+    return this.isZhHans ? '确认级别' : 'Ack level';
+  }
+
+  get ackLevelHelperText(): string {
+    return this.isZhHans
+      ? '选择确认级别，以控制客户端与 broker 之间的消息投递保障。'
+      : 'Select the acknowledgment level to control message delivery guarantees between client and broker';
+  }
+
+  get kafkaBrokersHelperText(): string {
+    return this.isZhHans ? '指定 Kafka broker 的地址（例如：host:9092）。' : 'Specify the address of the Kafka broker (e.g., host:9092)';
+  }
+
+  get additionalCommonAttributesHelpText(): string {
+    return this.isZhHans
+      ? '配置附加属性以自定义主题的行为和设置。'
+      : "Configure additional attributes to customize the topic's behavior and settings";
+  }
+
+  get opaqueDataHelperText(): string {
+    return this.isZhHans
+      ? '用户自定义元数据，会添加到该主题触发的所有通知中。'
+      : 'A user-defined metadata added to all notifications that are triggered by the topic.';
+  }
+
+  get timeToLiveLabel(): string {
+    return this.isZhHans ? '生存时间' : 'Time to live';
+  }
+
+  get timeToLiveHelperText(): string {
+    return this.isZhHans ? '通知保留的时间限制（秒）。' : 'Time limit (in seconds) for retaining notifications';
+  }
+
+  get maxRetriesLabel(): string {
+    return this.isZhHans ? '最大重试次数' : 'Max retries';
+  }
+
+  get maxRetriesHelperText(): string {
+    return this.isZhHans ? '通知过期前允许的最大重试次数。' : 'Max retries before expiring notifications';
+  }
+
+  get retrySleepDurationLabel(): string {
+    return this.isZhHans ? '重试休眠时长' : 'Retry sleep duration';
+  }
+
+  get retrySleepDurationHelperText(): string {
+    return this.isZhHans
+      ? '控制通知重试的频率。'
+      : 'Controls the frequency of retrying the notifications';
   }
 
   ngAfterViewChecked(): void {

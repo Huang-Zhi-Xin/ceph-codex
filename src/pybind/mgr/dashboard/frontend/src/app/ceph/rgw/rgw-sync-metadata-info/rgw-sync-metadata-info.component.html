@@ -1,7 +1,7 @@
 <span *ngIf="metadataSyncInfo === 'no sync (zone is master)'">
   <ul class="me-2">
-    <li><b i18n>Status:</b></li>
-    <li>No Sync</li>
+    <li><b>{{ statusLabel }}</b></li>
+    <li>{{ noSyncLabel }}</li>
   </ul>
 </span>
 <span *ngIf="metadataSyncInfo !== 'no sync (zone is master)'">
@@ -23,7 +23,7 @@
               class="lead text-primary"
               i18n>Not Syncing</a>
         </ng-template>
-        <li><b i18n>Status:</b></li>
+        <li><b>{{ statusLabel }}</b></li>
         <li *ngIf="metadataSyncInfo.syncstatus?.includes('failed') || metadataSyncInfo.syncstatus?.includes('error'); else showMetadataStatus">
           <i  class="text-danger"
               [ngClass]="[icons.danger]"></i>
@@ -33,7 +33,7 @@
       </div>
       <div cdsToggletipContent>
         <ul class="text-center">
-          <li><h5><b i18n>Metadata Sync Status:</b></h5></li>
+          <li><h5><b>{{ metadataSyncStatusLabel }}</b></h5></li>
           <li *ngFor="let status of metadataSyncInfo.fullSyncStatus">
             <span *ngIf="!status?.includes(metadataSyncInfo.syncstatus) && !status?.includes('failed') && !status?.includes('error')">
               <span *ngIf="status?.includes(':')">
@@ -51,9 +51,7 @@
       </div>
     </cds-toggletip>
     <li class="mt-4 fw-bold"
-        i18n>
-        Last Synced:
-    </li>
+        >{{ lastSyncedLabel }}</li>
     <li class="badge badge-info"
         *ngIf="metadataSyncInfo.timestamp; else upToDateTpl">{{ metadataSyncInfo.timestamp | relativeDate }}</li>
   </ul>

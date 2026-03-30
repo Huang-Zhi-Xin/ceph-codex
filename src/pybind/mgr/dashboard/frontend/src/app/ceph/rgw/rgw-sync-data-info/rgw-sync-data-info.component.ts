@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID } from '@angular/core';
 import { Icons } from '~/app/shared/enum/icons.enum';
 
 @Component({
@@ -9,7 +9,18 @@ import { Icons } from '~/app/shared/enum/icons.enum';
 export class RgwSyncDataInfoComponent {
   icons = Icons;
   align = 'top';
+  isZhHans: boolean;
   @Input()
   zone: any = {};
-  constructor() {}
+  constructor(@Inject(LOCALE_ID) localeId: string) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get statusLabel(): string {
+    return this.isZhHans ? '状态：' : 'Status:';
+  }
+
+  get lastSyncedLabel(): string {
+    return this.isZhHans ? '上次同步：' : 'Last Synced:';
+  }
 }

@@ -26,8 +26,8 @@
       <a ngbNavLink
          i18n>Performance Details</a>
       <ng-template ngbNavContent>
-        <cd-grafana i18n-title
-                    title="RGW instance details"
+        <cd-grafana
+                    [title]="'RGW 实例详情'"
                     [grafanaPath]="'rgw-instance-detail?var-rgw_servers=rgw.' + this.serviceId"
                     [type]="'metrics'"
                     uid="x5ARzZtmk"

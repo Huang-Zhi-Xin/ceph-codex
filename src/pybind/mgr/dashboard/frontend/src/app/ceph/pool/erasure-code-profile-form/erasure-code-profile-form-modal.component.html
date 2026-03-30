@@ -1,6 +1,5 @@
 <cd-modal [modalRef]="activeModal">
-  <ng-container i18n="form title"
-                class="modal-title">{{ action | titlecase }} {{ resource | upperFirst }}</ng-container>
+  <ng-container class="modal-title">{{ formTitle }}</ng-container>
 
   <ng-container class="modal-content">
     <form #frm="ngForm"
@@ -16,7 +15,7 @@
                    id="name"
                    name="name"
                    class="form-control"
-                   placeholder="Name..."
+                   placeholder="名称..."
                    formControlName="name"
                    autofocus>
             <span class="invalid-feedback"
@@ -72,7 +71,7 @@
                    name="k"
                    class="form-control"
                    ng-model="$ctrl.erasureCodeProfile.k"
-                   placeholder="Data chunks..."
+                   placeholder="数据块数..."
                    formControlName="k"
                    min="2">
             <span class="invalid-feedback"
@@ -112,7 +111,7 @@
                    id="m"
                    name="m"
                    class="form-control"
-                   placeholder="Coding chunks..."
+                   placeholder="编码块数..."
                    formControlName="m"
                    min="1">
             <span class="invalid-feedback"
@@ -144,7 +143,7 @@
                    id="c"
                    name="c"
                    class="form-control"
-                   placeholder="Coding chunks..."
+                   placeholder="编码块数..."
                    formControlName="c"
                    min="1">
             <span class="invalid-feedback"
@@ -171,7 +170,7 @@
                      id="d"
                      name="d"
                      class="form-control"
-                     placeholder="Helper chunks..."
+                     placeholder="辅助块数..."
                      formControlName="d">
               <button class="btn btn-light"
                       id="d-calc-btn"
@@ -218,7 +217,7 @@
                    id="l"
                    name="l"
                    class="form-control"
-                   placeholder="Coding chunks..."
+                   placeholder="编码块数..."
                    formControlName="l"
                    min="1">
             <span class="invalid-feedback"
@@ -381,7 +380,7 @@
                    id="packetSize"
                    name="packetSize"
                    class="form-control"
-                   placeholder="Packetsize..."
+                   placeholder="包大小..."
                    formControlName="packetSize"
                    min="1">
             <span class="invalid-feedback"
@@ -450,7 +449,7 @@
                    id="directory"
                    name="directory"
                    class="form-control"
-                   placeholder="Path..."
+                   placeholder="路径..."
                    formControlName="directory">
           </div>
         </div>
@@ -459,7 +458,7 @@
       <div class="modal-footer">
         <cd-form-button-panel (submitActionEvent)="onSubmit()"
                               [form]="form"
-                              [submitText]="(action | titlecase) + ' ' + (resource | upperFirst)"></cd-form-button-panel>
+                              [submitText]="formTitle"></cd-form-button-panel>
       </div>
     </form>
   </ng-container>

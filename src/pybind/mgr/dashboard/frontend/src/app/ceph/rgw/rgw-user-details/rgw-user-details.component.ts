@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnChanges, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import _ from 'lodash';
 
@@ -39,10 +39,61 @@ export class RgwUserDetailsComponent implements OnChanges, OnInit {
   keysSelection: CdTableSelection = new CdTableSelection();
   tableAction: CdTableAction[] = [];
   permissions: Permissions;
+  isZhHans: boolean;
 
   icons = Icons;
 
-  constructor(private rgwUserService: RgwUserService, private cdsModalService: ModalCdsService) {}
+  constructor(
+    private rgwUserService: RgwUserService,
+    private cdsModalService: ModalCdsService,
+    @Inject(LOCALE_ID) localeId: string
+  ) {
+    this.isZhHans = localeId.startsWith('zh');
+  }
+
+  get userIdLabel(): string {
+    return this.isZhHans ? '用户 ID' : 'User ID';
+  }
+
+  get fullNameLabel(): string {
+    return this.isZhHans ? '全名' : 'Full name';
+  }
+
+  get emailAddressLabel(): string {
+    return this.isZhHans ? '邮箱地址' : 'Email address';
+  }
+
+  get systemUserLabel(): string {
+    return this.isZhHans ? '系统用户' : 'System user';
+  }
+
+  get maximumBucketsLabel(): string {
+    return this.isZhHans ? '最大 Bucket 数' : 'Maximum buckets';
+  }
+
+  get managedPoliciesLabel(): string {
+    return this.isZhHans ? '托管策略' : 'Managed policies';
+  }
+
+  get mfasIdLabel(): string {
+    return this.isZhHans ? '多重身份验证（ID）' : 'MFAs(Id)';
+  }
+
+  get accountIdLabel(): string {
+    return this.isZhHans ? '账户 ID' : 'Account ID';
+  }
+
+  get userTypeLabel(): string {
+    return this.isZhHans ? '用户类型' : 'User type';
+  }
+
+  get maximumSizeLabel(): string {
+    return this.isZhHans ? '最大大小' : 'Maximum size';
+  }
+
+  get maximumObjectsLabel(): string {
+    return this.isZhHans ? '最大对象数' : 'Maximum objects';
+  }
 
   ngOnInit() {
     this.keysColumns = [

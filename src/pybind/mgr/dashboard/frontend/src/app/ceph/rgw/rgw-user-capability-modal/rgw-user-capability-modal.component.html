@@ -35,7 +35,7 @@
                       formControlName="type"
                       [invalid]="formGroup.controls.type.invalid && formGroup.controls.type.dirty"
                       [invalidText]="typeError">
-            <option value="">--- Select a type ---</option>
+            <option value="" i18n>--- 选择类型 ---</option>
             <option *ngFor="let type of types"
                     [value]="type">{{ type }}</option>
           </cds-select>
@@ -54,7 +54,7 @@
                       formControlName="perm"
                       [invalid]="formGroup.controls.perm.invalid && formGroup.controls.perm.dirty"
                       [invalidText]="permError">
-            <option value="">--- Select a permission ---</option>
+            <option value="" i18n>--- 选择权限 ---</option>
             <option *ngFor="let perm of ['read', 'write', '*']"
                     [value]="perm">
               {{ perm }}

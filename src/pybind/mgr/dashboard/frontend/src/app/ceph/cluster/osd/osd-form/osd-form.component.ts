@@ -148,6 +148,14 @@ export class OsdFormComponent extends CdForm implements OnInit, OnDestroy {
     return this.isZhHans ? '创建 OSD' : 'Create OSDs';
   }
 
+  get selectedCapacityTitle(): string {
+    return this.isZhHans ? '已选容量' : 'Selected Capacity';
+  }
+
+  get selectedCapacitySummary(): string {
+    return this.isZhHans ? '10 台主机 | 30 个 NVMe' : '10 Hosts | 30 NVMes';
+  }
+
   get primaryDevicesLabel(): string {
     return this.isZhHans ? '主设备' : 'Primary';
   }

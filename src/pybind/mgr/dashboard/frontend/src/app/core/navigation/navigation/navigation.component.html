@@ -92,9 +92,9 @@
           <span>{{ dashboardLabel }}</span>
         </cds-sidenav-item>
         <!-- Multi-cluster Dashboard -->
-        <cds-sidenav-menu title="Multi-Cluster"
+        <cds-sidenav-menu [title]="multiClusterLabel"
                           *ngIf="permissions.configOpt.read"
-                          i18n-title>
+                          >
           <svg cdsIcon="edge-cluster"
                icon
                size="20"></svg>
@@ -104,8 +104,7 @@
                             [useRouter]="true"
                             class="tc_submenuitem tc_submenuitem_multiCluster_overview"><span i18n>Overview</span></cds-sidenav-item>
           <cds-sidenav-item route="/multi-cluster/manage-clusters"
-                            title="Manage Clusters"
-                            i18n-title
+                            [title]="'管理集群'"
                             [useRouter]="true"
                             class="tc_submenuitem tc_submenuitem_multiCluster_manage_clusters"><span i18n>Manage Clusters</span></cds-sidenav-item>
         </cds-sidenav-menu>
@@ -137,14 +136,12 @@
                             class="tc_submenuitem tc_submenuitem_cluster_osds"><span i18n>OSDs</span></cds-sidenav-item>
           <cds-sidenav-item route="/inventory"
                             [useRouter]="true"
-                            title="Physical Disks"
-                            i18n-title
+                            [title]="'物理磁盘'"
                             *ngIf="permissions.hosts.read"
                             class="tc_submenuitem tc_submenuitem_cluster_inventory"><span i18n>Physical Disks</span></cds-sidenav-item>
           <cds-sidenav-item route="/crush-map"
                             [useRouter]="true"
-                            title="CRUSH Map"
-                            i18n-title
+                            [title]="'CRUSH Map'"
                             *ngIf="permissions.osd.read"
                             class="tc_submenuitem tc_submenuitem_cluster_crush"><span i18n>CRUSH Map</span></cds-sidenav-item>
           <cds-sidenav-item route="/monitor"
@@ -187,8 +184,7 @@
                             class="tc_submenuitem tc_submenuitem_block_iscsi"><span i18n>iSCSI</span></cds-sidenav-item>
           <cds-sidenav-item route="/block/nvmeof"
                             [useRouter]="true"
-                            title="NVMe/TCP"
-                            i18n-title
+                            [title]="'NVMe/TCP'"
                             class="tc_submenuitem tc_submenuitem_block_nvme"><span i18n>NVMe/TCP</span></cds-sidenav-item>
         </cds-sidenav-menu>
         <!-- Object Storage -->
@@ -248,8 +244,7 @@
                size="20"></svg>
           <cds-sidenav-item route="/cephfs/fs"
                             [useRouter]="true"
-                            title="File Systems"
-                            i18n-title
+                            [title]="'文件系统'"
                             *ngIf="permissions.cephfs.read && enabledFeature.cephfs"
                             class="tc_submenuitem tc_submenuitem_file_cephfs"><span i18n>File Systems</span></cds-sidenav-item>
           <cds-sidenav-item route="/cephfs/nfs"
@@ -321,8 +316,7 @@
                             class="tc_submenuitem tc_submenuitem_admin_users"><span>{{ storageUsersLabel }}</span></cds-sidenav-item>
           <cds-sidenav-item route="/mgr-modules"
                             [useRouter]="true"
-                            title="Manager Modules"
-                            i18n-title
+                            [title]="'Manager Modules'"
                             *ngIf="permissions.configOpt.read"
                             class="tc_submenuitem tc_submenuitem_admin_modules"><span i18n>Manager Modules</span></cds-sidenav-item>
           <cds-sidenav-item route="/configuration"
