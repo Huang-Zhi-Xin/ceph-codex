@@ -41,27 +41,27 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
   columns: Array<CdTableColumn> = [];
 
   queriesResults: any = {
-    ALERTS_COUNT: 0,
-    CLUSTER_COUNT: 0,
-    HEALTH_OK_COUNT: 0,
-    HEALTH_WARNING_COUNT: 0,
-    HEALTH_ERROR_COUNT: 0,
-    TOTAL_CLUSTERS_CAPACITY: 0,
-    TOTAL_USED_CAPACITY: 0,
-    CLUSTER_CAPACITY_UTILIZATION: 0,
-    CLUSTER_IOPS_UTILIZATION: 0,
-    CLUSTER_THROUGHPUT_UTILIZATION: 0,
-    POOL_CAPACITY_UTILIZATION: 0,
-    POOL_IOPS_UTILIZATION: 0,
-    POOL_THROUGHPUT_UTILIZATION: 0,
-    TOTAL_CAPACITY: 0,
-    USED_CAPACITY: 0,
-    HOSTS: 0,
-    POOLS: 0,
-    OSDS: 0,
-    CLUSTER_ALERTS: 0,
+    ALERTS_COUNT: [],
+    CLUSTER_COUNT: [],
+    HEALTH_OK_COUNT: [],
+    HEALTH_WARNING_COUNT: [],
+    HEALTH_ERROR_COUNT: [],
+    TOTAL_CLUSTERS_CAPACITY: [],
+    TOTAL_USED_CAPACITY: [],
+    CLUSTER_CAPACITY_UTILIZATION: [],
+    CLUSTER_IOPS_UTILIZATION: [],
+    CLUSTER_THROUGHPUT_UTILIZATION: [],
+    POOL_CAPACITY_UTILIZATION: [],
+    POOL_IOPS_UTILIZATION: [],
+    POOL_THROUGHPUT_UTILIZATION: [],
+    TOTAL_CAPACITY: [],
+    USED_CAPACITY: [],
+    HOSTS: [],
+    POOLS: [],
+    OSDS: [],
+    CLUSTER_ALERTS: [],
     version: '',
-    FEDERATE_UP_METRIC: 0
+    FEDERATE_UP_METRIC: []
   };
   alerts: any;
 
@@ -364,6 +364,7 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
         this.alerts = this.queriesResults.ALERTS;
         this.getAlertsInfo();
         this.getClustersInfo();
+        clearInterval(this.interval);
         this.interval = setInterval(() => {
           this.getClustersInfo();
         }, this.CLUSTERS_REFRESH_INTERVAL);
@@ -410,11 +411,17 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
     }
 
     const clusters: ClusterInfo[] = [];
-    this.queriesResults.TOTAL_CAPACITY?.forEach((totalCapacityMetric: any, index: number) => {
+    const totalCapacityMetrics = Array.isArray(this.queriesResults?.TOTAL_CAPACITY)
+      ? this.queriesResults.TOTAL_CAPACITY
+      : [];
+
+    totalCapacityMetrics.forEach((totalCapacityMetric: any, index: number) => {
       const clusterName = totalCapacityMetric.metric.cluster;
       const totalCapacity = parseInt(totalCapacityMetric.value[1]);
       const getMgrMetadata = this.findCluster(this.queriesResults?.MGR_METADATA, clusterName);
-      const version = this.getVersion(getMgrMetadata.metric.ceph_version);
+      const version = getMgrMetadata?.metric?.ceph_version
+        ? this.getVersion(getMgrMetadata.metric.ceph_version)
+        : '';
 
       const usedCapacity = this.findClusterData(this.queriesResults?.USED_CAPACITY, clusterName);
       const pools = this.findClusterData(this.queriesResults?.POOLS, clusterName);
@@ -424,9 +431,11 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
       const status = this.findClusterData(this.queriesResults?.HEALTH_STATUS, clusterName);
       const available_capacity = totalCapacity - usedCapacity;
       const federateJobName = `federate_${index + 1}`;
-      const federateMetrics = this.queriesResults?.FEDERATE_UP_METRIC.filter(
-        (metric: any) => metric.metric.job === federateJobName
-      );
+      const federateMetrics = Array.isArray(this.queriesResults?.FEDERATE_UP_METRIC)
+        ? this.queriesResults.FEDERATE_UP_METRIC.filter(
+            (metric: any) => metric.metric.job === federateJobName
+          )
+        : [];
       this.checkFederateMetricsStatus(federateMetrics);
 
       clusters.push({
@@ -567,6 +576,9 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
   }
 
   findCluster(metrics: any, clusterName: string) {
+    if (!Array.isArray(metrics)) {
+      return undefined;
+    }
     return metrics.find((metric: any) => metric?.metric?.cluster === clusterName);
   }
 
@@ -576,12 +588,13 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
   }
 
   generateQueryLabel(query: any, name = false, count = this.COUNT_OF_UTILIZATION_CHARTS) {
+    const normalizedQuery = Array.isArray(query) ? query : [];
     let labels = [];
     for (let i = 0; i < count; i++) {
       let label = '';
-      if (query[i]) {
-        label = query[i]?.metric?.cluster;
-        if (name) label = query[i]?.metric?.name + ' - ' + label;
+      if (normalizedQuery[i]) {
+        label = normalizedQuery[i]?.metric?.cluster;
+        if (name) label = normalizedQuery[i]?.metric?.name + ' - ' + label;
       }
       labels.push(label);
     }
@@ -589,9 +602,10 @@ export class MultiClusterComponent implements OnInit, OnDestroy {
   }
 
   getQueryValues(query: any, count = this.COUNT_OF_UTILIZATION_CHARTS) {
+    const normalizedQuery = Array.isArray(query) ? query : [];
     let values = [];
     for (let i = 0; i < count; i++) {
-      if (query[i]) values.push(query[i]?.values);
+      if (normalizedQuery[i]) values.push(normalizedQuery[i]?.values);
     }
     return values;
   }

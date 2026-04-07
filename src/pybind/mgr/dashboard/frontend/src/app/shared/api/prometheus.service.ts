@@ -22,6 +22,10 @@ export type PromqlGuageMetric = {
   result: PromethuesGaugeMetricResult[];
 };
 
+type PrometheusQueryResponse = {
+  result?: any[];
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -42,6 +46,10 @@ export class PrometheusService {
 
   constructor(private http: HttpClient) {}
 
+  private emptyResult(): PrometheusQueryResponse {
+    return { result: [] };
+  }
+
   unsubscribe() {
     if (this.timerGetPrometheusDataSub) {
       this.timerGetPrometheusDataSub.unsubscribe();
@@ -50,12 +58,16 @@ export class PrometheusService {
 
   // Range Queries
   getPrometheusData(params: any): any {
-    return this.http.get<any>(`${this.baseURL}/data`, { params });
+    return this.http.get<any>(`${this.baseURL}/data`, { params }).pipe(
+      catchError(() => of(this.emptyResult()))
+    );
   }
 
   // Guage Queries
   getPrometheusQueryData(params: { params: string }): Observable<PromqlGuageMetric> {
-    return this.http.get<any>(`${this.baseURL}/prometheus_query_data`, { params });
+    return this.http.get<any>(`${this.baseURL}/prometheus_query_data`, { params }).pipe(
+      catchError(() => of(this.emptyResult() as PromqlGuageMetric))
+    );
   }
 
   ifAlertmanagerConfigured(fn: (value?: string) => void, elseFn?: () => void): void {
@@ -224,11 +236,15 @@ export class PrometheusService {
   }
 
   getMultiClusterData(params: any): any {
-    return this.http.get<any>(`${this.baseURL}/prometheus_query_data`, { params });
+    return this.http.get<any>(`${this.baseURL}/prometheus_query_data`, { params }).pipe(
+      catchError(() => of(this.emptyResult()))
+    );
   }
 
   getMultiClusterQueryRangeData(params: any): any {
-    return this.http.get<any>(`${this.baseURL}/data`, { params });
+    return this.http.get<any>(`${this.baseURL}/data`, { params }).pipe(
+      catchError(() => of(this.emptyResult()))
+    );
   }
 
   getMultiClusterQueriesData(
