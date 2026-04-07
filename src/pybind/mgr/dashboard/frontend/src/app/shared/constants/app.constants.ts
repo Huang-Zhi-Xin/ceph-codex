@@ -6,7 +6,7 @@ export class AppConstants {
   public static readonly releaseTag = 'v20.2.0-kx.20260323.1';
   public static readonly productVersion = `KX Storage ${AppConstants.releaseTag}`;
   public static readonly baseVersion = 'Ceph 20.2.0';
-  public static readonly releaseImage = 'registry.cn-hangzhou.aliyuncs.com/kaixinlab/kx-storage-dashboard';
+  public static readonly releaseImage = 'registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph';
   public static readonly imageRegistry = 'registry.cn-hangzhou.aliyuncs.com';
   public static readonly defaultUser = 'dashboard';
   public static readonly license = '';

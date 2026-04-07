@@ -1,6 +1,6 @@
 # KX Storage 阿里云私有仓库镜像清单
 
-生成时间: 2026-03-24 16:52:44 CST
+生成时间: 2026-03-31 11:45:00 CST
 镜像平台: linux/amd64
 目标仓库: registry.cn-hangzhou.aliyuncs.com/kaixinlab
 
@@ -11,3 +11,4 @@ quay.io/prometheus/prometheus:v3.6.0          registry.cn-hangzhou.aliyuncs.com/
 quay.io/prometheus/alertmanager:v0.28.1       registry.cn-hangzhou.aliyuncs.com/kaixinlab/alertmanager:v0.28.1            sha256:220da6995a919b9ee6e0d3da7ca5f09802f3088007af56be22160314d2485b54
 quay.io/prometheus/node-exporter:v1.9.1       registry.cn-hangzhou.aliyuncs.com/kaixinlab/node-exporter:v1.9.1            sha256:863b62ff9f392b6f472e22b4b670ad1cabb66b3042502ebd4b2cd192733e1bce
 quay.io/ceph/nvmeof:1.5                       registry.cn-hangzhou.aliyuncs.com/kaixinlab/nvmeof:1.5                      sha256:f42df1e15b9d4cd560e2b1f9f5c11323a8bae1a6e910f11db1f2d745599eeace
+local-build:ceph-dashboard-final             registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0-kx.202603311930      sha256:2ec4e27ef64a869dd8c3670a1d72e96fe484591b5ce170848be4fbf287e59f1e

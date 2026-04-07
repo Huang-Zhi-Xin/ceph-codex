@@ -8,8 +8,8 @@ NODE20_BIN="/opt/homebrew/opt/node@20/bin"
 
 BASE_IMAGE="${BASE_IMAGE:-registry.cn-hangzhou.aliyuncs.com/kaixinlab/ceph:20.2.0}"
 REGISTRY="${REGISTRY:-registry.cn-hangzhou.aliyuncs.com/kaixinlab}"
-IMAGE_NAME="${IMAGE_NAME:-kx-storage-dashboard}"
-IMAGE_TAG="${IMAGE_TAG:-v20.2.0-kx.$(date +%Y%m%d%H%M)}"
+IMAGE_NAME="${IMAGE_NAME:-ceph}"
+IMAGE_TAG="${IMAGE_TAG:-20.2.0-kx.$(date +%Y%m%d%H%M)}"
 PLATFORM="${PLATFORM:-linux/amd64}"
 
 if [[ ! -x "${NODE20_BIN}/node" ]]; then
