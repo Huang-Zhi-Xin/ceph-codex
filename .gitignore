@@ -76,6 +76,7 @@ GTAGS
 /src/pybind/mgr/dashboard/frontend/src/environments/environment.ts
 /src/pybind/mgr/dashboard/frontend/src/environments/environment.prod.ts
 /src/pybind/mgr/dashboard/frontend/src/locale/messages.xlf
+/dashboard_custom_dev/image/dist/
 
 # mypy cache
 .mypy_cache/
